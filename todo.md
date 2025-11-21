@@ -238,3 +238,20 @@
 - [x] Save photos to project directory
 - [x] Update menu data with new photo paths
 - [x] Verify all photos display correctly
+
+
+## Fix Dessert Menu Display - User Reported Issue
+- [x] Investigate why wrong desserts are showing (Gâteau au Chocolat, Tarte aux Fruits instead of Brownie, Carré aux Dattes)
+- [x] Check menu data for duplicate or incorrect dessert entries
+- [x] Remove incorrect dessert items from menu data
+- [x] Verify only 4 correct desserts remain (Brownie, Carré aux Dattes, Tiramisu Bailey's, Pain aux Bananes)
+- [ ] Test dessert section displays correctly
+
+
+## Audit Product Images and Nutritional Information - User Request
+- [x] Review all menu items in completeMenuData.ts
+- [x] Verify each product image matches its description
+- [x] Identify products missing nutritional information
+- [x] Add complete nutrition data (calories, protein, carbs, fat) to all products
+- [x] Replace any mismatched product images
+- [x] Test all corrections display correctly
