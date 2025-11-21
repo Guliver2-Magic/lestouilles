@@ -128,3 +128,22 @@
 - [x] Test email notifications
 - [x] Generate appropriate images for each product category (salads, sandwiches, main dishes, etc.)
 - [x] Map generated images to correct products in menu data
+
+## Fix Product Images to Match Dishes
+- [ ] Generate specific images for each individual menu item
+- [ ] Map each product to its corresponding image
+- [ ] Verify all images match their products correctly
+
+## Event Gallery Portfolio
+- [x] Generate images for wedding catering events
+- [x] Generate images for corporate catering events
+- [x] Create Portfolio/Gallery page component
+- [x] Add event categories (weddings, corporate, private parties)
+- [x] Implement image lightbox for gallery viewing
+- [ ] Add testimonials from event clients (future enhancement)
+
+## Missing Product Information
+- [x] Add nutritional information display to product cards
+- [x] Add quantity/weight display to product cards
+- [x] Display number of servings clearly for each item
+- [x] Update product cards to show all this information prominently

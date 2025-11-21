@@ -13,6 +13,7 @@ export interface MenuItem {
   };
   price: number;
   servings?: string; // Number of people served
+  quantity?: string; // Weight or volume (e.g., "250g", "300ml")
   image: string;
   category: string;
   dietary?: string[];
@@ -36,8 +37,10 @@ export const completeMenu: MenuItem[] = [
     description: { fr: "Jambon, fromage, laitue, tomate", en: "Ham, cheese, lettuce, tomato" },
     price: 8.50,
     servings: "1 personne",
+    quantity: "250g",
     category: "Sandwichs",
     image: "/images/menu/WgESo0WjYDzG.jpg",
+    nutrition: { calories: 350, protein: 15, carbs: 45, fat: 12 },
     nutritionalTips: { 
       fr: "Riche en protéines et fibres. Parfait pour un déjeuner équilibré qui vous garde rassasié.", 
       en: "Rich in protein and fiber. Perfect for a balanced lunch that keeps you satisfied." 
@@ -49,9 +52,11 @@ export const completeMenu: MenuItem[] = [
     description: { fr: "Légumes grillés, houmous, roquette", en: "Grilled vegetables, hummus, arugula" },
     price: 9.00,
     servings: "1 personne",
+    quantity: "250g",
     category: "Sandwichs",
     dietary: ["Vegetarian", "Vegan"],
     image: "/images/menu/6BnExjt67ce6.jpg",
+    nutrition: { calories: 320, protein: 12, carbs: 48, fat: 10 },
     nutritionalTips: { 
       fr: "Riche en fibres et vitamines. Excellente source de nutriments végétaux pour une santé optimale.", 
       en: "Rich in fiber and vitamins. Excellent source of plant nutrients for optimal health." 
@@ -63,8 +68,14 @@ export const completeMenu: MenuItem[] = [
     description: { fr: "Poulet grillé, mayo chipotle, avocat", en: "Grilled chicken, chipotle mayo, avocado" },
     price: 10.50,
     servings: "1 personne",
+    quantity: "270g",
     category: "Sandwichs",
-    image: "/images/menu/WU23K8Mz4HXE.jpg"
+    image: "/images/menu/WU23K8Mz4HXE.jpg",
+    nutrition: { calories: 420, protein: 28, carbs: 38, fat: 16 },
+    nutritionalTips: { 
+      fr: "Excellente source de protéines maigres. L'avocat apporte des graisses saines pour le cœur.", 
+      en: "Excellent source of lean protein. Avocado provides heart-healthy fats." 
+    }
   },
   {
     id: "sand-004",

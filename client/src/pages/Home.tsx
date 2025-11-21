@@ -195,9 +195,21 @@ export default function Home() {
           </Link>
           
           <nav className="hidden md:flex items-center gap-6">
-            <a href="#home" className="hover:text-primary transition-colors">{t.nav.home}</a>
-            <Link href="/about" className="hover:text-primary transition-colors">{t.nav.about}</Link>
-            <Link href="/contact" className="hover:text-primary transition-colors">{t.nav.contact}</Link>
+            <a href="#home" className="hover:text-primary transition-colors">
+              {t.nav.home}
+            </a>
+            <a href="#menu" className="hover:text-primary transition-colors">
+              {language === "fr" ? "Menu" : "Menu"}
+            </a>
+            <a href="/about" className="hover:text-primary transition-colors">
+              {t.nav.about}
+            </a>
+            <a href="/portfolio" className="hover:text-primary transition-colors">
+              {language === "fr" ? "Portfolio" : "Portfolio"}
+            </a>
+            <a href="/contact" className="hover:text-primary transition-colors">
+              {t.nav.contact}
+            </a>
           </nav>
 
           <div className="flex items-center gap-4">
@@ -423,6 +435,46 @@ export default function Home() {
                   <p className="text-sm text-muted-foreground mb-2 line-clamp-2">
                     {item.description[language]}
                   </p>
+                  
+                  {/* Quantity and Servings */}
+                  <div className="flex items-center justify-between mb-2 text-sm">
+                    {item.quantity && (
+                      <span className="font-medium text-muted-foreground">
+                        📦 {item.quantity}
+                      </span>
+                    )}
+                    {item.servings && (
+                      <span className="font-medium text-primary">
+                        👥 {item.servings}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Nutrition Information */}
+                  {item.nutrition && (
+                    <div className="mb-3 p-2 bg-amber-50 dark:bg-amber-900/20 rounded-md border border-amber-200 dark:border-amber-800">
+                      <div className="grid grid-cols-4 gap-1 text-xs text-center">
+                        <div>
+                          <div className="font-bold text-amber-700 dark:text-amber-300">{item.nutrition.calories}</div>
+                          <div className="text-muted-foreground">cal</div>
+                        </div>
+                        <div>
+                          <div className="font-bold text-amber-700 dark:text-amber-300">{item.nutrition.protein}g</div>
+                          <div className="text-muted-foreground">prot</div>
+                        </div>
+                        <div>
+                          <div className="font-bold text-amber-700 dark:text-amber-300">{item.nutrition.carbs}g</div>
+                          <div className="text-muted-foreground">gluc</div>
+                        </div>
+                        <div>
+                          <div className="font-bold text-amber-700 dark:text-amber-300">{item.nutrition.fat}g</div>
+                          <div className="text-muted-foreground">lip</div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Nutritional Tips */}
                   {item.nutritionalTips && (
                     <div className="mb-3 p-2 bg-green-50 dark:bg-green-900/20 rounded-md border border-green-200 dark:border-green-800">
                       <p className="text-xs text-green-700 dark:text-green-300 flex items-start gap-1">
@@ -431,15 +483,12 @@ export default function Home() {
                       </p>
                     </div>
                   )}
+                  
+                  {/* Price */}
                   <div className="flex items-center justify-between mb-3">
                     <span className="text-2xl font-bold text-primary">
                       ${item.price.toFixed(2)}
                     </span>
-                    {item.servings && (
-                      <span className="text-sm text-muted-foreground">
-                        {t.menu.servings}: {item.servings}
-                      </span>
-                    )}
                   </div>
                   <Button 
                     className="w-full" 

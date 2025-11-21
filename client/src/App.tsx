@@ -10,6 +10,7 @@ import Home from "./pages/Home";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Checkout from "./pages/Checkout";
+import Portfolio from "./pages/Portfolio";
 
 function Router() {
   return (
@@ -18,6 +19,7 @@ function Router() {
       <Route path={"/about"} component={About} />
       <Route path={"/contact"} component={Contact} />
       <Route path={"/checkout"} component={Checkout} />
+      <Route path={"/portfolio"} component={Portfolio} />
       <Route path={"/404"} component={NotFound} />
       <Route component={NotFound} />
     </Switch>
