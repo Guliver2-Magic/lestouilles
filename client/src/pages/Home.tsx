@@ -17,16 +17,26 @@ import {
   ChefHat,
   Users,
   Clock,
-  Star
+  Star,
+  ChevronLeft,
+  ChevronRight
 } from "lucide-react";
 import { APP_LOGO, APP_TITLE } from "@/const";
 import { Link } from "wouter";
+
+const carouselImages = [
+  "/images/carousel/catering1.jpg",
+  "/images/carousel/catering2.jpg",
+  "/images/carousel/catering3.jpg",
+  "/images/carousel/catering4.jpg",
+];
 
 export default function Home() {
   const { language, toggleLanguage } = useLanguage();
   const { addToCart, cartOpen, setCartOpen, cart } = useCart();
   const [selectedCategory, setSelectedCategory] = useState("Tous");
   const [scrollY, setScrollY] = useState(0);
+  const [currentSlide, setCurrentSlide] = useState(0);
 
   // Parallax effect
   useEffect(() => {
@@ -35,11 +45,27 @@ export default function Home() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Auto-advance carousel
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % carouselImages.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, []);
+
   const filteredMenu = selectedCategory === "Tous" 
     ? completeMenu 
     : completeMenu.filter(item => item.category === selectedCategory);
 
   const cartItemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % carouselImages.length);
+  };
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + carouselImages.length) % carouselImages.length);
+  };
 
   const content = {
     fr: {
@@ -200,32 +226,72 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Hero Section with Video Background */}
+      {/* Hero Section with Image Carousel */}
       <section 
         id="home"
         className="relative h-screen flex items-center justify-center overflow-hidden"
       >
-        {/* Video Background */}
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="absolute inset-0 w-full h-full object-cover"
-          poster="https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=1920"
-        >
-          <source src="https://videos.pexels.com/video-files/3195394/3195394-uhd_2560_1440_25fps.mp4" type="video/mp4" />
-          {/* Fallback image if video doesn't load */}
-        </video>
+        {/* Carousel Images */}
+        <div className="absolute inset-0">
+          {carouselImages.map((image, index) => (
+            <div
+              key={index}
+              className={`absolute inset-0 transition-opacity duration-1000 ${
+                index === currentSlide ? 'opacity-100' : 'opacity-0'
+              }`}
+              style={{
+                transform: `translateY(${scrollY * 0.5}px)`,
+              }}
+            >
+              <img 
+                src={image} 
+                alt={`Slide ${index + 1}`}
+                className="w-full h-full object-cover"
+              />
+            </div>
+          ))}
+        </div>
         
         {/* Overlay */}
         <div className="absolute inset-0 bg-black/50" />
+        
+        {/* Carousel Controls */}
+        <button
+          onClick={prevSlide}
+          className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white p-3 rounded-full transition-all"
+          aria-label="Previous slide"
+        >
+          <ChevronLeft className="h-6 w-6" />
+        </button>
+        <button
+          onClick={nextSlide}
+          className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white p-3 rounded-full transition-all"
+          aria-label="Next slide"
+        >
+          <ChevronRight className="h-6 w-6" />
+        </button>
+
+        {/* Carousel Dots */}
+        <div className="absolute bottom-24 left-1/2 -translate-x-1/2 z-20 flex gap-2">
+          {carouselImages.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentSlide(index)}
+              className={`w-3 h-3 rounded-full transition-all ${
+                index === currentSlide 
+                  ? 'bg-white w-8' 
+                  : 'bg-white/50 hover:bg-white/75'
+              }`}
+              aria-label={`Go to slide ${index + 1}`}
+            />
+          ))}
+        </div>
         
         {/* Content */}
         <div 
           className="relative z-10 text-center text-white px-4"
           style={{
-            transform: `translateY(${scrollY * 0.5}px)`,
+            transform: `translateY(${scrollY * 0.3}px)`,
             opacity: 1 - scrollY / 500
           }}
         >
@@ -331,13 +397,12 @@ export default function Home() {
                       alt={item.name[language]}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       onError={(e) => {
-                        // Fallback if image fails to load
                         e.currentTarget.style.display = 'none';
                         e.currentTarget.parentElement!.querySelector('.fallback-icon')?.classList.remove('hidden');
                       }}
                     />
                   ) : null}
-                  <div className="fallback-icon absolute inset-0 flex items-center justify-center">
+                  <div className="fallback-icon hidden absolute inset-0 flex items-center justify-center">
                     <ChefHat className="h-16 w-16 text-muted-foreground/20" />
                   </div>
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10" />

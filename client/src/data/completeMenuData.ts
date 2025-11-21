@@ -37,7 +37,7 @@ export const completeMenu: MenuItem[] = [
     price: 8.50,
     servings: "1 personne",
     category: "Sandwichs",
-    image: "/images/sandwiches/classique.jpg",
+    image: "/images/menu/WgESo0WjYDzG.jpg",
     nutritionalTips: { 
       fr: "Riche en protéines et fibres. Parfait pour un déjeuner équilibré qui vous garde rassasié.", 
       en: "Rich in protein and fiber. Perfect for a balanced lunch that keeps you satisfied." 
@@ -51,7 +51,7 @@ export const completeMenu: MenuItem[] = [
     servings: "1 personne",
     category: "Sandwichs",
     dietary: ["Vegetarian", "Vegan"],
-    image: "/images/sandwiches/vege.jpg",
+    image: "/images/menu/6BnExjt67ce6.jpg",
     nutritionalTips: { 
       fr: "Riche en fibres et vitamines. Excellente source de nutriments végétaux pour une santé optimale.", 
       en: "Rich in fiber and vitamins. Excellent source of plant nutrients for optimal health." 
@@ -64,7 +64,7 @@ export const completeMenu: MenuItem[] = [
     price: 10.50,
     servings: "1 personne",
     category: "Sandwichs",
-    image: "/images/sandwiches/poulet.jpg"
+    image: "/images/menu/WU23K8Mz4HXE.jpg"
   },
   {
     id: "sand-004",
@@ -73,7 +73,7 @@ export const completeMenu: MenuItem[] = [
     price: 12.00,
     servings: "1 personne",
     category: "Sandwichs",
-    image: "/images/sandwiches/smoked-meat.jpg"
+    image: "/images/menu/xGkxjMaoLLlM.jpg"
   },
 
   // SALADES
@@ -84,7 +84,7 @@ export const completeMenu: MenuItem[] = [
     price: 9.50,
     servings: "1 personne",
     category: "Salades",
-    image: "/images/salads/caesar.jpg"
+    image: "/images/menu/X5oLMAlBg8Q1.jpg"
   },
   {
     id: "sal-002",
@@ -94,7 +94,7 @@ export const completeMenu: MenuItem[] = [
     servings: "1 personne",
     category: "Salades",
     dietary: ["Vegetarian"],
-    image: "/images/salads/greek.jpg"
+    image: "/images/menu/TOfmOflBRqDW.jpg"
   },
   {
     id: "sal-003",
@@ -104,7 +104,7 @@ export const completeMenu: MenuItem[] = [
     servings: "1 personne",
     category: "Salades",
     dietary: ["Vegetarian", "Vegan", "Gluten-Free"],
-    image: "/images/salads/quinoa.jpg"
+    image: "/images/menu/JMDUTzf6D48y.jpg"
   },
 
   // PLATS PRINCIPAUX (PRÊT À MANGER)
@@ -115,7 +115,7 @@ export const completeMenu: MenuItem[] = [
     price: 12.50,
     servings: "1-2 personnes",
     category: "Plats Principaux",
-    image: "/images/mains/lasagna.jpg"
+    image: "/images/menu/WgESo0WjYDzG.jpg"
   },
   {
     id: "plat-002",
@@ -125,7 +125,7 @@ export const completeMenu: MenuItem[] = [
     servings: "1-2 personnes",
     category: "Plats Principaux",
     dietary: ["Gluten-Free"],
-    image: "/images/mains/roasted-chicken.jpg"
+    image: "/images/menu/6BnExjt67ce6.jpg"
   },
   {
     id: "plat-003",
@@ -134,7 +134,7 @@ export const completeMenu: MenuItem[] = [
     price: 16.50,
     servings: "1-2 personnes",
     category: "Plats Principaux",
-    image: "/images/mains/salmon.jpg"
+    image: "/images/menu/WU23K8Mz4HXE.jpg"
   },
   {
     id: "plat-004",
@@ -143,7 +143,7 @@ export const completeMenu: MenuItem[] = [
     price: 11.50,
     servings: "1-2 personnes",
     category: "Plats Principaux",
-    image: "/images/mains/carbonara.jpg"
+    image: "/images/menu/xGkxjMaoLLlM.jpg"
   },
 
   // TRAITEUR - BOUCHÉES
@@ -154,7 +154,7 @@ export const completeMenu: MenuItem[] = [
     price: 45.00,
     servings: "10-12 personnes",
     category: "Traiteur - Bouchées",
-    image: "/images/catering/canapes.jpg"
+    image: "/images/menu/X5oLMAlBg8Q1.jpg"
   },
   {
     id: "bou-002",
@@ -164,7 +164,7 @@ export const completeMenu: MenuItem[] = [
     servings: "10-12 personnes",
     category: "Traiteur - Bouchées",
     dietary: ["Vegetarian"],
-    image: "/images/catering/mini-quiches.jpg"
+    image: "/images/menu/TOfmOflBRqDW.jpg"
   },
   {
     id: "bou-003",
@@ -174,7 +174,7 @@ export const completeMenu: MenuItem[] = [
     servings: "10-12 personnes",
     category: "Traiteur - Bouchées",
     dietary: ["Gluten-Free"],
-    image: "/images/catering/chicken-skewers.jpg"
+    image: "/images/menu/JMDUTzf6D48y.jpg"
   },
 
   // TRAITEUR - BUFFETS
@@ -185,7 +185,7 @@ export const completeMenu: MenuItem[] = [
     price: 25.00,
     servings: "Par personne (min. 20)",
     category: "Traiteur - Buffets",
-    image: "/images/catering/classic-buffet.jpg"
+    image: "/images/menu/WgESo0WjYDzG.jpg"
   },
   {
     id: "buf-002",
@@ -195,7 +195,7 @@ export const completeMenu: MenuItem[] = [
     servings: "Par personne (min. 20)",
     category: "Traiteur - Buffets",
     dietary: ["Vegetarian"],
-    image: "/images/catering/veggie-buffet.jpg"
+    image: "/images/menu/6BnExjt67ce6.jpg"
   },
   {
     id: "buf-003",
@@ -204,7 +204,7 @@ export const completeMenu: MenuItem[] = [
     price: 35.00,
     servings: "Par personne (min. 20)",
     category: "Traiteur - Buffets",
-    image: "/images/catering/premium-buffet.jpg"
+    image: "/images/menu/WU23K8Mz4HXE.jpg"
   },
 
   // BOÎTES À LUNCH
@@ -215,7 +215,7 @@ export const completeMenu: MenuItem[] = [
     price: 15.00,
     servings: "1 personne",
     category: "Boîtes à Lunch",
-    image: "/images/catering/lunch-box-classic.jpg"
+    image: "/images/menu/xGkxjMaoLLlM.jpg"
   },
   {
     id: "box-002",
@@ -225,7 +225,7 @@ export const completeMenu: MenuItem[] = [
     servings: "1 personne",
     category: "Boîtes à Lunch",
     dietary: ["Vegetarian"],
-    image: "/images/catering/lunch-box-veggie.jpg"
+    image: "/images/menu/X5oLMAlBg8Q1.jpg"
   },
   {
     id: "box-003",
@@ -234,7 +234,7 @@ export const completeMenu: MenuItem[] = [
     price: 18.00,
     servings: "1 personne",
     category: "Boîtes à Lunch",
-    image: "/images/catering/lunch-box-executive.jpg"
+    image: "/images/menu/TOfmOflBRqDW.jpg"
   },
 
   // DESSERTS
@@ -246,7 +246,7 @@ export const completeMenu: MenuItem[] = [
     servings: "8-10 personnes",
     category: "Desserts",
     dietary: ["Vegetarian"],
-    image: "/images/desserts/chocolate-cake.jpg"
+    image: "/images/menu/JMDUTzf6D48y.jpg"
   },
   {
     id: "des-002",
@@ -256,7 +256,7 @@ export const completeMenu: MenuItem[] = [
     servings: "8-10 personnes",
     category: "Desserts",
     dietary: ["Vegetarian"],
-    image: "/images/desserts/fruit-tart.jpg"
+    image: "/images/menu/WgESo0WjYDzG.jpg"
   },
   {
     id: "des-003",
@@ -266,7 +266,7 @@ export const completeMenu: MenuItem[] = [
     servings: "8-10 personnes",
     category: "Desserts",
     dietary: ["Vegetarian"],
-    image: "/images/desserts/tiramisu.jpg"
+    image: "/images/menu/6BnExjt67ce6.jpg"
   },
 
   // BOISSONS
@@ -278,7 +278,7 @@ export const completeMenu: MenuItem[] = [
     servings: "1 personne",
     category: "Boissons",
     dietary: ["Vegan", "Gluten-Free"],
-    image: "/images/beverages/coffee.jpg"
+    image: "/images/menu/WU23K8Mz4HXE.jpg"
   },
   {
     id: "boi-002",
@@ -288,7 +288,7 @@ export const completeMenu: MenuItem[] = [
     servings: "1 personne",
     category: "Boissons",
     dietary: ["Vegan", "Gluten-Free"],
-    image: "/images/beverages/juice.jpg"
+    image: "/images/menu/xGkxjMaoLLlM.jpg"
   },
   {
     id: "boi-003",
@@ -298,7 +298,7 @@ export const completeMenu: MenuItem[] = [
     servings: "1 personne",
     category: "Boissons",
     dietary: ["Vegan", "Gluten-Free"],
-    image: "/images/beverages/iced-tea.jpg"
+    image: "/images/menu/X5oLMAlBg8Q1.jpg"
   }
 ];
 

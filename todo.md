@@ -98,3 +98,13 @@
 - [x] Add nutritional tips and health benefits for each menu item
 - [x] Display nutritional information in product cards
 - [x] Add educational value about healthy eating
+
+## Hero Section Carousel Enhancement
+- [ ] Extract video URL from original lestouilles.ca website
+- [x] Download hero carousel images from original site
+- [x] Implement image carousel with parallax effect in hero section
+- [ ] Replace current video with original site video
+- [x] Add carousel navigation controls (prev/next, dots)
+- [x] Ensure carousel auto-plays and loops
+- [x] Test carousel responsiveness on mobile
+- [x] Fix missing product images - update image paths to use existing images
