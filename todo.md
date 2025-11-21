@@ -227,3 +227,14 @@
 - [x] Map each dessert to its correct generated image
 - [x] Test dessert images display correctly on website
 - [x] Verify all dessert images match their descriptions
+
+
+## Replace Dessert Images with Professional Photos from Internet
+- [x] Search for professional photo of Brownie au Chocolat
+- [x] Search for professional photo of Carré aux Dattes
+- [x] Search for professional photo of Tiramisu au Bailey's
+- [x] Search for professional photo of Pain aux Bananes et Chocolat
+- [x] Download all dessert photos
+- [x] Save photos to project directory
+- [x] Update menu data with new photo paths
+- [x] Verify all photos display correctly
