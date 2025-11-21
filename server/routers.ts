@@ -331,6 +331,31 @@ export const appRouter = router({
       }
       return await getUserOrders(ctx.user.id);
     }),
+
+    // Admin procedures
+    listAll: publicProcedure.query(async ({ ctx }) => {
+      if (!ctx.user || ctx.user.role !== "admin") {
+        throw new Error("Unauthorized");
+      }
+      const db = await import("./orders-db").then(m => m.getAllOrders);
+      return await db();
+    }),
+
+    updateStatus: publicProcedure
+      .input(
+        z.object({
+          orderId: z.number(),
+          status: z.enum(["pending", "confirmed", "preparing", "ready", "delivered", "cancelled"]),
+        })
+      )
+      .mutation(async ({ input, ctx }) => {
+        if (!ctx.user || ctx.user.role !== "admin") {
+          throw new Error("Unauthorized");
+        }
+        const db = await import("./orders-db").then(m => m.updateOrderStatus);
+        await db(input.orderId, input.status);
+        return { success: true };
+      }),
   }),
 
   newsletter: router({

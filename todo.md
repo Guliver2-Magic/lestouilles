@@ -147,3 +147,44 @@
 - [x] Add quantity/weight display to product cards
 - [x] Display number of servings clearly for each item
 - [x] Update product cards to show all this information prominently
+
+## Fix Product Images to Match Dishes
+- [ ] Generate specific image for Caesar salad (romaine lettuce, croutons, parmesan)
+- [ ] Generate specific image for Greek salad (tomatoes, cucumbers, olives, feta)
+- [ ] Generate specific image for Quinoa salad
+- [ ] Generate specific image for classic ham and cheese sandwich
+- [ ] Generate specific image for vegetarian sandwich with grilled vegetables
+- [ ] Generate specific image for grilled chicken sandwich with avocado
+- [ ] Generate specific image for Montreal smoked meat sandwich
+- [ ] Generate specific images for wraps
+- [ ] Generate specific images for soups
+- [ ] Generate specific images for main dishes
+- [ ] Generate specific images for desserts
+- [x] Update menu data to map each product to its correct image
+
+## Event Reservation System
+- [ ] Create reservations table in database schema
+- [ ] Create availability calendar table
+- [ ] Build reservation/booking page with calendar
+- [ ] Add event type selection (wedding, corporate, private party)
+- [ ] Add guest count and date/time selection
+- [ ] Implement availability checking
+- [ ] Create tRPC procedures for reservation management
+- [ ] Send automatic confirmation email to client
+- [ ] Send reservation notification to owner
+- [ ] Add admin dashboard to manage reservations
+- [ ] Test complete reservation flow
+
+## Admin Dashboard for Order Management
+- [x] Create /admin/orders page component
+- [x] Add authentication check for admin role
+- [x] Display all orders in a table with key information
+- [x] Add filters by order status (pending, confirmed, preparing, ready, delivered, cancelled)
+- [ ] Add filters by date range (future enhancement)
+- [ ] Add filter by total amount (future enhancement)
+- [x] Add search by customer name or order number
+- [x] Implement order status update functionality
+- [ ] Add order details view modal (future enhancement)
+- [x] Create tRPC procedures for admin order management
+- [x] Add statistics dashboard (total orders, revenue, pending orders)
+- [x] Test admin dashboard functionality

@@ -70,7 +70,7 @@ export const completeMenu: MenuItem[] = [
     servings: "1 personne",
     quantity: "270g",
     category: "Sandwichs",
-    image: "/images/menu/WU23K8Mz4HXE.jpg",
+    image: "/images/products/sandwich-poulet.jpg",
     nutrition: { calories: 420, protein: 28, carbs: 38, fat: 16 },
     nutritionalTips: { 
       fr: "Excellente source de protéines maigres. L'avocat apporte des graisses saines pour le cœur.", 
@@ -84,7 +84,7 @@ export const completeMenu: MenuItem[] = [
     price: 12.00,
     servings: "1 personne",
     category: "Sandwichs",
-    image: "/images/menu/xGkxjMaoLLlM.jpg"
+    image: "/images/products/sandwich-jambon-fromage.jpg"
   },
 
   // SALADES
@@ -95,7 +95,7 @@ export const completeMenu: MenuItem[] = [
     price: 9.50,
     servings: "1 personne",
     category: "Salades",
-    image: "/images/menu/X5oLMAlBg8Q1.jpg"
+    image: "/images/products/salade-cesar.jpg"
   },
   {
     id: "sal-002",
@@ -105,7 +105,7 @@ export const completeMenu: MenuItem[] = [
     servings: "1 personne",
     category: "Salades",
     dietary: ["Vegetarian"],
-    image: "/images/menu/TOfmOflBRqDW.jpg"
+    image: "/images/products/salade-grecque.jpg"
   },
   {
     id: "sal-003",
@@ -115,7 +115,7 @@ export const completeMenu: MenuItem[] = [
     servings: "1 personne",
     category: "Salades",
     dietary: ["Vegetarian", "Vegan", "Gluten-Free"],
-    image: "/images/menu/JMDUTzf6D48y.jpg"
+    image: "/images/products/salade-quinoa.jpg"
   },
 
   // PLATS PRINCIPAUX (PRÊT À MANGER)
@@ -145,7 +145,7 @@ export const completeMenu: MenuItem[] = [
     price: 16.50,
     servings: "1-2 personnes",
     category: "Plats Principaux",
-    image: "/images/menu/WU23K8Mz4HXE.jpg"
+    image: "/images/products/plat-principal.jpg"
   },
   {
     id: "plat-004",
@@ -154,7 +154,7 @@ export const completeMenu: MenuItem[] = [
     price: 11.50,
     servings: "1-2 personnes",
     category: "Plats Principaux",
-    image: "/images/menu/xGkxjMaoLLlM.jpg"
+    image: "/images/products/plat-principal.jpg"
   },
 
   // TRAITEUR - BOUCHÉES
@@ -165,7 +165,7 @@ export const completeMenu: MenuItem[] = [
     price: 45.00,
     servings: "10-12 personnes",
     category: "Traiteur - Bouchées",
-    image: "/images/menu/X5oLMAlBg8Q1.jpg"
+    image: "/images/products/salade-cesar.jpg"
   },
   {
     id: "bou-002",
@@ -175,7 +175,7 @@ export const completeMenu: MenuItem[] = [
     servings: "10-12 personnes",
     category: "Traiteur - Bouchées",
     dietary: ["Vegetarian"],
-    image: "/images/menu/TOfmOflBRqDW.jpg"
+    image: "/images/products/salade-grecque.jpg"
   },
   {
     id: "bou-003",
@@ -185,7 +185,7 @@ export const completeMenu: MenuItem[] = [
     servings: "10-12 personnes",
     category: "Traiteur - Bouchées",
     dietary: ["Gluten-Free"],
-    image: "/images/menu/JMDUTzf6D48y.jpg"
+    image: "/images/products/salade-quinoa.jpg"
   },
 
   // TRAITEUR - BUFFETS
@@ -215,7 +215,7 @@ export const completeMenu: MenuItem[] = [
     price: 35.00,
     servings: "Par personne (min. 20)",
     category: "Traiteur - Buffets",
-    image: "/images/menu/WU23K8Mz4HXE.jpg"
+    image: "/images/products/sandwich-poulet.jpg"
   },
 
   // BOÎTES À LUNCH
@@ -226,7 +226,7 @@ export const completeMenu: MenuItem[] = [
     price: 15.00,
     servings: "1 personne",
     category: "Boîtes à Lunch",
-    image: "/images/menu/xGkxjMaoLLlM.jpg"
+    image: "/images/products/boite-lunch.jpg"
   },
   {
     id: "box-002",
@@ -236,7 +236,7 @@ export const completeMenu: MenuItem[] = [
     servings: "1 personne",
     category: "Boîtes à Lunch",
     dietary: ["Vegetarian"],
-    image: "/images/menu/X5oLMAlBg8Q1.jpg"
+    image: "/images/products/boite-lunch.jpg"
   },
   {
     id: "box-003",
@@ -245,7 +245,7 @@ export const completeMenu: MenuItem[] = [
     price: 18.00,
     servings: "1 personne",
     category: "Boîtes à Lunch",
-    image: "/images/menu/TOfmOflBRqDW.jpg"
+    image: "/images/products/boite-lunch.jpg"
   },
 
   // DESSERTS
@@ -257,7 +257,7 @@ export const completeMenu: MenuItem[] = [
     servings: "8-10 personnes",
     category: "Desserts",
     dietary: ["Vegetarian"],
-    image: "/images/menu/JMDUTzf6D48y.jpg"
+    image: "/images/products/salade-quinoa.jpg"
   },
   {
     id: "des-002",
@@ -289,7 +289,7 @@ export const completeMenu: MenuItem[] = [
     servings: "1 personne",
     category: "Boissons",
     dietary: ["Vegan", "Gluten-Free"],
-    image: "/images/menu/WU23K8Mz4HXE.jpg"
+    image: "/images/products/sandwich-poulet.jpg"
   },
   {
     id: "boi-002",
@@ -299,7 +299,7 @@ export const completeMenu: MenuItem[] = [
     servings: "1 personne",
     category: "Boissons",
     dietary: ["Vegan", "Gluten-Free"],
-    image: "/images/menu/xGkxjMaoLLlM.jpg"
+    image: "/images/products/sandwich-jambon-fromage.jpg"
   },
   {
     id: "boi-003",
@@ -309,7 +309,7 @@ export const completeMenu: MenuItem[] = [
     servings: "1 personne",
     category: "Boissons",
     dietary: ["Vegan", "Gluten-Free"],
-    image: "/images/menu/X5oLMAlBg8Q1.jpg"
+    image: "/images/products/salade-cesar.jpg"
   }
 ];
 
