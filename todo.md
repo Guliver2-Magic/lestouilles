@@ -69,3 +69,16 @@
 - [ ] AI demand forecasting
 - [ ] Email marketing automation
 - [ ] Voice agent integration (ElevenLabs)
+
+## Website Redesign Tasks
+- [x] Research best catering website designs for inspiration
+- [x] Extract all images from original lestouilles.ca website
+- [x] Extract complete menu data from original site
+- [x] Implement parallax hero section with background images
+- [x] Add parallax background images to hero and sections
+- [x] Replace placeholder images with high-quality stock images
+- [x] Update all menu items with complete data
+- [x] Implement parallax scrolling effects
+- [x] Add visual enhancements inspired by top catering sites
+- [x] Test parallax performance and responsiveness
+- [x] Add serving size (number of people) for each menu item

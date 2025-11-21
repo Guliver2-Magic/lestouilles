@@ -7,18 +7,23 @@ interface CartItem extends MenuItem {
 
 interface CartContextType {
   items: CartItem[];
+  cart: CartItem[]; // Alias for items
   addItem: (item: MenuItem) => void;
+  addToCart: (item: MenuItem) => void; // Alias for addItem
   removeItem: (itemId: string) => void;
   updateQuantity: (itemId: string, quantity: number) => void;
   clearCart: () => void;
   getTotal: () => number;
   getItemCount: () => number;
+  cartOpen: boolean;
+  setCartOpen: (open: boolean) => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
+  const [cartOpen, setCartOpen] = useState(false);
 
   const addItem = (item: MenuItem) => {
     setItems(prevItems => {
@@ -62,12 +67,16 @@ export function CartProvider({ children }: { children: ReactNode }) {
     <CartContext.Provider
       value={{
         items,
+        cart: items, // Alias
         addItem,
+        addToCart: addItem, // Alias
         removeItem,
         updateQuantity,
         clearCart,
         getTotal,
         getItemCount,
+        cartOpen,
+        setCartOpen,
       }}
     >
       {children}
