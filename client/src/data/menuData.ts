@@ -1,0 +1,366 @@
+export interface MenuItem {
+  id: string;
+  name: {
+    fr: string;
+    en: string;
+  };
+  description: {
+    fr: string;
+    en: string;
+  };
+  price: number;
+  image: string;
+  category: string;
+  servingSize?: string;
+  nutrition?: {
+    calories: number;
+    protein: number;
+    carbs: number;
+    fat: number;
+  };
+  dietaryTags?: Array<'vegan' | 'vegetarian' | 'glutenfree' | 'organic' | 'lowsugar' | 'dairyfree'>;
+}
+
+export const menuCategories = [
+  { id: 'soups', name: { fr: 'Soupes', en: 'Soups' } },
+  { id: 'prepared', name: { fr: 'Plats Préparés', en: 'Prepared Dishes' } },
+  { id: 'meats', name: { fr: 'Viandes', en: 'Meats' } },
+  { id: 'vegetables', name: { fr: 'Légumes', en: 'Vegetables' } },
+  { id: 'appetizers', name: { fr: 'Bouchées', en: 'Appetizers' } },
+  { id: 'desserts', name: { fr: 'Desserts', en: 'Desserts' } },
+  { id: 'lunchboxes', name: { fr: 'Boîtes à Lunch', en: 'Lunch Boxes' } },
+  { id: 'sauces', name: { fr: 'Sauces', en: 'Sauces' } },
+  { id: 'beverages', name: { fr: 'Boissons', en: 'Beverages' } },
+];
+
+export const menuItems: MenuItem[] = [
+  // Soups
+  {
+    id: 'soup-1',
+    name: { fr: 'Soupe aux Légumes', en: 'Vegetable Soup' },
+    description: { fr: 'Soupe maison aux légumes frais de saison', en: 'Homemade soup with fresh seasonal vegetables' },
+    price: 8.99,
+    image: '/images/menu/soup-vegetable.jpg',
+    category: 'soups',
+    servingSize: '500ml',
+    nutrition: { calories: 180, protein: 6, carbs: 28, fat: 5 },
+    dietaryTags: ['vegan', 'glutenfree'],
+  },
+  {
+    id: 'soup-2',
+    name: { fr: 'Soupe à l\'Oignon Gratinée', en: 'French Onion Soup' },
+    description: { fr: 'Soupe à l\'oignon traditionnelle avec fromage gratiné', en: 'Traditional onion soup with melted cheese' },
+    price: 9.99,
+    image: '/images/menu/soup-onion.jpg',
+    category: 'soups',
+    servingSize: '500ml',
+    nutrition: { calories: 320, protein: 14, carbs: 32, fat: 16 },
+    dietaryTags: ['vegetarian'],
+  },
+  {
+    id: 'soup-3',
+    name: { fr: 'Soupe Poulet et Nouilles', en: 'Chicken Noodle Soup' },
+    description: { fr: 'Soupe réconfortante au poulet et nouilles maison', en: 'Comforting chicken soup with homemade noodles' },
+    price: 10.99,
+    image: '/images/menu/soup-chicken.jpg',
+    category: 'soups',
+    servingSize: '500ml',
+    nutrition: { calories: 240, protein: 18, carbs: 26, fat: 7 },
+  },
+  {
+    id: 'soup-4',
+    name: { fr: 'Soupe Minestrone', en: 'Minestrone Soup' },
+    description: { fr: 'Soupe italienne aux légumes et pâtes', en: 'Italian vegetable and pasta soup' },
+    price: 9.49,
+    image: '/images/menu/soup-minestrone.jpg',
+    category: 'soups',
+    servingSize: '500ml',
+    nutrition: { calories: 210, protein: 8, carbs: 35, fat: 5 },
+    dietaryTags: ['vegan', 'organic'],
+  },
+  {
+    id: 'soup-5',
+    name: { fr: 'Soupe Tom Yum', en: 'Tom Yum Soup' },
+    description: { fr: 'Soupe thaïlandaise épicée aux crevettes', en: 'Spicy Thai soup with shrimp' },
+    price: 11.99,
+    image: '/images/menu/soup-tomyum.jpg',
+    category: 'soups',
+    servingSize: '500ml',
+    nutrition: { calories: 190, protein: 15, carbs: 18, fat: 8 },
+    dietaryTags: ['glutenfree'],
+  },
+  {
+    id: 'soup-6',
+    name: { fr: 'Soupe aux Lentilles', en: 'Lentil Soup' },
+    description: { fr: 'Soupe nutritive aux lentilles et épices', en: 'Nutritious lentil soup with spices' },
+    price: 8.49,
+    image: '/images/menu/soup-lentil.jpg',
+    category: 'soups',
+    servingSize: '500ml',
+    nutrition: { calories: 220, protein: 14, carbs: 36, fat: 4 },
+    dietaryTags: ['vegan', 'glutenfree', 'organic'],
+  },
+  {
+    id: 'soup-7',
+    name: { fr: 'Soupe Crème de Champignons', en: 'Cream of Mushroom Soup' },
+    description: { fr: 'Soupe crémeuse aux champignons sauvages', en: 'Creamy wild mushroom soup' },
+    price: 10.49,
+    image: '/images/menu/soup-mushroom.jpg',
+    category: 'soups',
+    servingSize: '500ml',
+    nutrition: { calories: 280, protein: 8, carbs: 24, fat: 18 },
+    dietaryTags: ['vegetarian', 'glutenfree'],
+  },
+
+  // Prepared Dishes
+  {
+    id: 'prepared-1',
+    name: { fr: 'Lasagne Maison', en: 'Homemade Lasagna' },
+    description: { fr: 'Lasagne traditionnelle avec sauce bolognaise', en: 'Traditional lasagna with bolognese sauce' },
+    price: 14.99,
+    image: '/images/menu/lasagna.jpg',
+    category: 'prepared',
+    servingSize: '350g',
+    nutrition: { calories: 480, protein: 28, carbs: 42, fat: 22 },
+  },
+  {
+    id: 'prepared-2',
+    name: { fr: 'Coq au Vin', en: 'Coq au Vin' },
+    description: { fr: 'Poulet braisé au vin rouge avec légumes', en: 'Chicken braised in red wine with vegetables' },
+    price: 16.99,
+    image: '/images/menu/coq-au-vin.jpg',
+    category: 'prepared',
+    servingSize: '400g',
+    nutrition: { calories: 420, protein: 35, carbs: 18, fat: 24 },
+    dietaryTags: ['glutenfree'],
+  },
+  {
+    id: 'prepared-3',
+    name: { fr: 'Pâté Chinois', en: 'Shepherd\'s Pie' },
+    description: { fr: 'Plat réconfortant traditionnel québécois', en: 'Traditional Quebec comfort food' },
+    price: 13.99,
+    image: '/images/menu/pate-chinois.jpg',
+    category: 'prepared',
+    servingSize: '400g',
+    nutrition: { calories: 520, protein: 26, carbs: 48, fat: 26 },
+  },
+  {
+    id: 'prepared-4',
+    name: { fr: 'Tourtière du Lac', en: 'Meat Pie' },
+    description: { fr: 'Tourtière traditionnelle aux trois viandes', en: 'Traditional three-meat pie' },
+    price: 15.99,
+    image: '/images/menu/tourtiere.jpg',
+    category: 'prepared',
+    servingSize: '350g',
+    nutrition: { calories: 560, protein: 32, carbs: 38, fat: 32 },
+  },
+  {
+    id: 'prepared-5',
+    name: { fr: 'Ratatouille Provençale', en: 'Provençal Ratatouille' },
+    description: { fr: 'Légumes méditerranéens mijotés', en: 'Mediterranean stewed vegetables' },
+    price: 12.99,
+    image: '/images/menu/ratatouille.jpg',
+    category: 'prepared',
+    servingSize: '350g',
+    nutrition: { calories: 180, protein: 5, carbs: 28, fat: 8 },
+    dietaryTags: ['vegan', 'glutenfree', 'organic'],
+  },
+
+  // Meats
+  {
+    id: 'meat-1',
+    name: { fr: 'Poulet Rôti', en: 'Roasted Chicken' },
+    description: { fr: 'Poulet entier rôti aux herbes', en: 'Whole roasted chicken with herbs' },
+    price: 18.99,
+    image: '/images/menu/roasted-chicken.jpg',
+    category: 'meats',
+    servingSize: '1.2kg',
+    nutrition: { calories: 650, protein: 72, carbs: 2, fat: 38 },
+    dietaryTags: ['glutenfree'],
+  },
+  {
+    id: 'meat-2',
+    name: { fr: 'Bœuf Bourguignon', en: 'Beef Bourguignon' },
+    description: { fr: 'Bœuf mijoté au vin rouge', en: 'Beef stewed in red wine' },
+    price: 19.99,
+    image: '/images/menu/beef-bourguignon.jpg',
+    category: 'meats',
+    servingSize: '400g',
+    nutrition: { calories: 520, protein: 42, carbs: 16, fat: 32 },
+    dietaryTags: ['glutenfree'],
+  },
+  {
+    id: 'meat-3',
+    name: { fr: 'Côtelettes de Porc Grillées', en: 'Grilled Pork Chops' },
+    description: { fr: 'Côtelettes de porc marinées et grillées', en: 'Marinated and grilled pork chops' },
+    price: 16.99,
+    image: '/images/menu/pork-chops.jpg',
+    category: 'meats',
+    servingSize: '300g',
+    nutrition: { calories: 480, protein: 38, carbs: 4, fat: 34 },
+    dietaryTags: ['glutenfree'],
+  },
+
+  // Vegetables
+  {
+    id: 'veg-1',
+    name: { fr: 'Gratin Dauphinois', en: 'Potato Gratin' },
+    description: { fr: 'Gratin de pommes de terre crémeux', en: 'Creamy potato gratin' },
+    price: 9.99,
+    image: '/images/menu/gratin.jpg',
+    category: 'vegetables',
+    servingSize: '300g',
+    nutrition: { calories: 320, protein: 10, carbs: 38, fat: 16 },
+    dietaryTags: ['vegetarian', 'glutenfree'],
+  },
+  {
+    id: 'veg-2',
+    name: { fr: 'Légumes Rôtis', en: 'Roasted Vegetables' },
+    description: { fr: 'Assortiment de légumes de saison rôtis', en: 'Assorted seasonal roasted vegetables' },
+    price: 8.99,
+    image: '/images/menu/roasted-veg.jpg',
+    category: 'vegetables',
+    servingSize: '300g',
+    nutrition: { calories: 160, protein: 4, carbs: 24, fat: 7 },
+    dietaryTags: ['vegan', 'glutenfree', 'organic'],
+  },
+
+  // Desserts
+  {
+    id: 'dessert-1',
+    name: { fr: 'Brownie au Chocolat', en: 'Chocolate Brownie' },
+    description: { fr: 'Brownie fondant au chocolat noir', en: 'Fudgy dark chocolate brownie' },
+    price: 5.99,
+    image: '/images/menu/brownie.jpg',
+    category: 'desserts',
+    servingSize: '120g',
+    nutrition: { calories: 380, protein: 5, carbs: 48, fat: 20 },
+    dietaryTags: ['vegetarian'],
+  },
+  {
+    id: 'dessert-2',
+    name: { fr: 'Carré aux Dattes', en: 'Date Square' },
+    description: { fr: 'Carré traditionnel aux dattes', en: 'Traditional date square' },
+    price: 4.99,
+    image: '/images/menu/date-square.jpg',
+    category: 'desserts',
+    servingSize: '100g',
+    nutrition: { calories: 280, protein: 3, carbs: 42, fat: 12 },
+    dietaryTags: ['vegetarian'],
+  },
+  {
+    id: 'dessert-3',
+    name: { fr: 'Tiramisu au Bailey\'s', en: 'Bailey\'s Tiramisu' },
+    description: { fr: 'Tiramisu crémeux au Bailey\'s', en: 'Creamy Bailey\'s tiramisu' },
+    price: 7.99,
+    image: '/images/menu/tiramisu.jpg',
+    category: 'desserts',
+    servingSize: '150g',
+    nutrition: { calories: 420, protein: 8, carbs: 38, fat: 26 },
+    dietaryTags: ['vegetarian'],
+  },
+  {
+    id: 'dessert-4',
+    name: { fr: 'Pain aux Bananes et Chocolat', en: 'Banana Chocolate Bread' },
+    description: { fr: 'Pain moelleux aux bananes et pépites de chocolat', en: 'Moist banana bread with chocolate chips' },
+    price: 6.49,
+    image: '/images/menu/banana-bread.jpg',
+    category: 'desserts',
+    servingSize: '130g',
+    nutrition: { calories: 320, protein: 5, carbs: 48, fat: 14 },
+    dietaryTags: ['vegetarian'],
+  },
+
+  // Lunch Boxes - Kids
+  {
+    id: 'lunch-kids-1',
+    name: { fr: 'Boîte à Lunch Enfant - Classique', en: 'Kids Lunch Box - Classic' },
+    description: { fr: 'Sandwich, légumes, fruits et biscuit', en: 'Sandwich, vegetables, fruit and cookie' },
+    price: 8.99,
+    image: '/images/menu/lunch-kids-classic.jpg',
+    category: 'lunchboxes',
+    servingSize: '400g',
+    nutrition: { calories: 420, protein: 18, carbs: 52, fat: 16 },
+  },
+  {
+    id: 'lunch-kids-2',
+    name: { fr: 'Boîte à Lunch Enfant - Végé', en: 'Kids Lunch Box - Veggie' },
+    description: { fr: 'Wrap végétarien, crudités et compote', en: 'Vegetarian wrap, raw veggies and applesauce' },
+    price: 8.99,
+    image: '/images/menu/lunch-kids-veggie.jpg',
+    category: 'lunchboxes',
+    servingSize: '380g',
+    nutrition: { calories: 380, protein: 12, carbs: 58, fat: 12 },
+    dietaryTags: ['vegetarian'],
+  },
+
+  // Lunch Boxes - Adults
+  {
+    id: 'lunch-adult-1',
+    name: { fr: 'Boîte à Lunch Adulte - Protéines', en: 'Adult Lunch Box - Protein' },
+    description: { fr: 'Poulet grillé, quinoa et légumes', en: 'Grilled chicken, quinoa and vegetables' },
+    price: 12.99,
+    image: '/images/menu/lunch-adult-protein.jpg',
+    category: 'lunchboxes',
+    servingSize: '500g',
+    nutrition: { calories: 520, protein: 42, carbs: 48, fat: 18 },
+    dietaryTags: ['glutenfree'],
+  },
+  {
+    id: 'lunch-adult-2',
+    name: { fr: 'Boîte à Lunch Adulte - Végétarien', en: 'Adult Lunch Box - Vegetarian' },
+    description: { fr: 'Salade composée, houmous et pain pita', en: 'Mixed salad, hummus and pita bread' },
+    price: 11.99,
+    image: '/images/menu/lunch-adult-veggie.jpg',
+    category: 'lunchboxes',
+    servingSize: '480g',
+    nutrition: { calories: 460, protein: 16, carbs: 62, fat: 16 },
+    dietaryTags: ['vegetarian', 'vegan'],
+  },
+  {
+    id: 'lunch-adult-3',
+    name: { fr: 'Boîte à Lunch Adulte - Faible en Glucides', en: 'Adult Lunch Box - Low Carb' },
+    description: { fr: 'Saumon, légumes verts et avocat', en: 'Salmon, green vegetables and avocado' },
+    price: 14.99,
+    image: '/images/menu/lunch-adult-lowcarb.jpg',
+    category: 'lunchboxes',
+    servingSize: '450g',
+    nutrition: { calories: 480, protein: 38, carbs: 18, fat: 32 },
+    dietaryTags: ['glutenfree', 'lowsugar'],
+  },
+
+  // Sauces
+  {
+    id: 'sauce-1',
+    name: { fr: 'Sauce Béchamel', en: 'Béchamel Sauce' },
+    description: { fr: 'Sauce blanche crémeuse classique', en: 'Classic creamy white sauce' },
+    price: 4.99,
+    image: '/images/menu/sauce-bechamel.jpg',
+    category: 'sauces',
+    servingSize: '250ml',
+    nutrition: { calories: 180, protein: 4, carbs: 12, fat: 14 },
+    dietaryTags: ['vegetarian'],
+  },
+  {
+    id: 'sauce-2',
+    name: { fr: 'Sauce Tomate Maison', en: 'Homemade Tomato Sauce' },
+    description: { fr: 'Sauce tomate mijotée aux herbes', en: 'Simmered tomato sauce with herbs' },
+    price: 3.99,
+    image: '/images/menu/sauce-tomato.jpg',
+    category: 'sauces',
+    servingSize: '250ml',
+    nutrition: { calories: 80, protein: 2, carbs: 14, fat: 3 },
+    dietaryTags: ['vegan', 'glutenfree', 'organic'],
+  },
+  {
+    id: 'sauce-3',
+    name: { fr: 'Sauce BBQ', en: 'BBQ Sauce' },
+    description: { fr: 'Sauce barbecue fumée et sucrée', en: 'Smoky and sweet barbecue sauce' },
+    price: 4.49,
+    image: '/images/menu/sauce-bbq.jpg',
+    category: 'sauces',
+    servingSize: '250ml',
+    nutrition: { calories: 120, protein: 1, carbs: 28, fat: 1 },
+    dietaryTags: ['vegan', 'glutenfree'],
+  },
+];

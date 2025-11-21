@@ -1,6 +1,17 @@
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users } from "../drizzle/schema";
+import { 
+  InsertUser, 
+  users,
+  conversations,
+  InsertConversation,
+  leads,
+  InsertLead,
+  contactSubmissions,
+  InsertContactSubmission,
+  newsletterSubscriptions,
+  InsertNewsletterSubscription
+} from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -89,4 +100,123 @@ export async function getUserByOpenId(openId: string) {
   return result.length > 0 ? result[0] : undefined;
 }
 
-// TODO: add feature queries here as your schema grows.
+// Conversation helpers
+export async function saveConversation(conversation: InsertConversation) {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Database not available");
+  }
+
+  const result = await db.insert(conversations).values(conversation);
+  return result;
+}
+
+export async function getConversationsBySessionId(sessionId: string) {
+  const db = await getDb();
+  if (!db) {
+    return [];
+  }
+
+  const result = await db
+    .select()
+    .from(conversations)
+    .where(eq(conversations.sessionId, sessionId))
+    .orderBy(conversations.createdAt);
+
+  return result;
+}
+
+// Lead helpers
+export async function saveLead(lead: InsertLead) {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Database not available");
+  }
+
+  const result = await db.insert(leads).values(lead);
+  return result;
+}
+
+export async function getAllLeads() {
+  const db = await getDb();
+  if (!db) {
+    return [];
+  }
+
+  const result = await db
+    .select()
+    .from(leads)
+    .orderBy(leads.createdAt);
+
+  return result;
+}
+
+export async function updateLeadStatus(id: number, status: "new" | "contacted" | "converted" | "closed") {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Database not available");
+  }
+
+  const result = await db
+    .update(leads)
+    .set({ status, updatedAt: new Date() })
+    .where(eq(leads.id, id));
+
+  return result;
+}
+
+// Contact submission helpers
+export async function saveContactSubmission(submission: InsertContactSubmission) {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Database not available");
+  }
+
+  const result = await db.insert(contactSubmissions).values(submission);
+  return result;
+}
+
+export async function getAllContactSubmissions() {
+  const db = await getDb();
+  if (!db) {
+    return [];
+  }
+
+  const result = await db
+    .select()
+    .from(contactSubmissions)
+    .orderBy(contactSubmissions.createdAt);
+
+  return result;
+}
+
+// Newsletter subscription helpers
+export async function saveNewsletterSubscription(subscription: InsertNewsletterSubscription) {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Database not available");
+  }
+
+  try {
+    const result = await db.insert(newsletterSubscriptions).values(subscription);
+    return result;
+  } catch (error) {
+    // Handle duplicate email
+    console.error("[Database] Failed to save newsletter subscription:", error);
+    throw error;
+  }
+}
+
+export async function unsubscribeNewsletter(email: string) {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Database not available");
+  }
+
+  const result = await db
+    .update(newsletterSubscriptions)
+    .set({ isActive: false, unsubscribedAt: new Date() })
+    .where(eq(newsletterSubscriptions.email, email));
+
+  return result;
+}
