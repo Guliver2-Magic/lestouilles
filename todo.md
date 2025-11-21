@@ -108,3 +108,23 @@
 - [x] Ensure carousel auto-plays and loops
 - [x] Test carousel responsiveness on mobile
 - [x] Fix missing product images - update image paths to use existing images
+
+## Online Ordering System with Stripe
+- [x] Add Stripe feature to project using webdev_add_feature
+- [x] Configure Stripe API keys and webhook
+- [x] Create orders table in database schema
+- [x] Build checkout page with cart summary
+- [x] Add delivery date/time selection component
+- [x] Implement delivery method selection (pickup/delivery)
+- [x] Add delivery address form
+- [x] Integrate Stripe payment processing
+- [x] Create order confirmation page route
+- [x] Implement automatic email confirmation via Stripe
+- [x] Send order notification via Stripe webhook
+- [ ] Create order management dashboard for admin (future)
+- [x] Add order status tracking in database
+- [x] Test complete checkout flow
+- [x] Test Stripe payment integration
+- [x] Test email notifications
+- [x] Generate appropriate images for each product category (salads, sandwiches, main dishes, etc.)
+- [x] Map generated images to correct products in menu data

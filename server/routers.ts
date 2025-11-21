@@ -10,6 +10,20 @@ import {
   saveContactSubmission,
   saveNewsletterSubscription,
 } from "./db";
+import {
+  createOrder,
+  createOrderItems,
+  getOrderByNumber,
+  getOrderItems,
+  getUserOrders,
+  generateOrderNumber,
+} from "./orders-db";
+import { ENV } from "./_core/env";
+import Stripe from "stripe";
+
+const stripe = new Stripe(ENV.stripeSecretKey, {
+  apiVersion: "2025-11-17.clover",
+});
 
 export const appRouter = router({
   system: systemRouter,
@@ -164,6 +178,159 @@ export const appRouter = router({
 
         return { success: true };
       }),
+  }),
+
+  orders: router({
+    createCheckout: publicProcedure
+      .input(
+        z.object({
+          customerName: z.string(),
+          customerEmail: z.string().email(),
+          customerPhone: z.string(),
+          deliveryMethod: z.enum(["pickup", "delivery"]),
+          deliveryDate: z.string(),
+          deliveryTime: z.string(),
+          deliveryAddress: z.string().optional(),
+          deliveryInstructions: z.string().optional(),
+          notes: z.string().optional(),
+          items: z.array(
+            z.object({
+              productId: z.string(),
+              productName: z.string(),
+              productCategory: z.string(),
+              productImage: z.string().optional(),
+              unitPrice: z.number(),
+              quantity: z.number(),
+            })
+          ),
+          language: z.enum(["fr", "en"]),
+        })
+      )
+      .mutation(async ({ input, ctx }) => {
+        // Calculate totals
+        const subtotal = input.items.reduce((sum, item) => sum + item.unitPrice * item.quantity, 0);
+        const deliveryFee = input.deliveryMethod === "delivery" ? 10_00 : 0;
+        const tax = Math.round((subtotal + deliveryFee) * 0.14975);
+        const total = subtotal + deliveryFee + tax;
+
+        // Generate order number
+        const orderNumber = generateOrderNumber();
+
+        // Create order in database
+        const orderId = await createOrder({
+          userId: ctx.user?.id || null,
+          orderNumber,
+          customerName: input.customerName,
+          customerEmail: input.customerEmail,
+          customerPhone: input.customerPhone,
+          deliveryMethod: input.deliveryMethod,
+          deliveryDate: new Date(input.deliveryDate),
+          deliveryTime: input.deliveryTime,
+          deliveryAddress: input.deliveryAddress || null,
+          deliveryInstructions: input.deliveryInstructions || null,
+          subtotal,
+          tax,
+          deliveryFee,
+          total,
+          language: input.language,
+          notes: input.notes || null,
+          status: "pending",
+        });
+
+        // Create order items
+        await createOrderItems(
+          input.items.map((item) => ({
+            orderId,
+            productId: item.productId,
+            productName: item.productName,
+            productCategory: item.productCategory,
+            productImage: item.productImage || null,
+            unitPrice: item.unitPrice,
+            quantity: item.quantity,
+            subtotal: item.unitPrice * item.quantity,
+          }))
+        );
+
+        // Create Stripe checkout session
+        const session = await stripe.checkout.sessions.create({
+          mode: "payment",
+          customer_email: input.customerEmail,
+          client_reference_id: orderId.toString(),
+          metadata: {
+            order_id: orderId.toString(),
+            order_number: orderNumber,
+            customer_email: input.customerEmail,
+            customer_name: input.customerName,
+          },
+          line_items: input.items.map((item) => ({
+            price_data: {
+              currency: "cad",
+              product_data: {
+                name: item.productName,
+                images: item.productImage ? [item.productImage] : [],
+              },
+              unit_amount: item.unitPrice,
+            },
+            quantity: item.quantity,
+          })),
+          // Add delivery fee if applicable
+          ...(deliveryFee > 0
+            ? {
+                line_items: [
+                  ...input.items.map((item) => ({
+                    price_data: {
+                      currency: "cad",
+                      product_data: {
+                        name: item.productName,
+                      },
+                      unit_amount: item.unitPrice,
+                    },
+                    quantity: item.quantity,
+                  })),
+                  {
+                    price_data: {
+                      currency: "cad",
+                      product_data: {
+                        name: input.language === "fr" ? "Frais de livraison" : "Delivery Fee",
+                      },
+                      unit_amount: deliveryFee,
+                    },
+                    quantity: 1,
+                  },
+                ],
+              }
+            : {}),
+          success_url: `${ctx.req.headers.origin}/order-confirmation?session_id={CHECKOUT_SESSION_ID}`,
+          cancel_url: `${ctx.req.headers.origin}/checkout`,
+          allow_promotion_codes: true,
+        });
+
+        return {
+          checkoutUrl: session.url!,
+          sessionId: session.id,
+          orderId,
+          orderNumber,
+        };
+      }),
+
+    getOrder: publicProcedure
+      .input(z.object({ orderNumber: z.string() }))
+      .query(async ({ input }) => {
+        const order = await getOrderByNumber(input.orderNumber);
+        if (!order) {
+          throw new Error("Order not found");
+        }
+
+        const items = await getOrderItems(order.id);
+        return { order, items };
+      }),
+
+    getUserOrders: publicProcedure.query(async ({ ctx }) => {
+      if (!ctx.user) {
+        return [];
+      }
+      return await getUserOrders(ctx.user.id);
+    }),
   }),
 
   newsletter: router({

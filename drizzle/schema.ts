@@ -102,3 +102,73 @@ export const newsletterSubscriptions = mysqlTable("newsletterSubscriptions", {
 
 export type NewsletterSubscription = typeof newsletterSubscriptions.$inferSelect;
 export type InsertNewsletterSubscription = typeof newsletterSubscriptions.$inferInsert;
+
+/**
+ * Orders table
+ * Stores customer orders with delivery information
+ */
+export const orders = mysqlTable("orders", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId"),
+  orderNumber: varchar("orderNumber", { length: 50 }).notNull().unique(),
+  
+  // Customer information
+  customerName: varchar("customerName", { length: 255 }).notNull(),
+  customerEmail: varchar("customerEmail", { length: 320 }).notNull(),
+  customerPhone: varchar("customerPhone", { length: 50 }).notNull(),
+  
+  // Delivery information
+  deliveryMethod: mysqlEnum("deliveryMethod", ["pickup", "delivery"]).notNull(),
+  deliveryDate: timestamp("deliveryDate").notNull(),
+  deliveryTime: varchar("deliveryTime", { length: 20 }).notNull(),
+  deliveryAddress: text("deliveryAddress"),
+  deliveryInstructions: text("deliveryInstructions"),
+  
+  // Order details
+  subtotal: int("subtotal").notNull(), // in cents
+  tax: int("tax").notNull(), // in cents
+  deliveryFee: int("deliveryFee").default(0).notNull(), // in cents
+  total: int("total").notNull(), // in cents
+  
+  // Payment information (Stripe IDs only)
+  stripePaymentIntentId: varchar("stripePaymentIntentId", { length: 255 }),
+  stripeCustomerId: varchar("stripeCustomerId", { length: 255 }),
+  
+  // Order status
+  status: mysqlEnum("status", ["pending", "confirmed", "preparing", "ready", "completed", "cancelled"]).default("pending").notNull(),
+  
+  // Metadata
+  language: varchar("language", { length: 10 }).default("fr").notNull(),
+  notes: text("notes"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Order = typeof orders.$inferSelect;
+export type InsertOrder = typeof orders.$inferInsert;
+
+/**
+ * Order items table
+ * Stores individual items in each order
+ */
+export const orderItems = mysqlTable("orderItems", {
+  id: int("id").autoincrement().primaryKey(),
+  orderId: int("orderId").notNull(),
+  
+  // Product information (snapshot at time of order)
+  productId: varchar("productId", { length: 100 }).notNull(),
+  productName: varchar("productName", { length: 255 }).notNull(),
+  productCategory: varchar("productCategory", { length: 100 }).notNull(),
+  productImage: text("productImage"),
+  
+  // Pricing
+  unitPrice: int("unitPrice").notNull(), // in cents
+  quantity: int("quantity").notNull(),
+  subtotal: int("subtotal").notNull(), // in cents
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type OrderItem = typeof orderItems.$inferSelect;
+export type InsertOrderItem = typeof orderItems.$inferInsert;

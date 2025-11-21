@@ -15,6 +15,13 @@
       "when": 1763744014202,
       "tag": "0001_same_gorgon",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1763748878717,
+      "tag": "0002_dry_sentinel",
+      "breakpoints": true
     }
   ]
 }
