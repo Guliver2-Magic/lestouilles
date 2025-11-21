@@ -163,10 +163,10 @@ export default function Home() {
       {/* Header with Parallax */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b">
         <div className="container flex items-center justify-between h-16">
-          <div className="flex items-center gap-2">
+          <Link href="/" className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity">
             <img src={APP_LOGO} alt={APP_TITLE} className="h-10 w-10" />
             <span className="font-serif text-xl font-bold text-primary">Les Touillés</span>
-          </div>
+          </Link>
           
           <nav className="hidden md:flex items-center gap-6">
             <a href="#home" className="hover:text-primary transition-colors">{t.nav.home}</a>
@@ -200,17 +200,24 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Hero Section with Parallax Effect */}
+      {/* Hero Section with Video Background */}
       <section 
         id="home"
         className="relative h-screen flex items-center justify-center overflow-hidden"
-        style={{
-          backgroundImage: "url('https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=1920')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundAttachment: "fixed"
-        }}
       >
+        {/* Video Background */}
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover"
+          poster="https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=1920"
+        >
+          <source src="https://videos.pexels.com/video-files/3195394/3195394-uhd_2560_1440_25fps.mp4" type="video/mp4" />
+          {/* Fallback image if video doesn't load */}
+        </video>
+        
         {/* Overlay */}
         <div className="absolute inset-0 bg-black/50" />
         
@@ -318,10 +325,22 @@ export default function Home() {
             {filteredMenu.map((item) => (
               <Card key={item.id} className="overflow-hidden hover:shadow-xl transition-shadow group">
                 <div className="relative h-48 overflow-hidden bg-muted">
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10" />
-                  <div className="absolute inset-0 flex items-center justify-center">
+                  {item.image ? (
+                    <img 
+                      src={item.image} 
+                      alt={item.name[language]}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      onError={(e) => {
+                        // Fallback if image fails to load
+                        e.currentTarget.style.display = 'none';
+                        e.currentTarget.parentElement!.querySelector('.fallback-icon')?.classList.remove('hidden');
+                      }}
+                    />
+                  ) : null}
+                  <div className="fallback-icon absolute inset-0 flex items-center justify-center">
                     <ChefHat className="h-16 w-16 text-muted-foreground/20" />
                   </div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10" />
                   {item.dietary && (
                     <div className="absolute top-2 right-2 z-20 flex gap-1">
                       {item.dietary.map((tag) => (
@@ -336,9 +355,17 @@ export default function Home() {
                   <h3 className="font-bold text-lg mb-1">
                     {item.name[language]}
                   </h3>
-                  <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
+                  <p className="text-sm text-muted-foreground mb-2 line-clamp-2">
                     {item.description[language]}
                   </p>
+                  {item.nutritionalTips && (
+                    <div className="mb-3 p-2 bg-green-50 dark:bg-green-900/20 rounded-md border border-green-200 dark:border-green-800">
+                      <p className="text-xs text-green-700 dark:text-green-300 flex items-start gap-1">
+                        <span className="text-green-600 dark:text-green-400 font-bold">💡</span>
+                        <span>{item.nutritionalTips[language]}</span>
+                      </p>
+                    </div>
+                  )}
                   <div className="flex items-center justify-between mb-3">
                     <span className="text-2xl font-bold text-primary">
                       ${item.price.toFixed(2)}

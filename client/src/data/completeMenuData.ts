@@ -22,6 +22,10 @@ export interface MenuItem {
     carbs: number;
     fat: number;
   };
+  nutritionalTips?: {
+    fr: string;
+    en: string;
+  };
 }
 
 export const completeMenu: MenuItem[] = [
@@ -33,7 +37,11 @@ export const completeMenu: MenuItem[] = [
     price: 8.50,
     servings: "1 personne",
     category: "Sandwichs",
-    image: "/images/sandwiches/classique.jpg"
+    image: "/images/sandwiches/classique.jpg",
+    nutritionalTips: { 
+      fr: "Riche en protéines et fibres. Parfait pour un déjeuner équilibré qui vous garde rassasié.", 
+      en: "Rich in protein and fiber. Perfect for a balanced lunch that keeps you satisfied." 
+    }
   },
   {
     id: "sand-002",
@@ -43,7 +51,11 @@ export const completeMenu: MenuItem[] = [
     servings: "1 personne",
     category: "Sandwichs",
     dietary: ["Vegetarian", "Vegan"],
-    image: "/images/sandwiches/vege.jpg"
+    image: "/images/sandwiches/vege.jpg",
+    nutritionalTips: { 
+      fr: "Riche en fibres et vitamines. Excellente source de nutriments végétaux pour une santé optimale.", 
+      en: "Rich in fiber and vitamins. Excellent source of plant nutrients for optimal health." 
+    }
   },
   {
     id: "sand-003",

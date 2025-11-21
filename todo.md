@@ -82,3 +82,19 @@
 - [x] Add visual enhancements inspired by top catering sites
 - [x] Test parallax performance and responsiveness
 - [x] Add serving size (number of people) for each menu item
+
+## Video Background Enhancement
+- [x] Find suitable cooking/catering video for hero background
+- [x] Implement HTML5 video element in hero section
+- [x] Add video controls and autoplay functionality
+- [ ] Ensure video is optimized for web (compressed, proper format)
+- [ ] Add fallback image for browsers that don't support video
+- [ ] Test video performance on mobile devices
+- [ ] Ensure video doesn't impact page load speed
+- [ ] Extract all product images from original lestouilles.ca website
+- [ ] Download and save product images to project
+- [ ] Update menu data with correct image paths
+- [x] Fix broken logo link in header
+- [x] Add nutritional tips and health benefits for each menu item
+- [x] Display nutritional information in product cards
+- [x] Add educational value about healthy eating
