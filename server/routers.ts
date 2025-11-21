@@ -358,6 +358,121 @@ export const appRouter = router({
       }),
   }),
 
+  reservations: router({
+    create: publicProcedure
+      .input(
+        z.object({
+          customerName: z.string().min(1),
+          customerEmail: z.string().email(),
+          customerPhone: z.string().min(1),
+          eventType: z.enum(["wedding", "corporate", "private_party", "other"]),
+          eventDate: z.string(),
+          eventTime: z.string(),
+          guestCount: z.number().min(1),
+          venue: z.string().optional(),
+          specialRequirements: z.string().optional(),
+          dietaryRestrictions: z.string().optional(),
+          estimatedBudget: z.number().optional(),
+          language: z.enum(["fr", "en"]),
+        })
+      )
+      .mutation(async ({ input }) => {
+        const { createReservation } = await import("./db");
+        const { notifyOwner } = await import("./_core/notification");
+        
+        await createReservation({
+          customerName: input.customerName,
+          customerEmail: input.customerEmail,
+          customerPhone: input.customerPhone,
+          eventType: input.eventType,
+          eventDate: new Date(input.eventDate),
+          eventTime: input.eventTime,
+          guestCount: input.guestCount,
+          venue: input.venue,
+          specialRequirements: input.specialRequirements,
+          dietaryRestrictions: input.dietaryRestrictions,
+          estimatedBudget: input.estimatedBudget,
+          status: "pending",
+        });
+
+        // Notify owner of new reservation
+        const eventTypeLabels = {
+          wedding: input.language === "fr" ? "Mariage" : "Wedding",
+          corporate: input.language === "fr" ? "Événement corporatif" : "Corporate event",
+          private_party: input.language === "fr" ? "Fête privée" : "Private party",
+          other: input.language === "fr" ? "Autre" : "Other",
+        };
+
+        const eventDate = new Date(input.eventDate).toLocaleDateString(input.language === "fr" ? "fr-CA" : "en-CA", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        });
+
+        const notificationContent = `
+Nouvelle réservation reçue:
+
+Client: ${input.customerName}
+Email: ${input.customerEmail}
+Téléphone: ${input.customerPhone}
+
+Type d'événement: ${eventTypeLabels[input.eventType]}
+Date: ${eventDate}
+Heure: ${input.eventTime}
+Nombre d'invités: ${input.guestCount}
+${input.venue ? `Lieu: ${input.venue}` : ""}
+${input.estimatedBudget ? `Budget estimé: ${(input.estimatedBudget / 100).toFixed(2)} CAD` : ""}
+${input.specialRequirements ? `\nExigences spéciales: ${input.specialRequirements}` : ""}
+${input.dietaryRestrictions ? `\nRestrictions alimentaires: ${input.dietaryRestrictions}` : ""}
+        `.trim();
+
+        try {
+          await notifyOwner({
+            title: input.language === "fr" ? "Nouvelle réservation d'événement" : "New event reservation",
+            content: notificationContent,
+          });
+        } catch (error) {
+          console.error("Failed to send owner notification:", error);
+        }
+
+        return { success: true };
+      }),
+
+    listAll: publicProcedure.query(async ({ ctx }) => {
+      if (!ctx.user || ctx.user.role !== "admin") {
+        throw new Error("Unauthorized");
+      }
+      const { getAllReservations } = await import("./db");
+      return await getAllReservations();
+    }),
+
+    getById: publicProcedure
+      .input(z.object({ id: z.number() }))
+      .query(async ({ input, ctx }) => {
+        if (!ctx.user || ctx.user.role !== "admin") {
+          throw new Error("Unauthorized");
+        }
+        const { getReservationById } = await import("./db");
+        return await getReservationById(input.id);
+      }),
+
+    updateStatus: publicProcedure
+      .input(
+        z.object({
+          id: z.number(),
+          status: z.enum(["pending", "confirmed", "cancelled", "completed"]),
+        })
+      )
+      .mutation(async ({ input, ctx }) => {
+        if (!ctx.user || ctx.user.role !== "admin") {
+          throw new Error("Unauthorized");
+        }
+        const { updateReservationStatus } = await import("./db");
+        await updateReservationStatus(input.id, input.status);
+        return { success: true };
+      }),
+  }),
+
   newsletter: router({
     subscribe: publicProcedure
       .input(

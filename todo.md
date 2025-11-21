@@ -163,17 +163,17 @@
 - [x] Update menu data to map each product to its correct image
 
 ## Event Reservation System
-- [ ] Create reservations table in database schema
+- [x] Create reservations table in database schema
 - [ ] Create availability calendar table
-- [ ] Build reservation/booking page with calendar
-- [ ] Add event type selection (wedding, corporate, private party)
-- [ ] Add guest count and date/time selection
+- [x] Build reservation/booking page with calendar
+- [x] Add event type selection (wedding, corporate, private party)
+- [x] Add guest count and date/time selection
 - [ ] Implement availability checking
-- [ ] Create tRPC procedures for reservation management
+- [x] Create tRPC procedures for reservation management
 - [ ] Send automatic confirmation email to client
-- [ ] Send reservation notification to owner
-- [ ] Add admin dashboard to manage reservations
-- [ ] Test complete reservation flow
+- [x] Send reservation notification to owner
+- [x] Add admin dashboard to manage reservations
+- [x] Test complete reservation flow
 
 ## Admin Dashboard for Order Management
 - [x] Create /admin/orders page component
@@ -188,3 +188,34 @@
 - [x] Create tRPC procedures for admin order management
 - [x] Add statistics dashboard (total orders, revenue, pending orders)
 - [x] Test admin dashboard functionality
+
+## Complete Nutritional Information for All Products
+- [ ] Add nutrition data (calories, protein, carbs, fat) to all sandwiches
+- [ ] Add nutrition data to all salads
+- [ ] Add nutrition data to all main dishes
+- [ ] Add nutrition data to all soups
+- [ ] Add nutrition data to all desserts
+- [ ] Add nutrition data to all lunch boxes
+- [ ] Add nutrition data to all buffet items
+- [ ] Verify nutrition displays on all product cards
+
+## Extract Real Product Photos from Original Website
+- [ ] Browse original lestouilles.ca online ordering menu
+- [ ] Extract all product image URLs
+- [ ] Download real product photos
+- [ ] Organize photos by category
+- [ ] Update menu data with real photo paths
+
+## Event Reservation System Implementation  
+- [x] Create reservations table in database schema
+- [ ] Add availability calendar table
+- [x] Create reservation booking page with calendar
+- [x] Implement date/time picker for event selection
+- [x] Add event type selection (wedding, corporate, private party)
+- [x] Add guest count and special requirements fields
+- [x] Create tRPC procedures for reservation management
+- [ ] Implement availability checking logic
+- [ ] Send automatic confirmation email to customer
+- [x] Send reservation notification to owner
+- [x] Add admin dashboard for reservation management
+- [x] Test complete reservation flow

@@ -12,6 +12,8 @@ import Contact from "./pages/Contact";
 import Checkout from "./pages/Checkout";
 import Portfolio from "./pages/Portfolio";
 import AdminOrders from "./pages/AdminOrders";
+import Reservations from "./pages/Reservations";
+import AdminReservations from "./pages/AdminReservations";
 
 function Router() {
   return (
@@ -20,7 +22,9 @@ function Router() {
       <Route path={"/about"} component={About} />
       <Route path={"/contact"} component={Contact} />
       <Route path={"/checkout"} component={Checkout} />      <Route path={"/portfolio"} component={Portfolio} />
+      <Route path={"/reservations"} component={Reservations} />
       <Route path={"/admin/orders"} component={AdminOrders} />
+      <Route path={"/admin/reservations"} component={AdminReservations} />
       <Route path={"/404"} component={NotFound} />
       <Route component={NotFound} />
     </Switch>

@@ -172,3 +172,42 @@ export const orderItems = mysqlTable("orderItems", {
 
 export type OrderItem = typeof orderItems.$inferSelect;
 export type InsertOrderItem = typeof orderItems.$inferInsert;
+
+/**
+ * Event reservations table
+ * Stores event booking requests for weddings, corporate events, and private parties
+ */
+export const reservations = mysqlTable("reservations", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId"),
+  
+  // Customer information
+  customerName: varchar("customerName", { length: 255 }).notNull(),
+  customerEmail: varchar("customerEmail", { length: 320 }).notNull(),
+  customerPhone: varchar("customerPhone", { length: 20 }).notNull(),
+  
+  // Event details
+  eventType: mysqlEnum("eventType", ["wedding", "corporate", "private_party", "other"]).notNull(),
+  eventDate: timestamp("eventDate").notNull(),
+  eventTime: varchar("eventTime", { length: 10 }).notNull(), // e.g., "18:00"
+  guestCount: int("guestCount").notNull(),
+  
+  // Venue and requirements
+  venue: varchar("venue", { length: 500 }),
+  specialRequirements: text("specialRequirements"),
+  dietaryRestrictions: text("dietaryRestrictions"),
+  
+  // Budget and status
+  estimatedBudget: int("estimatedBudget"), // in cents
+  status: mysqlEnum("status", ["pending", "confirmed", "cancelled", "completed"]).default("pending").notNull(),
+  
+  // Admin notes
+  adminNotes: text("adminNotes"),
+  
+  // Timestamps
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Reservation = typeof reservations.$inferSelect;
+export type InsertReservation = typeof reservations.$inferInsert;

@@ -207,6 +207,9 @@ export default function Home() {
             <a href="/portfolio" className="hover:text-primary transition-colors">
               {language === "fr" ? "Portfolio" : "Portfolio"}
             </a>
+            <a href="/reservations" className="hover:text-primary transition-colors">
+              {language === "fr" ? "Réservations" : "Reservations"}
+            </a>
             <a href="/contact" className="hover:text-primary transition-colors">
               {t.nav.contact}
             </a>

@@ -1,0 +1,20 @@
+CREATE TABLE `reservations` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`userId` int,
+	`customerName` varchar(255) NOT NULL,
+	`customerEmail` varchar(320) NOT NULL,
+	`customerPhone` varchar(20) NOT NULL,
+	`eventType` enum('wedding','corporate','private_party','other') NOT NULL,
+	`eventDate` timestamp NOT NULL,
+	`eventTime` varchar(10) NOT NULL,
+	`guestCount` int NOT NULL,
+	`venue` varchar(500),
+	`specialRequirements` text,
+	`dietaryRestrictions` text,
+	`estimatedBudget` int,
+	`status` enum('pending','confirmed','cancelled','completed') NOT NULL DEFAULT 'pending',
+	`adminNotes` text,
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	`updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,
+	CONSTRAINT `reservations_id` PRIMARY KEY(`id`)
+);

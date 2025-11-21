@@ -220,3 +220,119 @@ export async function unsubscribeNewsletter(email: string) {
 
   return result;
 }
+
+// Reservation helpers
+export async function createReservation(reservation: {
+  customerName: string;
+  customerEmail: string;
+  customerPhone: string;
+  eventType: "wedding" | "corporate" | "private_party" | "other";
+  eventDate: Date;
+  eventTime: string;
+  guestCount: number;
+  venue?: string;
+  specialRequirements?: string;
+  dietaryRestrictions?: string;
+  estimatedBudget?: number;
+  status?: "pending" | "confirmed" | "cancelled";
+}) {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Database not available");
+  }
+
+  const { reservations } = await import("../drizzle/schema");
+  
+  const result = await db.insert(reservations).values({
+    customerName: reservation.customerName,
+    customerEmail: reservation.customerEmail,
+    customerPhone: reservation.customerPhone,
+    eventType: reservation.eventType,
+    eventDate: reservation.eventDate,
+    eventTime: reservation.eventTime,
+    guestCount: reservation.guestCount,
+    venue: reservation.venue || null,
+    specialRequirements: reservation.specialRequirements || null,
+    dietaryRestrictions: reservation.dietaryRestrictions || null,
+    estimatedBudget: reservation.estimatedBudget || null,
+    status: reservation.status || "pending",
+  });
+
+  return result;
+}
+
+export async function getAllReservations() {
+  const db = await getDb();
+  if (!db) {
+    return [];
+  }
+
+  const { reservations } = await import("../drizzle/schema");
+  const { desc } = await import("drizzle-orm");
+  
+  const result = await db
+    .select()
+    .from(reservations)
+    .orderBy(desc(reservations.eventDate));
+
+  return result;
+}
+
+export async function getReservationById(id: number) {
+  const db = await getDb();
+  if (!db) {
+    return null;
+  }
+
+  const { reservations } = await import("../drizzle/schema");
+  
+  const result = await db
+    .select()
+    .from(reservations)
+    .where(eq(reservations.id, id))
+    .limit(1);
+
+  return result.length > 0 ? result[0] : null;
+}
+
+export async function updateReservationStatus(
+  id: number,
+  status: "pending" | "confirmed" | "cancelled" | "completed"
+) {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Database not available");
+  }
+
+  const { reservations } = await import("../drizzle/schema");
+  
+  const result = await db
+    .update(reservations)
+    .set({ status })
+    .where(eq(reservations.id, id));
+
+  return result;
+}
+
+export async function getReservationsByDateRange(startDate: Date, endDate: Date) {
+  const db = await getDb();
+  if (!db) {
+    return [];
+  }
+
+  const { reservations } = await import("../drizzle/schema");
+  const { and, gte, lte } = await import("drizzle-orm");
+  
+  const result = await db
+    .select()
+    .from(reservations)
+    .where(
+      and(
+        gte(reservations.eventDate, startDate),
+        lte(reservations.eventDate, endDate)
+      )
+    )
+    .orderBy(reservations.eventDate);
+
+  return result;
+}
