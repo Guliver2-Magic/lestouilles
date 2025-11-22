@@ -1,0 +1,60 @@
+{
+  "query": "SELECT id, name, image FROM products LIMIT 10;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 494y6CgAR8Uu32w.cf8f73b2fa18 --database nG5FpW6QC2VPLHfftjzBXF --execute SELECT id, name, image FROM products LIMIT 10;",
+  "rows": [
+    {
+      "id": "1",
+      "name": "Test Sandwich",
+      "image": "/images/test.jpg"
+    },
+    {
+      "id": "2",
+      "name": "Updated Product",
+      "image": "/images/original.jpg"
+    },
+    {
+      "id": "30001",
+      "name": "Le Végétarien",
+      "image": "/images/menu/vegetarian-sandwich.jpg"
+    },
+    {
+      "id": "30002",
+      "name": "Le Poulet",
+      "image": "/images/menu/chicken-sandwich.jpg"
+    },
+    {
+      "id": "30003",
+      "name": "Le Smoked Meat",
+      "image": "/images/menu/smoked-meat.jpg"
+    },
+    {
+      "id": "30004",
+      "name": "Salade César",
+      "image": "https://d2xsxph8kpxj0f.cloudfront.net/310419663030752959/nG5FpW6QC2VPLHfftjzBXF/generated/1763816959538.png"
+    },
+    {
+      "id": "30005",
+      "name": "Salade Grecque",
+      "image": "https://d2xsxph8kpxj0f.cloudfront.net/310419663030752959/nG5FpW6QC2VPLHfftjzBXF/generated/1763817042137.png"
+    },
+    {
+      "id": "30006",
+      "name": "Lasagne",
+      "image": "/images/menu/lasagna.jpg"
+    },
+    {
+      "id": "30007",
+      "name": "Poulet Rôti",
+      "image": "/images/menu/roasted-chicken.jpg"
+    },
+    {
+      "id": "30008",
+      "name": "Canapés Assortis",
+      "image": "/images/menu/canapes.jpg"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\timage\n1\tTest Sandwich\t/images/test.jpg\n2\tUpdated Product\t/images/original.jpg\n30001\tLe Végétarien\t/images/menu/vegetarian-sandwich.jpg\n30002\tLe Poulet\t/images/menu/chicken-sandwich.jpg\n30003\tLe Smoked Meat\t/images/menu/smoked-meat.jpg\n30004\tSalade César\thttps://d2xsxph8kpxj0f.cloudfront.net/310419663030752959/nG5FpW6QC2VPLHfftjzBXF/generated/1763816959538.png\n30005\tSalade Grecque\thttps://d2xsxph8kpxj0f.cloudfront.net/310419663030752959/nG5FpW6QC2VPLHfftjzBXF/generated/1763817042137.png\n30006\tLasagne\t/images/menu/lasagna.jpg\n30007\tPoulet Rôti\t/images/menu/roasted-chicken.jpg\n30008\tCanapés Assortis\t/images/menu/canapes.jpg\n",
+  "stderr": "",
+  "execution_time_ms": 48
+}
