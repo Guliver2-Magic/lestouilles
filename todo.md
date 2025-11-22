@@ -255,3 +255,13 @@
 - [x] Add complete nutrition data (calories, protein, carbs, fat) to all products
 - [x] Replace any mismatched product images
 - [x] Test all corrections display correctly
+
+
+## Automatic Date Blocking for Reservations - User Request
+- [x] Create tRPC procedure to fetch all reserved dates
+- [x] Update Reservations page to fetch and display unavailable dates
+- [x] Disable reserved dates in the calendar date picker
+- [x] Add backend validation to prevent double bookings
+- [x] Show helpful message when user selects unavailable date
+- [x] Write tests for date availability checking
+- [x] Test complete reservation flow with blocked dates

@@ -22,6 +22,9 @@ import { APP_LOGO, APP_TITLE } from "@/const";
 export default function Reservations() {
   const { language, toggleLanguage } = useLanguage();
   const [date, setDate] = useState<Date | undefined>(undefined);
+  
+  // Fetch reserved dates
+  const { data: reservedDates = [] } = trpc.reservations.getReservedDates.useQuery();
   const [formData, setFormData] = useState({
     customerName: "",
     customerEmail: "",
@@ -214,14 +217,27 @@ export default function Reservations() {
                     : "Choose your event date"}
                 </CardDescription>
               </CardHeader>
-              <CardContent className="flex justify-center">
+              <CardContent className="flex flex-col items-center gap-4">
                 <Calendar
                   mode="single"
                   selected={date}
                   onSelect={setDate}
-                  disabled={(date) => date < new Date()}
                   className="rounded-md border"
+                  disabled={(date) => {
+                    // Disable past dates
+                    if (date < new Date()) return true;
+                    // Disable already reserved dates
+                    const dateStr = date.toISOString().split('T')[0];
+                    return reservedDates.includes(dateStr);
+                  }}
                 />
+                {reservedDates.length > 0 && (
+                  <p className="text-sm text-muted-foreground text-center">
+                    {language === "fr"
+                      ? "Les dates grisées sont déjà réservées"
+                      : "Grayed out dates are already reserved"}
+                  </p>
+                )}
               </CardContent>
             </Card>
 

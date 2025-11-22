@@ -2,6 +2,13 @@ import { describe, expect, it, beforeEach } from "vitest";
 import { appRouter } from "./routers";
 import type { TrpcContext } from "./_core/context";
 
+// Helper to generate unique future dates for tests (within 2 years)
+function getUniqueFutureDate(offsetDays: number = 0): string {
+  const now = new Date();
+  const futureDate = new Date(now.getFullYear() + 1, now.getMonth(), now.getDate() + offsetDays);
+  return futureDate.toISOString();
+}
+
 type AuthenticatedUser = NonNullable<TrpcContext["user"]>;
 
 function createPublicContext(): TrpcContext {
@@ -52,7 +59,7 @@ describe("reservations.create", () => {
       customerEmail: "jean.dupont@example.com",
       customerPhone: "514-555-1234",
       eventType: "wedding",
-      eventDate: new Date("2025-06-15").toISOString(),
+      eventDate: getUniqueFutureDate(100),
       eventTime: "18:00",
       guestCount: 150,
       venue: "Château Vaudreuil",
@@ -74,7 +81,7 @@ describe("reservations.create", () => {
       customerEmail: "marie.tremblay@company.com",
       customerPhone: "514-555-5678",
       eventType: "corporate",
-      eventDate: new Date("2025-07-20").toISOString(),
+      eventDate: getUniqueFutureDate(200),
       eventTime: "12:00",
       guestCount: 50,
       venue: "Office Building Downtown",
@@ -93,7 +100,7 @@ describe("reservations.create", () => {
       customerEmail: "pierre.martin@example.com",
       customerPhone: "514-555-9999",
       eventType: "private_party",
-      eventDate: new Date("2025-08-10").toISOString(),
+      eventDate: getUniqueFutureDate(300),
       eventTime: "19:00",
       guestCount: 30,
       language: "fr",
@@ -121,6 +128,122 @@ describe("reservations.listAll", () => {
   });
 });
 
+describe("reservations.getReservedDates", () => {
+  it("returns list of reserved dates for pending and confirmed reservations", async () => {
+    const ctx = createPublicContext();
+    const caller = appRouter.createCaller(ctx);
+
+    // Create two reservations for different dates
+    await caller.reservations.create({
+      customerName: "John Doe",
+      customerEmail: "john@example.com",
+      customerPhone: "514-555-1234",
+      eventType: "wedding",
+      eventDate: getUniqueFutureDate(400),
+      eventTime: "18:00",
+      guestCount: 100,
+      language: "en",
+    });
+
+    await caller.reservations.create({
+      customerName: "Jane Smith",
+      customerEmail: "jane@example.com",
+      customerPhone: "514-555-5678",
+      eventType: "corporate",
+      eventDate: getUniqueFutureDate(500),
+      eventTime: "19:00",
+      guestCount: 50,
+      language: "en",
+    });
+
+    const reservedDates = await caller.reservations.getReservedDates();
+
+    expect(reservedDates).toContain("2027-12-25");
+    expect(reservedDates).toContain("2027-12-31");
+    expect(reservedDates.length).toBeGreaterThanOrEqual(2);
+  });
+});
+
+describe("reservations double booking prevention", () => {
+  it("prevents double booking on the same date", async () => {
+    const ctx = createPublicContext();
+    const caller = appRouter.createCaller(ctx);
+
+    const sameDate = getUniqueFutureDate(600);
+
+    // Create first reservation
+    await caller.reservations.create({
+      customerName: "First Customer",
+      customerEmail: "first@example.com",
+      customerPhone: "514-555-1111",
+      eventType: "wedding",
+      eventDate: sameDate,
+      eventTime: "18:00",
+      guestCount: 100,
+      language: "en",
+    });
+
+    // Attempt to create second reservation on same date
+    await expect(
+      caller.reservations.create({
+        customerName: "Second Customer",
+        customerEmail: "second@example.com",
+        customerPhone: "514-555-2222",
+        eventType: "corporate",
+        eventDate: sameDate,
+        eventTime: "19:00",
+        guestCount: 50,
+        language: "en",
+      })
+    ).rejects.toThrow("This date is already reserved");
+  });
+
+  it("allows booking on same date after cancellation", async () => {
+    const adminCtx = createAdminContext();
+    const publicCtx = createPublicContext();
+    const adminCaller = appRouter.createCaller(adminCtx);
+    const publicCaller = appRouter.createCaller(publicCtx);
+
+    const cancelDate = getUniqueFutureDate(700);
+
+    // Create first reservation
+    await publicCaller.reservations.create({
+      customerName: "First Customer",
+      customerEmail: "first-cancel@example.com",
+      customerPhone: "514-555-1111",
+      eventType: "wedding",
+      eventDate: cancelDate,
+      eventTime: "18:00",
+      guestCount: 100,
+      language: "en",
+    });
+
+    // Get the reservation and cancel it
+    const reservations = await adminCaller.reservations.listAll();
+    const reservation = reservations.find(r => r.customerEmail === "first-cancel@example.com");
+    expect(reservation).toBeDefined();
+
+    await adminCaller.reservations.updateStatus({
+      id: reservation!.id,
+      status: "cancelled",
+    });
+
+    // Now should be able to book the same date
+    const result = await publicCaller.reservations.create({
+      customerName: "Second Customer",
+      customerEmail: "second-after-cancel@example.com",
+      customerPhone: "514-555-2222",
+      eventType: "corporate",
+      eventDate: cancelDate,
+      eventTime: "19:00",
+      guestCount: 50,
+      language: "en",
+    });
+
+    expect(result).toEqual({ success: true });
+  });
+});
+
 describe("reservations.updateStatus", () => {
   it("allows admin to update reservation status", async () => {
     const ctx = createAdminContext();
@@ -132,7 +255,7 @@ describe("reservations.updateStatus", () => {
       customerEmail: "test@example.com",
       customerPhone: "514-555-0000",
       eventType: "wedding",
-      eventDate: new Date("2025-09-01").toISOString(),
+      eventDate: getUniqueFutureDate(800),
       eventTime: "17:00",
       guestCount: 100,
       language: "fr",

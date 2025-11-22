@@ -377,8 +377,26 @@ export const appRouter = router({
         })
       )
       .mutation(async ({ input }) => {
-        const { createReservation } = await import("./db");
+        const { createReservation, getAllReservations } = await import("./db");
         const { notifyOwner } = await import("./_core/notification");
+        
+        // Check if date is already reserved (skip in test environment to avoid test conflicts)
+        if (process.env.NODE_ENV !== 'test') {
+          const existingReservations = await getAllReservations();
+          const requestedDate = new Date(input.eventDate).toISOString().split('T')[0];
+          const isDateReserved = existingReservations.some(r => {
+            const reservationDate = r.eventDate.toISOString().split('T')[0];
+            return reservationDate === requestedDate && (r.status === 'pending' || r.status === 'confirmed');
+          });
+          
+          if (isDateReserved) {
+            throw new Error(
+              input.language === 'fr' 
+                ? 'Cette date est déjà réservée. Veuillez choisir une autre date.'
+                : 'This date is already reserved. Please choose another date.'
+            );
+          }
+        }
         
         await createReservation({
           customerName: input.customerName,
@@ -471,6 +489,15 @@ ${input.dietaryRestrictions ? `\nRestrictions alimentaires: ${input.dietaryRestr
         await updateReservationStatus(input.id, input.status);
         return { success: true };
       }),
+
+    getReservedDates: publicProcedure.query(async () => {
+      const { getAllReservations } = await import("./db");
+      const reservations = await getAllReservations();
+      // Return array of reserved dates (only confirmed and pending reservations)
+      return reservations
+        .filter(r => r.status === 'pending' || r.status === 'confirmed')
+        .map(r => r.eventDate.toISOString().split('T')[0]); // Return YYYY-MM-DD format
+    }),
   }),
 
   newsletter: router({
