@@ -368,3 +368,30 @@
 - [x] Verify image generation system is working
 - [x] Test image upload and storage
 - [x] Ensure all products have valid images
+
+
+## Implement Shopping Cart System - User Report
+- [x] Create cart context for global state management
+- [x] Implement add to cart functionality on product cards
+- [x] Create cart drawer/modal UI component
+- [x] Display cart items with images, names, prices, quantities
+- [x] Implement quantity adjustment (increase/decrease)
+- [x] Implement remove item from cart
+- [x] Calculate and display subtotal, tax, delivery fee, total
+- [x] Add empty cart state with call-to-action
+- [x] Make cart icon show item count badge
+- [x] Add cart persistence (localStorage)
+- [x] Prepare checkout flow structure
+- [x] Test complete cart flow
+
+
+## Fix Broken Logo - User Report
+- [x] Fix broken logo image in header navigation
+- [x] Generate or use text-based logo
+- [x] Ensure logo displays correctly on all pages
+
+
+## Reorganize Home Page Layout - User Request
+- [x] Move "Pourquoi Choisir Les Touillés?" section to bottom of page
+- [x] Place product menu section immediately after hero
+- [x] Ensure logical flow: Hero → Products → Testimonial → Why Choose Us → Footer

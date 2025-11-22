@@ -34,7 +34,7 @@ const carouselImages = [
 
 export default function Home() {
   const { language, toggleLanguage } = useLanguage();
-  const { addToCart, cartOpen, setCartOpen, cart } = useCart();
+  const { addItem, cartOpen, setCartOpen, items, itemCount } = useCart();
   const [selectedCategory, setSelectedCategory] = useState("Tous");
   const [scrollY, setScrollY] = useState(0);
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -85,7 +85,7 @@ export default function Home() {
     ? allProducts 
     : allProducts.filter(item => item.category === selectedCategory);
 
-  const cartItemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+  const cartItemCount = itemCount;
 
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % carouselImages.length);
@@ -259,9 +259,9 @@ export default function Home() {
               className="relative"
             >
               <ShoppingCart className="h-4 w-4" />
-              {cartItemCount > 0 && (
+              {itemCount > 0 && (
                 <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0">
-                  {cartItemCount}
+                  {itemCount}
                 </Badge>
               )}
             </Button>
@@ -363,44 +363,6 @@ export default function Home() {
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
           <div className="w-6 h-10 border-2 border-white rounded-full flex items-start justify-center p-2">
             <div className="w-1 h-3 bg-white rounded-full" />
-          </div>
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section className="py-20 bg-background">
-        <div className="container">
-          <h2 className="text-3xl md:text-4xl font-serif font-bold text-center mb-12">
-            {t.features.title}
-          </h2>
-          <div className="grid md:grid-cols-3 gap-8">
-            <Card className="text-center hover:shadow-lg transition-shadow">
-              <CardContent className="pt-6">
-                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <ChefHat className="h-8 w-8 text-primary" />
-                </div>
-                <h3 className="text-xl font-bold mb-2">{t.features.quality.title}</h3>
-                <p className="text-muted-foreground">{t.features.quality.desc}</p>
-              </CardContent>
-            </Card>
-            <Card className="text-center hover:shadow-lg transition-shadow">
-              <CardContent className="pt-6">
-                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Clock className="h-8 w-8 text-primary" />
-                </div>
-                <h3 className="text-xl font-bold mb-2">{t.features.experience.title}</h3>
-                <p className="text-muted-foreground">{t.features.experience.desc}</p>
-              </CardContent>
-            </Card>
-            <Card className="text-center hover:shadow-lg transition-shadow">
-              <CardContent className="pt-6">
-                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Users className="h-8 w-8 text-primary" />
-                </div>
-                <h3 className="text-xl font-bold mb-2">{t.features.service.title}</h3>
-                <p className="text-muted-foreground">{t.features.service.desc}</p>
-              </CardContent>
-            </Card>
           </div>
         </div>
       </section>
@@ -518,7 +480,10 @@ export default function Home() {
                   </div>
                   <Button 
                     className="w-full" 
-                    onClick={() => addToCart({ ...item, id: String(item.id) })}
+                    onClick={() => {
+                    const dbProduct = dbProducts.find(p => p.id === Number(item.id));
+                    if (dbProduct) addItem(dbProduct);
+                  }}
                   >
                     <ShoppingCart className="h-4 w-4 mr-2" />
                     {t.menu.addToCart}
@@ -564,6 +529,44 @@ export default function Home() {
           <Button size="lg" variant="outline" className="bg-white text-primary hover:bg-white/90" asChild>
             <Link href="/contact">{t.catering.cta}</Link>
           </Button>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="py-20 bg-background">
+        <div className="container">
+          <h2 className="text-3xl md:text-4xl font-serif font-bold text-center mb-12">
+            {t.features.title}
+          </h2>
+          <div className="grid md:grid-cols-3 gap-8">
+            <Card className="text-center hover:shadow-lg transition-shadow">
+              <CardContent className="pt-6">
+                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <ChefHat className="h-8 w-8 text-primary" />
+                </div>
+                <h3 className="text-xl font-bold mb-2">{t.features.quality.title}</h3>
+                <p className="text-muted-foreground">{t.features.quality.desc}</p>
+              </CardContent>
+            </Card>
+            <Card className="text-center hover:shadow-lg transition-shadow">
+              <CardContent className="pt-6">
+                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Clock className="h-8 w-8 text-primary" />
+                </div>
+                <h3 className="text-xl font-bold mb-2">{t.features.experience.title}</h3>
+                <p className="text-muted-foreground">{t.features.experience.desc}</p>
+              </CardContent>
+            </Card>
+            <Card className="text-center hover:shadow-lg transition-shadow">
+              <CardContent className="pt-6">
+                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Users className="h-8 w-8 text-primary" />
+                </div>
+                <h3 className="text-xl font-bold mb-2">{t.features.service.title}</h3>
+                <p className="text-muted-foreground">{t.features.service.desc}</p>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </section>
 

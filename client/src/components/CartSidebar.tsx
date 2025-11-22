@@ -7,7 +7,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 
 export function CartSidebar() {
-  const { items, updateQuantity, removeItem, clearCart, getTotal, getItemCount } = useCart();
+  const { items, updateQuantity, removeItem, clearCart, total, itemCount, cartOpen, setCartOpen } = useCart();
   const { language, t } = useLanguage();
 
   return (
@@ -16,9 +16,9 @@ export function CartSidebar() {
         <Button variant="outline" size="sm" className="relative">
           <ShoppingCart className="h-4 w-4 mr-2" />
           {t('nav.cart')}
-          {getItemCount() > 0 && (
+          {itemCount > 0 && (
             <span className="absolute -top-2 -right-2 bg-primary text-primary-foreground rounded-full w-5 h-5 text-xs flex items-center justify-center">
-              {getItemCount()}
+              {itemCount}
             </span>
           )}
         </Button>
@@ -27,7 +27,7 @@ export function CartSidebar() {
         <SheetHeader>
           <SheetTitle>{t('cart.title')}</SheetTitle>
           <SheetDescription>
-            {getItemCount() === 0 ? t('cart.empty') : `${getItemCount()} item(s)`}
+            {itemCount === 0 ? t('cart.empty') : `${itemCount} item(s)`}
           </SheetDescription>
         </SheetHeader>
 
@@ -41,11 +41,11 @@ export function CartSidebar() {
             <ScrollArea className="h-[calc(100vh-250px)] mt-6">
               <div className="space-y-4">
                 {items.map(item => (
-                  <div key={item.id} className="flex gap-4 p-4 border rounded-lg">
+                  <div key={item.product.id} className="flex gap-4 p-4 border rounded-lg">
                     <div className="aspect-square w-20 h-20 bg-muted rounded overflow-hidden flex-shrink-0">
                       <img
-                        src={item.image}
-                        alt={item.name[language]}
+                        src={item.product.image}
+                        alt={item.product.name}
                         className="object-cover w-full h-full"
                         onError={(e) => {
                           (e.target as HTMLImageElement).src = 'https://placehold.co/80x80/E5E7EB/6B7280?text=LT';
@@ -53,14 +53,14 @@ export function CartSidebar() {
                       />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h4 className="font-semibold text-sm truncate">{item.name[language]}</h4>
-                      <p className="text-sm text-primary font-bold">${item.price.toFixed(2)}</p>
+                      <h4 className="font-semibold text-sm truncate">{item.product.name}</h4>
+                      <p className="text-sm text-primary font-bold">${(item.product.price / 100).toFixed(2)}</p>
                       <div className="flex items-center gap-2 mt-2">
                         <Button
                           size="sm"
                           variant="outline"
                           className="h-7 w-7 p-0"
-                          onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                          onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
                         >
                           <Minus className="h-3 w-3" />
                         </Button>
@@ -69,7 +69,7 @@ export function CartSidebar() {
                           size="sm"
                           variant="outline"
                           className="h-7 w-7 p-0"
-                          onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                          onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
                         >
                           <Plus className="h-3 w-3" />
                         </Button>
@@ -77,7 +77,7 @@ export function CartSidebar() {
                           size="sm"
                           variant="ghost"
                           className="h-7 w-7 p-0 ml-auto text-destructive"
-                          onClick={() => removeItem(item.id)}
+                          onClick={() => removeItem(item.product.id)}
                         >
                           <Trash2 className="h-3 w-3" />
                         </Button>
@@ -92,7 +92,7 @@ export function CartSidebar() {
               <Separator />
               <div className="flex justify-between items-center text-lg font-bold">
                 <span>{t('cart.total')}</span>
-                <span className="text-primary">${getTotal().toFixed(2)}</span>
+                <span className="text-primary">${(total / 100).toFixed(2)}</span>
               </div>
               <div className="space-y-2">
                 <Button className="w-full" size="lg">

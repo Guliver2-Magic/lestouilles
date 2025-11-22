@@ -17,7 +17,7 @@ import { format } from "date-fns";
 import { fr, enUS } from "date-fns/locale";
 
 export default function Checkout() {
-  const { cart, clearCart } = useCart();
+  const { items, clearCart, subtotal: cartSubtotal, tax: cartTax, deliveryFee: cartDeliveryFee, total: cartTotal } = useCart();
   const { language } = useLanguage();
   const [, setLocation] = useLocation();
   
@@ -144,11 +144,11 @@ export default function Checkout() {
 
   const t = content[language];
 
-  // Calculate totals
-  const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const deliveryFee = deliveryMethod === "delivery" ? 10 : 0;
-  const tax = (subtotal + deliveryFee) * 0.14975; // Quebec tax rate
-  const total = subtotal + deliveryFee + tax;
+  // Use cart totals (already in cents)
+  const subtotal = cartSubtotal;
+  const tax = cartTax;
+  const deliveryFee = cartDeliveryFee;
+  const total = cartTotal;
 
   const timeSlots = [
     "08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
@@ -189,19 +189,19 @@ export default function Checkout() {
       deliveryAddress: deliveryMethod === "delivery" ? deliveryAddress : undefined,
       deliveryInstructions,
       notes,
-      items: cart.map(item => ({
-        productId: item.id,
-        productName: item.name[language],
-        productCategory: item.category,
-        productImage: item.image,
-        unitPrice: Math.round(item.price * 100), // Convert to cents
+      items: items.map(item => ({
+        productId: String(item.product.id),
+        productName: item.product.name,
+        productCategory: item.product.category,
+        productImage: item.product.image,
+        unitPrice: item.product.price, // Already in cents
         quantity: item.quantity,
       })),
       language,
     });
   };
 
-  if (cart.length === 0) {
+  if (items.length === 0) {
     return (
       <div className="min-h-screen pt-20 pb-12">
         <div className="container max-w-2xl">
@@ -379,19 +379,19 @@ export default function Checkout() {
               <CardContent className="space-y-4">
                 {/* Cart Items */}
                 <div className="space-y-3">
-                  {cart.map((item) => (
-                    <div key={item.id} className="flex gap-3 pb-3 border-b">
-                      {item.image && (
-                        <img src={item.image} alt={item.name[language]} className="w-16 h-16 object-cover rounded" />
+                  {items.map((item) => (
+                    <div key={item.product.id} className="flex gap-3 pb-3 border-b">
+                      {item.product.image && (
+                        <img src={item.product.image} alt={item.product.name} className="w-16 h-16 object-cover rounded" />
                       )}
                       <div className="flex-1">
-                        <p className="font-medium text-sm">{item.name[language]}</p>
+                        <p className="font-medium text-sm">{item.product.name}</p>
                         <p className="text-sm text-muted-foreground">
-                          {item.quantity} × ${item.price.toFixed(2)}
+                          {item.quantity} × ${(item.product.price / 100).toFixed(2)}
                         </p>
                       </div>
                       <div className="font-bold">
-                        ${(item.price * item.quantity).toFixed(2)}
+                        ${((item.product.price * item.quantity) / 100).toFixed(2)}
                       </div>
                     </div>
                   ))}
@@ -401,21 +401,21 @@ export default function Checkout() {
                 <div className="space-y-2 pt-4 border-t">
                   <div className="flex justify-between">
                     <span>{t.summary.subtotal}</span>
-                    <span>${subtotal.toFixed(2)}</span>
+                    <span>${(subtotal / 100).toFixed(2)}</span>
                   </div>
                   {deliveryMethod === "delivery" && (
                     <div className="flex justify-between">
                       <span>{t.summary.delivery}</span>
-                      <span>${deliveryFee.toFixed(2)}</span>
+                      <span>${(deliveryFee / 100).toFixed(2)}</span>
                     </div>
                   )}
                   <div className="flex justify-between text-sm text-muted-foreground">
                     <span>{t.summary.tax}</span>
-                    <span>${tax.toFixed(2)}</span>
+                    <span>${(tax / 100).toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between text-lg font-bold pt-2 border-t">
                     <span>{t.summary.total}</span>
-                    <span>${total.toFixed(2)}</span>
+                    <span>${(total / 100).toFixed(2)}</span>
                   </div>
                 </div>
 
