@@ -211,3 +211,87 @@ describe("products.byCategory", () => {
     });
   });
 });
+
+describe("products.price storage", () => {
+  it("stores price in cents as integer", async () => {
+    const { ctx } = createAdminContext();
+    const caller = appRouter.createCaller(ctx);
+
+    // Create product with price in cents (e.g., $15.50 = 1550 cents)
+    await caller.products.create({
+      name: "Price Test Product",
+      description: "Testing price storage",
+      category: "sandwiches",
+      price: 1550, // 15.50 in cents
+      image: "/images/test-price.jpg",
+      isActive: true,
+    });
+
+    const products = await caller.products.listAll();
+    const product = products.find((p) => p.name === "Price Test Product");
+    
+    expect(product).toBeDefined();
+    expect(product?.price).toBe(1550);
+    expect(typeof product?.price).toBe("number");
+    expect(Number.isInteger(product?.price)).toBe(true);
+  });
+
+  it("correctly handles decimal price conversion (frontend converts $15.50 to 1550 cents)", async () => {
+    const { ctx } = createAdminContext();
+    const caller = appRouter.createCaller(ctx);
+
+    // Simulate frontend conversion: $25.99 -> 2599 cents
+    const dollarPrice = 25.99;
+    const centsPrice = Math.round(dollarPrice * 100);
+
+    await caller.products.create({
+      name: "Decimal Price Test",
+      description: "Testing decimal conversion",
+      category: "desserts",
+      price: centsPrice, // Should be 2599
+      image: "/images/test-decimal.jpg",
+      isActive: true,
+    });
+
+    const products = await caller.products.listAll();
+    const product = products.find((p) => p.name === "Decimal Price Test");
+    
+    expect(product).toBeDefined();
+    expect(product?.price).toBe(2599);
+    
+    // Verify we can convert back to dollars
+    const displayPrice = (product?.price ?? 0) / 100;
+    expect(displayPrice).toBe(25.99);
+  });
+
+  it("handles price update correctly", async () => {
+    const { ctx } = createAdminContext();
+    const caller = appRouter.createCaller(ctx);
+
+    // Create product
+    await caller.products.create({
+      name: "Update Price Test",
+      description: "Testing price update",
+      category: "traiteur",
+      price: 3000, // $30.00
+      image: "/images/test-update.jpg",
+      isActive: true,
+    });
+
+    const products = await caller.products.listAll();
+    const product = products.find((p) => p.name === "Update Price Test");
+    
+    if (product) {
+      // Update to $35.50 (3550 cents)
+      await caller.products.update({
+        id: product.id,
+        price: 3550,
+      });
+
+      const updatedProducts = await caller.products.listAll();
+      const updatedProduct = updatedProducts.find((p) => p.id === product.id);
+      
+      expect(updatedProduct?.price).toBe(3550);
+    }
+  });
+});

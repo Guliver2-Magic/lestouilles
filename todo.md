@@ -330,3 +330,10 @@
 - [x] Show image preview before saving
 - [x] Test AI image generation with various products
 - [x] Test manual upload with different image formats
+
+
+## Fix Price Input to Accept Decimals - User Report
+- [x] Change price input label from "Prix (cents)" to "Prix ($)"
+- [x] Change input type to accept decimal numbers
+- [x] Add automatic conversion from dollars to cents before submission
+- [x] Test price input with decimal values

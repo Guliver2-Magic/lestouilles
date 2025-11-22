@@ -142,7 +142,7 @@ export default function AdminProducts() {
       descriptionEn: formData.get("descriptionEn") as string || undefined,
       category: formData.get("category") as string,
       subcategory: formData.get("subcategory") as string || undefined,
-      price: parseInt(formData.get("price") as string),
+      price: Math.round(parseFloat(formData.get("price") as string) * 100), // Convert dollars to cents
       servingSize: formData.get("servingSize") as string || undefined,
       image: formData.get("image") as string,
       imageAlt: formData.get("imageAlt") as string || undefined,
@@ -271,13 +271,16 @@ export default function AdminProducts() {
 
               <div className="grid grid-cols-3 gap-4">
                 <div>
-                  <Label htmlFor="price">Prix (cents) *</Label>
+                  <Label htmlFor="price">Prix ($) *</Label>
                   <Input
                     id="price"
                     name="price"
                     type="number"
-                    defaultValue={editingProduct?.price}
+                    step="0.01"
+                    min="0"
+                    defaultValue={editingProduct ? (editingProduct.price / 100).toFixed(2) : ""}
                     required
+                    placeholder="15.50"
                   />
                 </div>
                 <div>
