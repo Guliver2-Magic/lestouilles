@@ -57,20 +57,35 @@ export const appRouter = router({
           language: input.language,
         });
 
-        // Generate bot response (simple logic for now)
-        const botResponse = generateBotResponse(input.message, input.language);
+        // Get conversation history for context
+        const conversationHistory = await getConversationsBySessionId(input.sessionId);
+        
+        // Format history for n8n (last 10 messages for context)
+        const formattedHistory = conversationHistory
+          .slice(-10)
+          .map((conv) => ({
+            role: conv.sender === "user" ? "user" : "assistant",
+            content: conv.message,
+          }));
+
+        // Get bot response from n8n webhook
+        const botResponse = await getBotResponseFromN8n({
+          sessionId: input.sessionId,
+          message: input.message,
+          language: input.language,
+          conversationHistory: formattedHistory,
+        });
 
         // Save bot response
         await saveConversation({
           sessionId: input.sessionId,
-          message: botResponse,
+          message: botResponse.response,
           sender: "bot",
           language: input.language,
         });
 
         // Check if we should trigger n8n webhook for lead capture
-        const shouldCaptureLead = checkIfLeadInfo(input.message);
-        if (shouldCaptureLead) {
+        if (botResponse.shouldCaptureLead || checkIfLeadInfo(input.message)) {
           // Send lead data to n8n
           await sendLeadToN8n({
             sessionId: input.sessionId,
@@ -81,7 +96,7 @@ export const appRouter = router({
           });
         }
 
-        return { response: botResponse };
+        return { response: botResponse.response };
       }),
 
     getHistory: publicProcedure
@@ -741,8 +756,54 @@ Fournis UNIQUEMENT un objet JSON valide (sans markdown, sans \`\`\`) avec cette 
 
 export type AppRouter = typeof appRouter;
 
-// Helper function to generate bot responses
-function generateBotResponse(message: string, language: "fr" | "en"): string {
+// Helper function to get bot response from n8n webhook
+async function getBotResponseFromN8n(data: {
+  sessionId: string;
+  message: string;
+  language: "fr" | "en";
+  conversationHistory: Array<{ role: string; content: string }>;
+}): Promise<{ response: string; shouldCaptureLead: boolean }> {
+  const webhookUrl = ENV.n8nChatbotWebhookUrl;
+
+  // Fallback to simple responses if webhook is not configured
+  if (!webhookUrl) {
+    console.warn("N8N_CHATBOT_WEBHOOK_URL not configured, using fallback responses");
+    return {
+      response: generateFallbackResponse(data.message, data.language),
+      shouldCaptureLead: false,
+    };
+  }
+
+  try {
+    const response = await fetch(webhookUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Webhook returned status ${response.status}`);
+    }
+
+    const result = await response.json();
+    return {
+      response: result.response || generateFallbackResponse(data.message, data.language),
+      shouldCaptureLead: result.shouldCaptureLead || false,
+    };
+  } catch (error) {
+    console.error("Error calling n8n chatbot webhook:", error);
+    // Return fallback response on error
+    return {
+      response: generateFallbackResponse(data.message, data.language),
+      shouldCaptureLead: false,
+    };
+  }
+}
+
+// Fallback responses when n8n webhook is unavailable
+function generateFallbackResponse(message: string, language: "fr" | "en"): string {
   const lowerMessage = message.toLowerCase();
 
   const responses = {

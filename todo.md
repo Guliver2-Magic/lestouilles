@@ -337,3 +337,13 @@
 - [x] Change input type to accept decimal numbers
 - [x] Add automatic conversion from dollars to cents before submission
 - [x] Test price input with decimal values
+
+
+## Route Chatbot to n8n Webhook for AI Agent Responses - User Request
+- [x] Review current chatbot implementation in server/api/routers/chatbot.ts
+- [x] Create new n8n webhook environment variable for chatbot responses
+- [x] Modify sendMessage procedure to send user message to n8n webhook
+- [x] Update chatbot to receive and display AI agent response from n8n
+- [x] Handle webhook errors and timeouts gracefully
+- [x] Update chatbot tests to mock n8n webhook responses
+- [x] Test complete chatbot flow with n8n integration

@@ -10,4 +10,5 @@ export const ENV = {
   stripeSecretKey: process.env.STRIPE_SECRET_KEY ?? "",
   stripePublishableKey: process.env.VITE_STRIPE_PUBLISHABLE_KEY ?? "",
   stripeWebhookSecret: process.env.STRIPE_WEBHOOK_SECRET ?? "",
+  n8nChatbotWebhookUrl: process.env.N8N_CHATBOT_WEBHOOK_URL ?? "",
 };
