@@ -319,3 +319,14 @@
 - [x] Auto-fill nutritional values based on AI suggestions
 - [x] Auto-select dietary tags based on AI suggestions
 - [x] Test AI suggestions with various product types
+
+
+## AI Image Generation and Manual Upload - User Request
+- [x] Create tRPC procedure for AI image generation based on product description
+- [x] Create tRPC procedure for manual image upload with S3
+- [x] Add image optimization (resize, compress, convert to WebP)
+- [x] Build image management UI with AI generation button
+- [x] Add manual upload option with drag-and-drop
+- [x] Show image preview before saving
+- [x] Test AI image generation with various products
+- [x] Test manual upload with different image formats

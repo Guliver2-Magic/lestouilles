@@ -30,7 +30,7 @@ import {
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
-import { Pencil, Trash2, Plus, Search } from "lucide-react";
+import { Pencil, Trash2, Plus, Search, Upload } from "lucide-react";
 
 type Product = {
   id: number;
@@ -115,6 +115,12 @@ export default function AdminProducts() {
   });
 
   const suggestMutation = trpc.products.suggestAttributes.useMutation();
+  const generateImageMutation = trpc.products.generateImage.useMutation();
+  const uploadImageMutation = trpc.products.uploadImage.useMutation();
+  
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [isGeneratingImage, setIsGeneratingImage] = useState(false);
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
 
   const filteredProducts = products.filter((product) => {
     const matchesSearch =
@@ -294,15 +300,131 @@ export default function AdminProducts() {
                 </div>
               </div>
 
-              <div>
-                <Label htmlFor="image">URL de l'image *</Label>
+              <div className="space-y-4">
+                <Label>Image du produit *</Label>
+                
+                {/* Current image preview */}
+                {(editingProduct?.image || imagePreview) && (
+                  <div className="relative w-48 h-48 border rounded-lg overflow-hidden">
+                    <img
+                      src={imagePreview || (editingProduct?.image?.startsWith('http') ? editingProduct.image : `${window.location.origin}${editingProduct?.image || ''}`)}
+                      alt="Preview"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                )}
+                
+                {/* Hidden input for form submission */}
                 <Input
                   id="image"
                   name="image"
-                  defaultValue={editingProduct?.image}
+                  type="hidden"
+                  value={imagePreview || editingProduct?.image || ""}
                   required
-                  placeholder="/images/menu/product.jpg"
                 />
+                
+                <div className="flex gap-2">
+                  {/* AI Generation Button */}
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={async () => {
+                      const nameInput = (document.getElementById("name") as HTMLInputElement)?.value;
+                      const descInput = (document.getElementById("description") as HTMLTextAreaElement)?.value;
+                      
+                      if (!nameInput || !descInput) {
+                        toast.error("Veuillez remplir le nom et la description avant de générer une image");
+                        return;
+                      }
+                      
+                      setIsGeneratingImage(true);
+                      try {
+                        const result = await generateImageMutation.mutateAsync({
+                          productName: nameInput,
+                          description: descInput,
+                        });
+                        setImagePreview(result.url || null);
+                        toast.success("Image générée avec succès!");
+                      } catch (error) {
+                        toast.error("Erreur lors de la génération de l'image");
+                      } finally {
+                        setIsGeneratingImage(false);
+                      }
+                    }}
+                    disabled={isGeneratingImage}
+                  >
+                    {isGeneratingImage ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Génération...
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles className="mr-2 h-4 w-4" />
+                        Générer avec l'IA
+                      </>
+                    )}
+                  </Button>
+                  
+                  {/* Manual Upload Button */}
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => document.getElementById("imageFileInput")?.click()}
+                    disabled={isUploadingImage}
+                  >
+                    {isUploadingImage ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Upload...
+                      </>
+                    ) : (
+                      <>
+                        <Upload className="mr-2 h-4 w-4" />
+                        Uploader une image
+                      </>
+                    )}
+                  </Button>
+                  
+                  {/* Hidden file input */}
+                  <input
+                    id="imageFileInput"
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={async (e) => {
+                      const file = e.target.files?.[0];
+                      if (!file) return;
+                      
+                      // Validate file size (5MB max)
+                      if (file.size > 5 * 1024 * 1024) {
+                        toast.error("L'image est trop grande (max 5MB)");
+                        return;
+                      }
+                      
+                      setIsUploadingImage(true);
+                      try {
+                        // Convert to base64
+                        const reader = new FileReader();
+                        reader.onloadend = async () => {
+                          const base64Data = reader.result as string;
+                          const result = await uploadImageMutation.mutateAsync({
+                            filename: file.name,
+                            contentType: file.type,
+                            base64Data: base64Data.split(',')[1], // Remove data:image/...;base64, prefix
+                          });
+                          setImagePreview(result.url || null);
+                          toast.success("Image uploadée avec succès!");
+                        };
+                        reader.readAsDataURL(file);
+                      } catch (error) {
+                        toast.error("Erreur lors de l'upload de l'image");
+                      } finally {
+                        setIsUploadingImage(false);
+                      }
+                    }}
+                  />
+                </div>
               </div>
 
               <div>

@@ -634,7 +634,28 @@ ${input.dietaryRestrictions ? `\nRestrictions alimentaires: ${input.dietaryRestr
         return { success: true };
       }),
 
-    // Upload product image (admin only)
+    // Generate AI image for product (admin only)
+    generateImage: protectedProcedure
+      .input(z.object({
+        productName: z.string(),
+        description: z.string(),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        if (ctx.user.role !== 'admin') {
+          throw new Error('Unauthorized');
+        }
+        const { generateImage } = await import("./_core/imageGeneration");
+        
+        const prompt = `A professional, high-quality food photography image of ${input.productName}. ${input.description}. The image should be appetizing, well-lit, and suitable for a catering menu. Shot from a flattering angle with shallow depth of field, professional food styling.`;
+        
+        const result = await generateImage({ prompt });
+        
+        return {
+          url: result.url,
+        };
+      }),
+
+    // Suggest product attributes with AI (admin only)
     suggestAttributes: protectedProcedure
       .input(z.object({
         name: z.string(),
@@ -697,18 +718,21 @@ Fournis UNIQUEMENT un objet JSON valide (sans markdown, sans \`\`\`) avec cette 
         }
         
         const { storagePut } = await import("./storage");
+        const { optimizeProductImage } = await import("./_core/imageOptimization");
         
         // Convert base64 to buffer
         const buffer = Buffer.from(input.base64Data, 'base64');
         
+        // Optimize image for web
+        const optimized = await optimizeProductImage(buffer);
+        
         // Generate unique filename
         const timestamp = Date.now();
         const randomStr = Math.random().toString(36).substring(7);
-        const ext = input.filename.split('.').pop();
-        const key = `products/${timestamp}-${randomStr}.${ext}`;
+        const key = `products/${timestamp}-${randomStr}.${optimized.ext}`;
         
-        // Upload to S3
-        const { url } = await storagePut(key, buffer, input.contentType);
+        // Upload optimized image to S3
+        const { url } = await storagePut(key, optimized.buffer, optimized.mimeType);
         
         return { url };
       }),
