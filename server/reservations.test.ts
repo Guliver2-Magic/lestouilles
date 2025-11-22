@@ -3,9 +3,14 @@ import { appRouter } from "./routers";
 import type { TrpcContext } from "./_core/context";
 
 // Helper to generate unique future dates for tests (within 2 years)
+// Uses current timestamp to ensure each test gets a truly unique date
+let dateCounter = 0;
 function getUniqueFutureDate(offsetDays: number = 0): string {
-  const now = new Date();
-  const futureDate = new Date(now.getFullYear() + 1, now.getMonth(), now.getDate() + offsetDays);
+  const now = Date.now();
+  dateCounter++;
+  // Each call gets a unique day by combining offset, counter, and milliseconds
+  const uniqueDays = offsetDays + dateCounter + (now % 100);
+  const futureDate = new Date(now + uniqueDays * 24 * 60 * 60 * 1000);
   return futureDate.toISOString();
 }
 

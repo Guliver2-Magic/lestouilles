@@ -2,6 +2,7 @@ import { COOKIE_NAME } from "@shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router } from "./_core/trpc";
+import { sendLeadToN8n } from "./_core/n8n";
 import { z } from "zod";
 import {
   saveConversation,
@@ -70,24 +71,14 @@ export const appRouter = router({
         // Check if we should trigger n8n webhook for lead capture
         const shouldCaptureLead = checkIfLeadInfo(input.message);
         if (shouldCaptureLead) {
-          // Trigger n8n webhook (if configured)
-          const n8nUrl = process.env.N8N_WEBHOOK_URL;
-          if (n8nUrl) {
-            try {
-              await fetch(n8nUrl, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                  sessionId: input.sessionId,
-                  message: input.message,
-                  language: input.language,
-                  timestamp: new Date().toISOString(),
-                }),
-              });
-            } catch (error) {
-              console.error("Failed to trigger n8n webhook:", error);
-            }
-          }
+          // Send lead data to n8n
+          await sendLeadToN8n({
+            sessionId: input.sessionId,
+            message: input.message,
+            language: input.language,
+            source: "chatbot",
+            timestamp: new Date().toISOString(),
+          });
         }
 
         return { response: botResponse };
@@ -380,22 +371,20 @@ export const appRouter = router({
         const { createReservation, getAllReservations } = await import("./db");
         const { notifyOwner } = await import("./_core/notification");
         
-        // Check if date is already reserved (skip in test environment to avoid test conflicts)
-        if (process.env.NODE_ENV !== 'test') {
-          const existingReservations = await getAllReservations();
-          const requestedDate = new Date(input.eventDate).toISOString().split('T')[0];
-          const isDateReserved = existingReservations.some(r => {
-            const reservationDate = r.eventDate.toISOString().split('T')[0];
-            return reservationDate === requestedDate && (r.status === 'pending' || r.status === 'confirmed');
-          });
-          
-          if (isDateReserved) {
-            throw new Error(
-              input.language === 'fr' 
-                ? 'Cette date est déjà réservée. Veuillez choisir une autre date.'
-                : 'This date is already reserved. Please choose another date.'
-            );
-          }
+        // Check if date is already reserved
+        const existingReservations = await getAllReservations();
+        const requestedDate = new Date(input.eventDate).toISOString().split('T')[0];
+        const isDateReserved = existingReservations.some(r => {
+          const reservationDate = r.eventDate.toISOString().split('T')[0];
+          return reservationDate === requestedDate && (r.status === 'pending' || r.status === 'confirmed');
+        });
+        
+        if (isDateReserved) {
+          throw new Error(
+            input.language === 'fr' 
+              ? 'Cette date est déjà réservée. Veuillez choisir une autre date.'
+              : 'This date is already reserved. Please choose another date.'
+          );
         }
         
         await createReservation({

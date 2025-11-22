@@ -265,3 +265,17 @@
 - [x] Show helpful message when user selects unavailable date
 - [x] Write tests for date availability checking
 - [x] Test complete reservation flow with blocked dates
+
+
+## Chatbot with n8n Integration - User Request
+- [x] Review existing conversations schema in database
+- [x] Create messages table for chatbot conversations
+- [x] Create tRPC procedure to send messages
+- [x] Create tRPC procedure to get conversation history
+- [x] Build chatbot UI component with floating button
+- [x] Add message input and display area
+- [x] Implement real-time message updates
+- [x] Create n8n webhook endpoint for lead capture
+- [x] Send lead data to n8n when conversation starts
+- [x] Test chatbot functionality end-to-end
+- [x] Write tests for chatbot procedures

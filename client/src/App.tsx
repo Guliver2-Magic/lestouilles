@@ -14,6 +14,7 @@ import Portfolio from "./pages/Portfolio";
 import AdminOrders from "./pages/AdminOrders";
 import Reservations from "./pages/Reservations";
 import AdminReservations from "./pages/AdminReservations";
+import { Chatbot } from "./components/Chatbot";
 
 function Router() {
   return (
@@ -40,6 +41,7 @@ function App() {
             <TooltipProvider>
               <Toaster />
               <Router />
+              <Chatbot />
             </TooltipProvider>
           </CartProvider>
         </LanguageProvider>
