@@ -211,3 +211,54 @@ export const reservations = mysqlTable("reservations", {
 
 export type Reservation = typeof reservations.$inferSelect;
 export type InsertReservation = typeof reservations.$inferInsert;
+
+/**
+ * Products table
+ * Stores all menu items with complete information
+ */
+export const products = mysqlTable("products", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Basic information
+  name: varchar("name", { length: 255 }).notNull(),
+  nameEn: varchar("nameEn", { length: 255 }),
+  description: text("description").notNull(),
+  descriptionEn: text("descriptionEn"),
+  
+  // Classification
+  category: varchar("category", { length: 100 }).notNull(), // sandwiches, salades, plats-principaux, etc.
+  subcategory: varchar("subcategory", { length: 100 }),
+  
+  // Pricing
+  price: int("price").notNull(), // in cents
+  servingSize: varchar("servingSize", { length: 100 }), // e.g., "8-10 personnes"
+  
+  // Images
+  image: text("image").notNull(),
+  imageAlt: varchar("imageAlt", { length: 255 }),
+  
+  // Dietary information
+  isVegetarian: boolean("isVegetarian").default(false).notNull(),
+  isVegan: boolean("isVegan").default(false).notNull(),
+  isGlutenFree: boolean("isGlutenFree").default(false).notNull(),
+  isDairyFree: boolean("isDairyFree").default(false).notNull(),
+  
+  // Nutritional information
+  calories: int("calories"),
+  protein: int("protein"), // in grams
+  carbs: int("carbs"), // in grams
+  fat: int("fat"), // in grams
+  nutritionalTip: text("nutritionalTip"),
+  nutritionalTipEn: text("nutritionalTipEn"),
+  
+  // Availability and status
+  isActive: boolean("isActive").default(true).notNull(),
+  displayOrder: int("displayOrder").default(0).notNull(),
+  
+  // Metadata
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Product = typeof products.$inferSelect;
+export type InsertProduct = typeof products.$inferInsert;

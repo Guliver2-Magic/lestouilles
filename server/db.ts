@@ -336,3 +336,141 @@ export async function getReservationsByDateRange(startDate: Date, endDate: Date)
 
   return result;
 }
+
+// ============================================================================
+// PRODUCTS
+// ============================================================================
+
+export async function getAllProducts() {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get products: database not available");
+    return [];
+  }
+
+  const { products } = await import("../drizzle/schema");
+  const result = await db.select().from(products).orderBy(products.displayOrder, products.name);
+  return result;
+}
+
+export async function getProductById(id: number) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get product: database not available");
+    return undefined;
+  }
+
+  const { products } = await import("../drizzle/schema");
+  const result = await db.select().from(products).where(eq(products.id, id)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function getActiveProducts() {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get active products: database not available");
+    return [];
+  }
+
+  const { products } = await import("../drizzle/schema");
+  const result = await db.select().from(products)
+    .where(eq(products.isActive, true))
+    .orderBy(products.displayOrder, products.name);
+  return result;
+}
+
+export async function getProductsByCategory(category: string) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get products by category: database not available");
+    return [];
+  }
+
+  const { products } = await import("../drizzle/schema");
+  const result = await db.select().from(products)
+    .where(eq(products.category, category))
+    .orderBy(products.displayOrder, products.name);
+  return result;
+}
+
+export async function createProduct(product: {
+  name: string;
+  nameEn?: string | null;
+  description: string;
+  descriptionEn?: string | null;
+  category: string;
+  subcategory?: string | null;
+  price: number;
+  servingSize?: string | null;
+  image: string;
+  imageAlt?: string | null;
+  isVegetarian?: boolean;
+  isVegan?: boolean;
+  isGlutenFree?: boolean;
+  isDairyFree?: boolean;
+  calories?: number | null;
+  protein?: number | null;
+  carbs?: number | null;
+  fat?: number | null;
+  nutritionalTip?: string | null;
+  nutritionalTipEn?: string | null;
+  isActive?: boolean;
+  displayOrder?: number;
+}) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot create product: database not available");
+    return undefined;
+  }
+
+  const { products } = await import("../drizzle/schema");
+  const result = await db.insert(products).values(product);
+  return result;
+}
+
+export async function updateProduct(id: number, updates: {
+  name?: string;
+  nameEn?: string | null;
+  description?: string;
+  descriptionEn?: string | null;
+  category?: string;
+  subcategory?: string | null;
+  price?: number;
+  servingSize?: string | null;
+  image?: string;
+  imageAlt?: string | null;
+  isVegetarian?: boolean;
+  isVegan?: boolean;
+  isGlutenFree?: boolean;
+  isDairyFree?: boolean;
+  calories?: number | null;
+  protein?: number | null;
+  carbs?: number | null;
+  fat?: number | null;
+  nutritionalTip?: string | null;
+  nutritionalTipEn?: string | null;
+  isActive?: boolean;
+  displayOrder?: number;
+}) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot update product: database not available");
+    return undefined;
+  }
+
+  const { products } = await import("../drizzle/schema");
+  const result = await db.update(products).set(updates).where(eq(products.id, id));
+  return result;
+}
+
+export async function deleteProduct(id: number) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot delete product: database not available");
+    return undefined;
+  }
+
+  const { products } = await import("../drizzle/schema");
+  const result = await db.delete(products).where(eq(products.id, id));
+  return result;
+}

@@ -1,7 +1,7 @@
 import { COOKIE_NAME } from "@shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
-import { publicProcedure, router } from "./_core/trpc";
+import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import { sendLeadToN8n } from "./_core/n8n";
 import { z } from "zod";
 import {
@@ -510,6 +510,159 @@ ${input.dietaryRestrictions ? `\nRestrictions alimentaires: ${input.dietaryRestr
         } catch (error) {
           return { success: false, error: "Email already subscribed" };
         }
+      }),
+  }),
+
+  // Products management (admin only)
+  products: router({    
+    // List all products (admin only)
+    listAll: protectedProcedure.query(async ({ ctx }) => {
+      if (ctx.user.role !== 'admin') {
+        throw new Error('Unauthorized');
+      }
+      const { getAllProducts } = await import("./db");
+      return await getAllProducts();
+    }),
+
+    // Get active products (public)
+    listActive: publicProcedure.query(async () => {
+      const { getActiveProducts } = await import("./db");
+      return await getActiveProducts();
+    }),
+
+    // Get products by category (public)
+    byCategory: publicProcedure
+      .input(z.object({ category: z.string() }))
+      .query(async ({ input }) => {
+        const { getProductsByCategory } = await import("./db");
+        return await getProductsByCategory(input.category);
+      }),
+
+    // Get single product (public)
+    getById: publicProcedure
+      .input(z.object({ id: z.number() }))
+      .query(async ({ input }) => {
+        const { getProductById } = await import("./db");
+        return await getProductById(input.id);
+      }),
+
+    // Create product (admin only)
+    create: protectedProcedure
+      .input(
+        z.object({
+          name: z.string(),
+          nameEn: z.string().optional(),
+          description: z.string(),
+          descriptionEn: z.string().optional(),
+          category: z.string(),
+          subcategory: z.string().optional(),
+          price: z.number(),
+          servingSize: z.string().optional(),
+          image: z.string(),
+          imageAlt: z.string().optional(),
+          isVegetarian: z.boolean().optional(),
+          isVegan: z.boolean().optional(),
+          isGlutenFree: z.boolean().optional(),
+          isDairyFree: z.boolean().optional(),
+          calories: z.number().optional(),
+          protein: z.number().optional(),
+          carbs: z.number().optional(),
+          fat: z.number().optional(),
+          nutritionalTip: z.string().optional(),
+          nutritionalTipEn: z.string().optional(),
+          isActive: z.boolean().optional(),
+          displayOrder: z.number().optional(),
+        })
+      )
+      .mutation(async ({ ctx, input }) => {
+        if (ctx.user.role !== 'admin') {
+          throw new Error('Unauthorized');
+        }
+        const { createProduct } = await import("./db");
+        await createProduct(input);
+        return { success: true };
+      }),
+
+    // Update product (admin only)
+    update: protectedProcedure
+      .input(
+        z.object({
+          id: z.number(),
+          name: z.string().optional(),
+          nameEn: z.string().optional(),
+          description: z.string().optional(),
+          descriptionEn: z.string().optional(),
+          category: z.string().optional(),
+          subcategory: z.string().optional(),
+          price: z.number().optional(),
+          servingSize: z.string().optional(),
+          image: z.string().optional(),
+          imageAlt: z.string().optional(),
+          isVegetarian: z.boolean().optional(),
+          isVegan: z.boolean().optional(),
+          isGlutenFree: z.boolean().optional(),
+          isDairyFree: z.boolean().optional(),
+          calories: z.number().optional(),
+          protein: z.number().optional(),
+          carbs: z.number().optional(),
+          fat: z.number().optional(),
+          nutritionalTip: z.string().optional(),
+          nutritionalTipEn: z.string().optional(),
+          isActive: z.boolean().optional(),
+          displayOrder: z.number().optional(),
+        })
+      )
+      .mutation(async ({ ctx, input }) => {
+        if (ctx.user.role !== 'admin') {
+          throw new Error('Unauthorized');
+        }
+        const { id, ...updates } = input;
+        const { updateProduct } = await import("./db");
+        await updateProduct(id, updates);
+        return { success: true };
+      }),
+
+    // Delete product (admin only)
+    delete: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ ctx, input }) => {
+        if (ctx.user.role !== 'admin') {
+          throw new Error('Unauthorized');
+        }
+        const { deleteProduct } = await import("./db");
+        await deleteProduct(input.id);
+        return { success: true };
+      }),
+
+    // Upload product image (admin only)
+    uploadImage: protectedProcedure
+      .input(
+        z.object({
+          filename: z.string(),
+          contentType: z.string(),
+          base64Data: z.string(),
+        })
+      )
+      .mutation(async ({ ctx, input }) => {
+        if (ctx.user.role !== 'admin') {
+          throw new Error('Unauthorized');
+        }
+        
+        const { storagePut } = await import("./storage");
+        
+        // Convert base64 to buffer
+        const buffer = Buffer.from(input.base64Data, 'base64');
+        
+        // Generate unique filename
+        const timestamp = Date.now();
+        const randomStr = Math.random().toString(36).substring(7);
+        const ext = input.filename.split('.').pop();
+        const key = `products/${timestamp}-${randomStr}.${ext}`;
+        
+        // Upload to S3
+        const { url } = await storagePut(key, buffer, input.contentType);
+        
+        return { url };
       }),
   }),
 });

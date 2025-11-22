@@ -1,0 +1,532 @@
+import { useState } from "react";
+import { trpc } from "@/lib/trpc";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import { toast } from "sonner";
+import { Pencil, Trash2, Plus, Search } from "lucide-react";
+
+type Product = {
+  id: number;
+  name: string;
+  nameEn: string | null;
+  description: string;
+  descriptionEn: string | null;
+  category: string;
+  subcategory: string | null;
+  price: number;
+  servingSize: string | null;
+  image: string;
+  imageAlt: string | null;
+  isVegetarian: boolean;
+  isVegan: boolean;
+  isGlutenFree: boolean;
+  isDairyFree: boolean;
+  calories: number | null;
+  protein: number | null;
+  carbs: number | null;
+  fat: number | null;
+  nutritionalTip: string | null;
+  nutritionalTipEn: string | null;
+  isActive: boolean;
+  displayOrder: number;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+const CATEGORIES = [
+  { value: "sandwiches", label: "Sandwiches" },
+  { value: "salades", label: "Salades" },
+  { value: "plats-principaux", label: "Plats Principaux" },
+  { value: "traiteur-bouchees", label: "Traiteur - Bouchées" },
+  { value: "traiteur-buffets", label: "Traiteur - Buffets" },
+  { value: "boites-lunch", label: "Boîtes à Lunch" },
+  { value: "desserts", label: "Desserts" },
+  { value: "boissons", label: "Boissons" },
+];
+
+export default function AdminProducts() {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState<string>("all");
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+
+  const utils = trpc.useUtils();
+  const { data: products = [], isLoading } = trpc.products.listAll.useQuery();
+
+  const createMutation = trpc.products.create.useMutation({
+    onSuccess: () => {
+      utils.products.listAll.invalidate();
+      setIsDialogOpen(false);
+      toast.success("Produit créé avec succès");
+    },
+    onError: (error) => {
+      toast.error(`Erreur: ${error.message}`);
+    },
+  });
+
+  const updateMutation = trpc.products.update.useMutation({
+    onSuccess: () => {
+      utils.products.listAll.invalidate();
+      setIsDialogOpen(false);
+      setEditingProduct(null);
+      toast.success("Produit mis à jour avec succès");
+    },
+    onError: (error) => {
+      toast.error(`Erreur: ${error.message}`);
+    },
+  });
+
+  const deleteMutation = trpc.products.delete.useMutation({
+    onSuccess: () => {
+      utils.products.listAll.invalidate();
+      toast.success("Produit supprimé avec succès");
+    },
+    onError: (error) => {
+      toast.error(`Erreur: ${error.message}`);
+    },
+  });
+
+  const filteredProducts = products.filter((product) => {
+    const matchesSearch =
+      product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      product.description.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory =
+      categoryFilter === "all" || product.category === categoryFilter;
+    return matchesSearch && matchesCategory;
+  });
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+
+    const productData = {
+      name: formData.get("name") as string,
+      nameEn: formData.get("nameEn") as string || undefined,
+      description: formData.get("description") as string,
+      descriptionEn: formData.get("descriptionEn") as string || undefined,
+      category: formData.get("category") as string,
+      subcategory: formData.get("subcategory") as string || undefined,
+      price: parseInt(formData.get("price") as string),
+      servingSize: formData.get("servingSize") as string || undefined,
+      image: formData.get("image") as string,
+      imageAlt: formData.get("imageAlt") as string || undefined,
+      isVegetarian: formData.get("isVegetarian") === "on",
+      isVegan: formData.get("isVegan") === "on",
+      isGlutenFree: formData.get("isGlutenFree") === "on",
+      isDairyFree: formData.get("isDairyFree") === "on",
+      calories: formData.get("calories") ? parseInt(formData.get("calories") as string) : undefined,
+      protein: formData.get("protein") ? parseInt(formData.get("protein") as string) : undefined,
+      carbs: formData.get("carbs") ? parseInt(formData.get("carbs") as string) : undefined,
+      fat: formData.get("fat") ? parseInt(formData.get("fat") as string) : undefined,
+      nutritionalTip: formData.get("nutritionalTip") as string || undefined,
+      nutritionalTipEn: formData.get("nutritionalTipEn") as string || undefined,
+      isActive: formData.get("isActive") === "on",
+      displayOrder: formData.get("displayOrder") ? parseInt(formData.get("displayOrder") as string) : 0,
+    };
+
+    if (editingProduct) {
+      updateMutation.mutate({ id: editingProduct.id, ...productData });
+    } else {
+      createMutation.mutate(productData);
+    }
+  };
+
+  const handleEdit = (product: Product) => {
+    setEditingProduct(product);
+    setIsDialogOpen(true);
+  };
+
+  const handleDelete = (id: number) => {
+    if (confirm("Êtes-vous sûr de vouloir supprimer ce produit?")) {
+      deleteMutation.mutate({ id });
+    }
+  };
+
+  const handleDialogClose = () => {
+    setIsDialogOpen(false);
+    setEditingProduct(null);
+  };
+
+  return (
+    <div className="container py-8">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold">Gestion des Produits</h1>
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogTrigger asChild>
+            <Button onClick={() => setEditingProduct(null)}>
+              <Plus className="mr-2 h-4 w-4" />
+              Nouveau Produit
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>
+                {editingProduct ? "Modifier le produit" : "Nouveau produit"}
+              </DialogTitle>
+              <DialogDescription>
+                Remplissez les informations du produit
+              </DialogDescription>
+            </DialogHeader>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="name">Nom (FR) *</Label>
+                  <Input
+                    id="name"
+                    name="name"
+                    defaultValue={editingProduct?.name}
+                    required
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="nameEn">Nom (EN)</Label>
+                  <Input
+                    id="nameEn"
+                    name="nameEn"
+                    defaultValue={editingProduct?.nameEn || ""}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <Label htmlFor="description">Description (FR) *</Label>
+                <Textarea
+                  id="description"
+                  name="description"
+                  defaultValue={editingProduct?.description}
+                  required
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="descriptionEn">Description (EN)</Label>
+                <Textarea
+                  id="descriptionEn"
+                  name="descriptionEn"
+                  defaultValue={editingProduct?.descriptionEn || ""}
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="category">Catégorie *</Label>
+                  <Select name="category" defaultValue={editingProduct?.category} required>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Sélectionner une catégorie" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {CATEGORIES.map((cat) => (
+                        <SelectItem key={cat.value} value={cat.value}>
+                          {cat.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label htmlFor="subcategory">Sous-catégorie</Label>
+                  <Input
+                    id="subcategory"
+                    name="subcategory"
+                    defaultValue={editingProduct?.subcategory || ""}
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-3 gap-4">
+                <div>
+                  <Label htmlFor="price">Prix (cents) *</Label>
+                  <Input
+                    id="price"
+                    name="price"
+                    type="number"
+                    defaultValue={editingProduct?.price}
+                    required
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="servingSize">Portion</Label>
+                  <Input
+                    id="servingSize"
+                    name="servingSize"
+                    defaultValue={editingProduct?.servingSize || ""}
+                    placeholder="ex: 8-10 personnes"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="displayOrder">Ordre d'affichage</Label>
+                  <Input
+                    id="displayOrder"
+                    name="displayOrder"
+                    type="number"
+                    defaultValue={editingProduct?.displayOrder || 0}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <Label htmlFor="image">URL de l'image *</Label>
+                <Input
+                  id="image"
+                  name="image"
+                  defaultValue={editingProduct?.image}
+                  required
+                  placeholder="/images/menu/product.jpg"
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="imageAlt">Texte alternatif de l'image</Label>
+                <Input
+                  id="imageAlt"
+                  name="imageAlt"
+                  defaultValue={editingProduct?.imageAlt || ""}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label>Régimes alimentaires</Label>
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="isVegetarian"
+                      name="isVegetarian"
+                      defaultChecked={editingProduct?.isVegetarian}
+                    />
+                    <Label htmlFor="isVegetarian" className="font-normal">
+                      Végétarien
+                    </Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="isVegan"
+                      name="isVegan"
+                      defaultChecked={editingProduct?.isVegan}
+                    />
+                    <Label htmlFor="isVegan" className="font-normal">
+                      Végétalien
+                    </Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="isGlutenFree"
+                      name="isGlutenFree"
+                      defaultChecked={editingProduct?.isGlutenFree}
+                    />
+                    <Label htmlFor="isGlutenFree" className="font-normal">
+                      Sans gluten
+                    </Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="isDairyFree"
+                      name="isDairyFree"
+                      defaultChecked={editingProduct?.isDairyFree}
+                    />
+                    <Label htmlFor="isDairyFree" className="font-normal">
+                      Sans produits laitiers
+                    </Label>
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-4 gap-4">
+                <div>
+                  <Label htmlFor="calories">Calories</Label>
+                  <Input
+                    id="calories"
+                    name="calories"
+                    type="number"
+                    defaultValue={editingProduct?.calories || ""}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="protein">Protéines (g)</Label>
+                  <Input
+                    id="protein"
+                    name="protein"
+                    type="number"
+                    defaultValue={editingProduct?.protein || ""}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="carbs">Glucides (g)</Label>
+                  <Input
+                    id="carbs"
+                    name="carbs"
+                    type="number"
+                    defaultValue={editingProduct?.carbs || ""}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="fat">Lipides (g)</Label>
+                  <Input
+                    id="fat"
+                    name="fat"
+                    type="number"
+                    defaultValue={editingProduct?.fat || ""}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <Label htmlFor="nutritionalTip">Conseil nutritionnel (FR)</Label>
+                <Textarea
+                  id="nutritionalTip"
+                  name="nutritionalTip"
+                  defaultValue={editingProduct?.nutritionalTip || ""}
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="nutritionalTipEn">Conseil nutritionnel (EN)</Label>
+                <Textarea
+                  id="nutritionalTipEn"
+                  name="nutritionalTipEn"
+                  defaultValue={editingProduct?.nutritionalTipEn || ""}
+                />
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="isActive"
+                  name="isActive"
+                  defaultChecked={editingProduct?.isActive ?? true}
+                />
+                <Label htmlFor="isActive" className="font-normal">
+                  Produit actif (visible sur le site)
+                </Label>
+              </div>
+
+              <div className="flex justify-end space-x-2">
+                <Button type="button" variant="outline" onClick={handleDialogClose}>
+                  Annuler
+                </Button>
+                <Button type="submit" disabled={createMutation.isPending || updateMutation.isPending}>
+                  {editingProduct ? "Mettre à jour" : "Créer"}
+                </Button>
+              </div>
+            </form>
+          </DialogContent>
+        </Dialog>
+      </div>
+
+      <div className="mb-6 flex gap-4">
+        <div className="flex-1">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+            <Input
+              placeholder="Rechercher un produit..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10"
+            />
+          </div>
+        </div>
+        <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+          <SelectTrigger className="w-[200px]">
+            <SelectValue placeholder="Catégorie" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Toutes les catégories</SelectItem>
+            {CATEGORIES.map((cat) => (
+              <SelectItem key={cat.value} value={cat.value}>
+                {cat.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      {isLoading ? (
+        <div className="text-center py-8">Chargement...</div>
+      ) : (
+        <div className="border rounded-lg">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Image</TableHead>
+                <TableHead>Nom</TableHead>
+                <TableHead>Catégorie</TableHead>
+                <TableHead>Prix</TableHead>
+                <TableHead>Statut</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filteredProducts.map((product) => (
+                <TableRow key={product.id}>
+                  <TableCell>
+                    <img
+                      src={product.image}
+                      alt={product.imageAlt || product.name}
+                      className="w-16 h-16 object-cover rounded"
+                    />
+                  </TableCell>
+                  <TableCell className="font-medium">{product.name}</TableCell>
+                  <TableCell>
+                    {CATEGORIES.find((c) => c.value === product.category)?.label}
+                  </TableCell>
+                  <TableCell>${(product.price / 100).toFixed(2)}</TableCell>
+                  <TableCell>
+                    <span
+                      className={`px-2 py-1 rounded text-xs ${
+                        product.isActive
+                          ? "bg-green-100 text-green-800"
+                          : "bg-gray-100 text-gray-800"
+                      }`}
+                    >
+                      {product.isActive ? "Actif" : "Inactif"}
+                    </span>
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleEdit(product)}
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleDelete(product.id)}
+                    >
+                      <Trash2 className="h-4 w-4 text-destructive" />
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      )}
+    </div>
+  );
+}

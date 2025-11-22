@@ -14,6 +14,7 @@ import Portfolio from "./pages/Portfolio";
 import AdminOrders from "./pages/AdminOrders";
 import Reservations from "./pages/Reservations";
 import AdminReservations from "./pages/AdminReservations";
+import AdminProducts from "./pages/AdminProducts";
 import { Chatbot } from "./components/Chatbot";
 
 function Router() {
@@ -26,6 +27,7 @@ function Router() {
       <Route path={"/reservations"} component={Reservations} />
       <Route path={"/admin/orders"} component={AdminOrders} />
       <Route path={"/admin/reservations"} component={AdminReservations} />
+      <Route path={"/admin/products"} component={AdminProducts} />
       <Route path={"/404"} component={NotFound} />
       <Route component={NotFound} />
     </Switch>

@@ -279,3 +279,20 @@
 - [x] Send lead data to n8n when conversation starts
 - [x] Test chatbot functionality end-to-end
 - [x] Write tests for chatbot procedures
+
+
+## Admin Product Management Module - User Request
+- [x] Create products table in database schema
+- [x] Add product categories and dietary tags tables
+- [x] Create tRPC procedures for listing all products
+- [x] Create tRPC procedure for getting single product
+- [x] Create tRPC procedure for creating new product
+- [x] Create tRPC procedure for updating product
+- [x] Create tRPC procedure for deleting product
+- [x] Create tRPC procedure for uploading product images
+- [x] Build admin products list page with search and filters
+- [x] Build product edit form with all fields
+- [x] Add image upload component with preview
+- [x] Add category and dietary tags selection
+- [x] Test complete product management flow
+- [x] Write tests for product CRUD procedures
