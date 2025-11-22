@@ -1,0 +1,172 @@
+{
+  "name": "Les Touillés - Chatbot AI Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "chatbot-response",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "id": "webhook-node",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 300],
+      "webhookId": "chatbot-response"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract data from webhook\nconst sessionId = $input.item.json.sessionId;\nconst userMessage = $input.item.json.message;\nconst language = $input.item.json.language || 'fr';\nconst conversationHistory = $input.item.json.conversationHistory || [];\n\n// Build system message with company context\nconst systemMessage = {\n  role: 'system',\n  content: `Tu es l'assistant virtuel de Les Touillés, un service traiteur québécois de qualité.\n\nCONTEXTE DE L'ENTREPRISE:\n- Spécialités: plats préparés, sandwiches, salades, desserts, traiteur pour événements\n- Services: mariages, événements corporatifs, fêtes privées, commandes individuelles\n- Contact: (514) 123-4567, info@lestouilles.ca\n- Localisation: Québec, Canada\n\nTON RÔLE:\n- Répondre aux questions sur le menu, les prix, les services de traiteur\n- Aider à planifier des événements (nombre d'invités, type d'événement, budget)\n- Suggérer des plats appropriés selon les besoins du client\n- Capturer les informations de contact pour un suivi personnalisé\n- Être chaleureux, professionnel et orienté service client\n- Répondre en ${language === 'fr' ? 'français' : 'anglais'} selon la langue du client\n\nINSTRUCTIONS:\n- Si le client pose des questions sur des produits spécifiques, donne des détails sur les ingrédients, portions, prix\n- Si le client veut organiser un événement, pose des questions sur: date, nombre d'invités, type d'événement, budget, restrictions alimentaires\n- Si le client exprime un intérêt sérieux, demande poliment ses coordonnées (nom, email, téléphone) pour qu'un membre de l'équipe le contacte\n- Sois concis mais informatif (2-3 phrases maximum par réponse)\n- Utilise un ton amical et professionnel`\n};\n\n// Build current user message\nconst currentMessage = {\n  role: 'user',\n  content: userMessage\n};\n\n// Combine all messages for OpenAI\nconst messages = [systemMessage, ...conversationHistory, currentMessage];\n\nreturn {\n  sessionId,\n  userMessage,\n  language,\n  messages\n};"
+      },
+      "id": "prepare-messages",
+      "name": "Prepare Messages",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o-mini",
+        "options": {
+          "temperature": 0.7,
+          "maxTokens": 500
+        }
+      },
+      "id": "openai-node",
+      "name": "OpenAI Chat",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [680, 300],
+      "credentials": {
+        "openAiApi": {
+          "id": "REPLACE_WITH_YOUR_OPENAI_CREDENTIAL_ID",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "messages",
+              "name": "messages",
+              "value": "={{ $json.messages }}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "set-messages",
+      "name": "Set Messages",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [900, 300]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "response",
+              "name": "response",
+              "value": "={{ $json.choices[0].message.content }}",
+              "type": "string"
+            },
+            {
+              "id": "shouldCaptureLead",
+              "name": "shouldCaptureLead",
+              "value": "={{ $json.choices[0].message.content.toLowerCase().includes('coordonnées') || $json.choices[0].message.content.toLowerCase().includes('contact') || $json.choices[0].message.content.toLowerCase().includes('email') || $json.choices[0].message.content.toLowerCase().includes('téléphone') || $json.choices[0].message.content.toLowerCase().includes('phone') }}",
+              "type": "boolean"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "format-response",
+      "name": "Format Response",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [1120, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"response\": $json.response, \"shouldCaptureLead\": $json.shouldCaptureLead } }}"
+      },
+      "id": "respond-webhook",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1340, 300]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Prepare Messages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Messages": {
+      "main": [
+        [
+          {
+            "node": "Set Messages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Messages": {
+      "main": [
+        [
+          {
+            "node": "OpenAI Chat",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat": {
+      "main": [
+        [
+          {
+            "node": "Format Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Response": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-01-22T08:00:00.000Z",
+  "versionId": "1"
+}

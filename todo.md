@@ -347,3 +347,16 @@
 - [x] Handle webhook errors and timeouts gracefully
 - [x] Update chatbot tests to mock n8n webhook responses
 - [x] Test complete chatbot flow with n8n integration
+
+
+## Create n8n Workflow for AI Chatbot - User Request
+- [x] Access n8n instance via browser
+- [x] Create new workflow "Les Touillés - Chatbot AI Agent"
+- [x] Configure webhook trigger node
+- [x] Add OpenAI/Anthropic AI agent node with system prompt
+- [x] Add lead detection logic node
+- [x] Configure webhook response node
+- [x] Create JSON workflow file for easy import
+- [x] Create import instructions document
+- [ ] Import workflow in n8n and activate
+- [ ] Copy webhook URL and add to environment variables

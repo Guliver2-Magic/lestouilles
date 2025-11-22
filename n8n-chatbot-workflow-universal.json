@@ -1,0 +1,143 @@
+{
+  "name": "Les Touillés - Chatbot AI Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "chatbot-response",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "id": "webhook-node",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        240,
+        300
+      ],
+      "webhookId": "chatbot-response"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract data from webhook\nconst sessionId = $input.item.json.body.sessionId || $input.item.json.sessionId;\nconst userMessage = $input.item.json.body.message || $input.item.json.message;\nconst language = $input.item.json.body.language || $input.item.json.language || 'fr';\nconst conversationHistory = $input.item.json.body.conversationHistory || $input.item.json.conversationHistory || [];\n\n// Build system message with company context\nconst systemPrompt = language === 'fr' ? \n  `Tu es l'assistant virtuel de Les Touillés, un service traiteur québécois de qualité.\n\nCONTEXTE DE L'ENTREPRISE:\n- Spécialités: plats préparés, sandwiches, salades, desserts, traiteur pour événements\n- Services: mariages, événements corporatifs, fêtes privées, commandes individuelles\n- Contact: (514) 123-4567, info@lestouilles.ca\n- Localisation: Québec, Canada\n\nTON RÔLE:\n- Répondre aux questions sur le menu, les prix, les services de traiteur\n- Aider à planifier des événements (nombre d'invités, type d'événement, budget)\n- Suggérer des plats appropriés selon les besoins du client\n- Capturer les informations de contact pour un suivi personnalisé\n- Être chaleureux, professionnel et orienté service client\n- Répondre en français\n\nINSTRUCTIONS:\n- Si le client pose des questions sur des produits spécifiques, donne des détails sur les ingrédients, portions, prix\n- Si le client veut organiser un événement, pose des questions sur: date, nombre d'invités, type d'événement, budget, restrictions alimentaires\n- Si le client exprime un intérêt sérieux, demande poliment ses coordonnées (nom, email, téléphone) pour qu'un membre de l'équipe le contacte\n- Sois concis mais informatif (2-3 phrases maximum par réponse)\n- Utilise un ton amical et professionnel` :\n  `You are the virtual assistant for Les Touillés, a quality Quebec catering service.\n\nCOMPANY CONTEXT:\n- Specialties: prepared meals, sandwiches, salads, desserts, event catering\n- Services: weddings, corporate events, private parties, individual orders\n- Contact: (514) 123-4567, info@lestouilles.ca\n- Location: Quebec, Canada\n\nYOUR ROLE:\n- Answer questions about the menu, prices, catering services\n- Help plan events (number of guests, event type, budget)\n- Suggest appropriate dishes based on client needs\n- Capture contact information for personalized follow-up\n- Be warm, professional and customer service oriented\n- Respond in English\n\nINSTRUCTIONS:\n- If the client asks about specific products, give details about ingredients, portions, prices\n- If the client wants to organize an event, ask about: date, number of guests, event type, budget, dietary restrictions\n- If the client expresses serious interest, politely ask for their contact information (name, email, phone) so a team member can contact them\n- Be concise but informative (2-3 sentences maximum per response)\n- Use a friendly and professional tone`;\n\nconst systemMessage = {\n  role: 'system',\n  content: systemPrompt\n};\n\n// Build current user message\nconst currentMessage = {\n  role: 'user',\n  content: userMessage\n};\n\n// Combine all messages for OpenAI\nconst messages = [systemMessage, ...conversationHistory, currentMessage];\n\nreturn {\n  sessionId,\n  userMessage,\n  language,\n  messages\n};"
+      },
+      "id": "prepare-messages",
+      "name": "Prepare Messages",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://api.openai.com/v1/chat/completions",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "openAiApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ {\n  \"model\": \"gpt-4o-mini\",\n  \"messages\": $json.messages,\n  \"temperature\": 0.7,\n  \"max_tokens\": 500\n} }}",
+        "options": {}
+      },
+      "id": "openai-request",
+      "name": "OpenAI API Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        680,
+        300
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "REPLACE_WITH_YOUR_CREDENTIAL_ID",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get the AI response\nconst aiResponse = $input.item.json.choices[0].message.content;\n\n// Check if the response suggests capturing lead info\nconst lowerResponse = aiResponse.toLowerCase();\nconst shouldCaptureLead = \n  lowerResponse.includes('coordonnées') ||\n  lowerResponse.includes('coordonnees') ||\n  lowerResponse.includes('contact') ||\n  lowerResponse.includes('email') ||\n  lowerResponse.includes('téléphone') ||\n  lowerResponse.includes('telephone') ||\n  lowerResponse.includes('phone') ||\n  lowerResponse.includes('reach out') ||\n  lowerResponse.includes('get in touch') ||\n  lowerResponse.includes('membre de notre équipe') ||\n  lowerResponse.includes('team member');\n\nreturn {\n  response: aiResponse,\n  shouldCaptureLead: shouldCaptureLead\n};"
+      },
+      "id": "detect-lead",
+      "name": "Detect Lead Intent",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        900,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"response\": $json.response, \"shouldCaptureLead\": $json.shouldCaptureLead } }}",
+        "options": {}
+      },
+      "id": "respond-webhook",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1120,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Prepare Messages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Messages": {
+      "main": [
+        [
+          {
+            "node": "OpenAI API Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI API Request": {
+      "main": [
+        [
+          {
+            "node": "Detect Lead Intent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Detect Lead Intent": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-01-22T08:30:00.000Z",
+  "versionId": "1"
+}
