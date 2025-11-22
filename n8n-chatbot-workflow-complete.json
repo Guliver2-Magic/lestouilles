@@ -1,0 +1,120 @@
+{
+  "name": "Les Touillés - Chatbot AI Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "chatbot-response",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-node",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [250, 300],
+      "webhookId": "chatbot-response"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/chat/completions",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "openAiApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": []
+        },
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"gpt-4o-mini\",\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"Tu es l'assistant virtuel de Les Touillés, un service traiteur québécois.\\n\\nContexte:\\n- Spécialités: plats préparés, sandwiches, desserts, traiteur pour événements\\n- Services: mariages, événements corporatifs, fêtes privées\\n- Contact: (514) 123-4567, info@lestouilles.ca\\n\\nTon rôle:\\n- Répondre aux questions sur le menu et les services\\n- Aider à planifier des événements\\n- Capturer les informations de contact (nom, email, téléphone)\\n- Être chaleureux, professionnel et orienté service client\\n- Répondre en français ou anglais selon la langue du client\\n\\nSi le client exprime un intérêt, demande poliment ses coordonnées pour un suivi personnalisé.\"\n    },\n    ...{{ $json.body.conversationHistory || [] }},\n    {\n      \"role\": \"user\",\n      \"content\": \"{{ $json.body.message }}\"\n    }\n  ],\n  \"temperature\": 0.7,\n  \"max_tokens\": 500\n}",
+        "options": {}
+      },
+      "id": "openai-request",
+      "name": "OpenAI Chat",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [450, 300],
+      "credentials": {
+        "openAiApi": {
+          "id": "1",
+          "name": "OpenAI API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract the AI response from OpenAI\nconst openaiResponse = $input.item.json;\nconst aiMessage = openaiResponse.choices[0].message.content;\n\n// Check if we should capture lead (simple keyword detection)\nconst shouldCaptureLead = /contact|coordonnées|réserver|réservation|événement|mariage|corporatif|devis|prix|commander/i.test(aiMessage);\n\nreturn {\n  response: aiMessage,\n  shouldCaptureLead: shouldCaptureLead\n};"
+      },
+      "id": "format-response",
+      "name": "Format Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "respond-webhook",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [850, 300]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "OpenAI Chat",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat": {
+      "main": [
+        [
+          {
+            "node": "Format Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Response": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2024-11-22T15:30:00.000Z",
+  "versionId": "1"
+}
