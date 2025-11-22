@@ -296,3 +296,26 @@
 - [x] Add category and dietary tags selection
 - [x] Test complete product management flow
 - [x] Write tests for product CRUD procedures
+
+
+## Fix Broken Image Links in Admin Module - User Report
+- [x] Fix image display in admin products table
+- [x] Ensure images use correct absolute URLs
+- [ ] Test image display in admin module
+
+
+## Migrate Products to Database - User Request
+- [x] Create migration script to import from completeMenuData.ts
+- [x] Run migration and verify all products imported correctly
+- [x] Update Home page to fetch products from database
+- [x] Update menu filtering to use database queries
+- [x] Test product display on public pages
+- [ ] Remove dependency on static menu data files
+
+
+## AI Product Attribute Suggestions - User Request
+- [x] Create tRPC procedure to suggest product attributes using LLM
+- [x] Add "Suggest with AI" button in admin product form
+- [x] Auto-fill nutritional values based on AI suggestions
+- [x] Auto-select dietary tags based on AI suggestions
+- [x] Test AI suggestions with various product types

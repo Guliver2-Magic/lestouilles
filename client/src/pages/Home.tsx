@@ -4,7 +4,8 @@ import { useCart } from "@/contexts/CartContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { completeMenu, categories } from "@/data/completeMenuData";
+import { trpc } from "@/lib/trpc";
+import { categories } from "@/data/completeMenuData";
 import { CartSidebar } from "@/components/CartSidebar";
 import { Chatbot } from "@/components/Chatbot";
 import { 
@@ -53,9 +54,36 @@ export default function Home() {
     return () => clearInterval(timer);
   }, []);
 
+  // Load products from database
+  const { data: dbProducts = [], isLoading } = trpc.products.listActive.useQuery();
+
+  // Convert database products to MenuItem format
+  const allProducts = dbProducts.map(product => ({
+    id: String(product.id),
+    name: { fr: product.name, en: product.nameEn || product.name },
+    description: { fr: product.description, en: product.descriptionEn || product.description },
+    price: product.price / 100, // Convert cents to dollars
+    image: product.image,
+    category: product.category,
+    servingSize: product.servingSize || undefined,
+    nutrition: product.calories ? {
+      calories: product.calories,
+      protein: product.protein || 0,
+      carbs: product.carbs || 0,
+      fat: product.fat || 0,
+    } : undefined,
+    dietaryTags: [
+      ...(product.isVegan ? ['vegan' as const] : []),
+      ...(product.isVegetarian ? ['vegetarian' as const] : []),
+      ...(product.isGlutenFree ? ['glutenfree' as const] : []),
+      ...(product.isDairyFree ? ['dairyfree' as const] : []),
+    ],
+    nutritionalTip: product.nutritionalTip,
+  }));
+
   const filteredMenu = selectedCategory === "Tous" 
-    ? completeMenu 
-    : completeMenu.filter(item => item.category === selectedCategory);
+    ? allProducts 
+    : allProducts.filter(item => item.category === selectedCategory);
 
   const cartItemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
@@ -421,9 +449,9 @@ export default function Home() {
                     <ChefHat className="h-16 w-16 text-muted-foreground/20" />
                   </div>
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10" />
-                  {item.dietary && (
+                  {item.dietaryTags && item.dietaryTags.length > 0 && (
                     <div className="absolute top-2 right-2 z-20 flex gap-1">
-                      {item.dietary.map((tag) => (
+                      {item.dietaryTags.map((tag: string) => (
                         <Badge key={tag} variant="secondary" className="text-xs">
                           {tag}
                         </Badge>
@@ -439,19 +467,14 @@ export default function Home() {
                     {item.description[language]}
                   </p>
                   
-                  {/* Quantity and Servings */}
-                  <div className="flex items-center justify-between mb-2 text-sm">
-                    {item.quantity && (
-                      <span className="font-medium text-muted-foreground">
-                        📦 {item.quantity}
-                      </span>
-                    )}
-                    {item.servings && (
+                  {/* Servings */}
+                  {item.servingSize && (
+                    <div className="mb-2 text-sm">
                       <span className="font-medium text-primary">
-                        👥 {item.servings}
+                        👥 {item.servingSize}
                       </span>
-                    )}
-                  </div>
+                    </div>
+                  )}
 
                   {/* Nutrition Information */}
                   {item.nutrition && (
@@ -478,11 +501,11 @@ export default function Home() {
                   )}
 
                   {/* Nutritional Tips */}
-                  {item.nutritionalTips && (
+                  {item.nutritionalTip && (
                     <div className="mb-3 p-2 bg-green-50 dark:bg-green-900/20 rounded-md border border-green-200 dark:border-green-800">
                       <p className="text-xs text-green-700 dark:text-green-300 flex items-start gap-1">
                         <span className="text-green-600 dark:text-green-400 font-bold">💡</span>
-                        <span>{item.nutritionalTips[language]}</span>
+                        <span>{item.nutritionalTip}</span>
                       </p>
                     </div>
                   )}
@@ -495,7 +518,7 @@ export default function Home() {
                   </div>
                   <Button 
                     className="w-full" 
-                    onClick={() => addToCart(item)}
+                    onClick={() => addToCart({ ...item, id: String(item.id) })}
                   >
                     <ShoppingCart className="h-4 w-4 mr-2" />
                     {t.menu.addToCart}

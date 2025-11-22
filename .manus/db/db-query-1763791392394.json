@@ -1,0 +1,80 @@
+{
+  "query": "SELECT id, name, category, price, isActive FROM products LIMIT 10",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 494y6CgAR8Uu32w.cf8f73b2fa18 --database nG5FpW6QC2VPLHfftjzBXF --execute SELECT id, name, category, price, isActive FROM products LIMIT 10",
+  "rows": [
+    {
+      "id": "1",
+      "name": "Test Sandwich",
+      "category": "sandwiches",
+      "price": "1200",
+      "isActive": "1"
+    },
+    {
+      "id": "2",
+      "name": "Updated Product",
+      "category": "desserts",
+      "price": "900",
+      "isActive": "1"
+    },
+    {
+      "id": "30001",
+      "name": "Le Végétarien",
+      "category": "sandwiches",
+      "price": "1200",
+      "isActive": "1"
+    },
+    {
+      "id": "30002",
+      "name": "Le Poulet",
+      "category": "sandwiches",
+      "price": "1400",
+      "isActive": "1"
+    },
+    {
+      "id": "30003",
+      "name": "Le Smoked Meat",
+      "category": "sandwiches",
+      "price": "1600",
+      "isActive": "1"
+    },
+    {
+      "id": "30004",
+      "name": "Salade César",
+      "category": "salades",
+      "price": "1300",
+      "isActive": "1"
+    },
+    {
+      "id": "30005",
+      "name": "Salade Grecque",
+      "category": "salades",
+      "price": "1200",
+      "isActive": "1"
+    },
+    {
+      "id": "30006",
+      "name": "Lasagne",
+      "category": "plats-principaux",
+      "price": "1800",
+      "isActive": "1"
+    },
+    {
+      "id": "30007",
+      "name": "Poulet Rôti",
+      "category": "plats-principaux",
+      "price": "2000",
+      "isActive": "1"
+    },
+    {
+      "id": "30008",
+      "name": "Canapés Assortis",
+      "category": "traiteur-bouchees",
+      "price": "3500",
+      "isActive": "1"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tcategory\tprice\tisActive\n1\tTest Sandwich\tsandwiches\t1200\t1\n2\tUpdated Product\tdesserts\t900\t1\n30001\tLe Végétarien\tsandwiches\t1200\t1\n30002\tLe Poulet\tsandwiches\t1400\t1\n30003\tLe Smoked Meat\tsandwiches\t1600\t1\n30004\tSalade César\tsalades\t1300\t1\n30005\tSalade Grecque\tsalades\t1200\t1\n30006\tLasagne\tplats-principaux\t1800\t1\n30007\tPoulet Rôti\tplats-principaux\t2000\t1\n30008\tCanapés Assortis\ttraiteur-bouchees\t3500\t1\n",
+  "stderr": "",
+  "execution_time_ms": 214
+}

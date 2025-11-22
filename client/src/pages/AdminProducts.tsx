@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { trpc } from "@/lib/trpc";
+import { Loader2, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -75,6 +76,7 @@ export default function AdminProducts() {
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  const [isGeneratingSuggestions, setIsGeneratingSuggestions] = useState(false);
 
   const utils = trpc.useUtils();
   const { data: products = [], isLoading } = trpc.products.listAll.useQuery();
@@ -111,6 +113,8 @@ export default function AdminProducts() {
       toast.error(`Erreur: ${error.message}`);
     },
   });
+
+  const suggestMutation = trpc.products.suggestAttributes.useMutation();
 
   const filteredProducts = products.filter((product) => {
     const matchesSearch =
@@ -356,6 +360,69 @@ export default function AdminProducts() {
                 </div>
               </div>
 
+              {/* AI Suggestion Button */}
+              <div className="border-t pt-4">
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="w-full"
+                  onClick={async () => {
+                    const nameInput = document.getElementById("name") as HTMLInputElement;
+                    const descInput = document.getElementById("description") as HTMLTextAreaElement;
+                    
+                    if (!nameInput?.value || !descInput?.value) {
+                      toast.error("Veuillez remplir le nom et la description d'abord");
+                      return;
+                    }
+
+                    setIsGeneratingSuggestions(true);
+
+                    try {
+                      const suggestions = await suggestMutation.mutateAsync({
+                        name: nameInput.value,
+                        description: descInput.value,
+                      });
+
+                      // Fill in the form fields
+                      (document.getElementById("calories") as HTMLInputElement).value = String(suggestions.calories || "");
+                      (document.getElementById("protein") as HTMLInputElement).value = String(suggestions.protein || "");
+                      (document.getElementById("carbs") as HTMLInputElement).value = String(suggestions.carbs || "");
+                      (document.getElementById("fat") as HTMLInputElement).value = String(suggestions.fat || "");
+                      (document.getElementById("nutritionalTip") as HTMLTextAreaElement).value = suggestions.nutritionalTip || "";
+                      
+                      // Set checkboxes
+                      (document.getElementById("isVegetarian") as HTMLInputElement).checked = suggestions.isVegetarian || false;
+                      (document.getElementById("isVegan") as HTMLInputElement).checked = suggestions.isVegan || false;
+                      (document.getElementById("isGlutenFree") as HTMLInputElement).checked = suggestions.isGlutenFree || false;
+                      (document.getElementById("isDairyFree") as HTMLInputElement).checked = suggestions.isDairyFree || false;
+
+                      toast.success("Suggestions générées avec succès!");
+                    } catch (error) {
+                      console.error(error);
+                      toast.error("Erreur lors de la génération des suggestions");
+                    } finally {
+                      setIsGeneratingSuggestions(false);
+                    }
+                  }}
+                  disabled={isGeneratingSuggestions}
+                >
+                  {isGeneratingSuggestions ? (
+                    <>
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      Génération en cours...
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="h-4 w-4 mr-2" />
+                      Suggérer avec l'IA
+                    </>
+                  )}
+                </Button>
+                <p className="text-xs text-muted-foreground mt-2 text-center">
+                  L'IA analysera le nom et la description pour suggérer les valeurs nutritionnelles et les régimes alimentaires
+                </p>
+              </div>
+
               <div className="grid grid-cols-4 gap-4">
                 <div>
                   <Label htmlFor="calories">Calories</Label>
@@ -484,9 +551,13 @@ export default function AdminProducts() {
                 <TableRow key={product.id}>
                   <TableCell>
                     <img
-                      src={product.image}
+                      src={product.image.startsWith('http') ? product.image : `${window.location.origin}${product.image}`}
                       alt={product.imageAlt || product.name}
                       className="w-16 h-16 object-cover rounded"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="64" height="64"%3E%3Crect width="64" height="64" fill="%23ddd"/%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" dy=".3em" fill="%23999"%3ENo Image%3C/text%3E%3C/svg%3E';
+                      }}
                     />
                   </TableCell>
                   <TableCell className="font-medium">{product.name}</TableCell>

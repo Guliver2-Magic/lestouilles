@@ -635,6 +635,54 @@ ${input.dietaryRestrictions ? `\nRestrictions alimentaires: ${input.dietaryRestr
       }),
 
     // Upload product image (admin only)
+    suggestAttributes: protectedProcedure
+      .input(z.object({
+        name: z.string(),
+        description: z.string(),
+      }))
+      .mutation(async ({ input }) => {
+        const { invokeLLM } = await import("./_core/llm");
+        
+        const prompt = `Tu es un expert en nutrition. Analyse ce produit alimentaire et fournis des estimations précises:
+
+Nom: ${input.name}
+Description: ${input.description}
+
+Fournis UNIQUEMENT un objet JSON valide (sans markdown, sans \`\`\`) avec cette structure exacte:
+{
+  "calories": nombre (calories totales),
+  "protein": nombre (protéines en grammes),
+  "carbs": nombre (glucides en grammes),
+  "fat": nombre (lipides en grammes),
+  "nutritionalTip": "conseil nutritionnel en français (1 phrase)",
+  "isVegetarian": boolean,
+  "isVegan": boolean,
+  "isGlutenFree": boolean,
+  "isDairyFree": boolean
+}`;
+
+        const response = await invokeLLM({
+          messages: [
+            { role: "system", content: "Tu es un expert en nutrition. Tu réponds UNIQUEMENT avec du JSON valide, sans markdown." },
+            { role: "user", content: prompt }
+          ],
+        });
+
+        const content = response.choices[0]?.message?.content;
+        const contentStr = typeof content === 'string' ? content : '{}';
+        
+        // Remove markdown code blocks if present
+        const cleanContent = contentStr.replace(/```json\n?|```\n?/g, "").trim();
+        
+        try {
+          const suggestions = JSON.parse(cleanContent);
+          return suggestions;
+        } catch (error) {
+          console.error("Failed to parse LLM response:", cleanContent);
+          throw new Error("Failed to generate suggestions");
+        }
+      }),
+
     uploadImage: protectedProcedure
       .input(
         z.object({
