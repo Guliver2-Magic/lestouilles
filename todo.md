@@ -395,3 +395,17 @@
 - [x] Move "Pourquoi Choisir Les Touillés?" section to bottom of page
 - [x] Place product menu section immediately after hero
 - [x] Ensure logical flow: Hero → Products → Testimonial → Why Choose Us → Footer
+
+
+## Fix Navigation and Responsive Design - User Report
+- [x] Fix navigation menu links (not leading to correct sections)
+- [x] Fix category filter buttons (not filtering products correctly)
+- [x] Fix responsive design for iPad/tablet resolution
+- [x] Test navigation on all screen sizes
+- [x] Test category filters functionality
+- [x] Verify mobile menu works properly
+
+
+## Configure Chatbot Webhook - User Provided
+- [ ] Add N8N_CHATBOT_WEBHOOK_URL to environment variables
+- [ ] Test chatbot with n8n webhook integration

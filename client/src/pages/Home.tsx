@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { trpc } from "@/lib/trpc";
-import { categories } from "@/data/completeMenuData";
+import { useMemo, useState as useReactState } from "react";
 import { CartSidebar } from "@/components/CartSidebar";
 import { Chatbot } from "@/components/Chatbot";
 import { 
@@ -38,6 +38,7 @@ export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState("Tous");
   const [scrollY, setScrollY] = useState(0);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Parallax effect
   useEffect(() => {
@@ -80,6 +81,12 @@ export default function Home() {
     ],
     nutritionalTip: product.nutritionalTip,
   }));
+
+  // Get unique categories from products
+  const categories = useMemo(() => {
+    const uniqueCategories = Array.from(new Set(dbProducts.map(p => p.category)));
+    return ["Tous", ...uniqueCategories.sort()];
+  }, [dbProducts]);
 
   const filteredMenu = selectedCategory === "Tous" 
     ? allProducts 
@@ -222,7 +229,7 @@ export default function Home() {
             <span className="font-serif text-xl font-bold text-primary">Les Touillés</span>
           </Link>
           
-          <nav className="hidden md:flex items-center gap-6">
+          <nav className="hidden lg:flex items-center gap-6">
             <a href="#home" className="hover:text-primary transition-colors">
               {t.nav.home}
             </a>
@@ -242,6 +249,21 @@ export default function Home() {
               {t.nav.contact}
             </a>
           </nav>
+
+          {/* Mobile Menu Button */}
+          <button
+            className="lg:hidden p-2"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle menu"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              {mobileMenuOpen ? (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              ) : (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              )}
+            </svg>
+          </button>
 
           <div className="flex items-center gap-4">
             <Button
@@ -267,6 +289,32 @@ export default function Home() {
             </Button>
           </div>
         </div>
+
+        {/* Mobile Menu */}
+        {mobileMenuOpen && (
+          <div className="lg:hidden bg-background border-t">
+            <nav className="container flex flex-col py-4 space-y-3">
+              <a href="#home" className="hover:text-primary transition-colors" onClick={() => setMobileMenuOpen(false)}>
+                {t.nav.home}
+              </a>
+              <a href="#menu" className="hover:text-primary transition-colors" onClick={() => setMobileMenuOpen(false)}>
+                {language === "fr" ? "Menu" : "Menu"}
+              </a>
+              <a href="/about" className="hover:text-primary transition-colors" onClick={() => setMobileMenuOpen(false)}>
+                {t.nav.about}
+              </a>
+              <a href="/portfolio" className="hover:text-primary transition-colors" onClick={() => setMobileMenuOpen(false)}>
+                {language === "fr" ? "Portfolio" : "Portfolio"}
+              </a>
+              <a href="/reservations" className="hover:text-primary transition-colors" onClick={() => setMobileMenuOpen(false)}>
+                {language === "fr" ? "Réservations" : "Reservations"}
+              </a>
+              <a href="/contact" className="hover:text-primary transition-colors" onClick={() => setMobileMenuOpen(false)}>
+                {t.nav.contact}
+              </a>
+            </nav>
+          </div>
+        )}
       </header>
 
       {/* Hero Section with Image Carousel */}
@@ -338,13 +386,13 @@ export default function Home() {
             opacity: 1 - scrollY / 500
           }}
         >
-          <h1 className="font-serif text-5xl md:text-7xl font-bold mb-4">
+          <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4">
             {t.hero.title}
           </h1>
-          <p className="text-xl md:text-2xl mb-2 font-light tracking-wide">
+          <p className="text-lg sm:text-xl md:text-2xl mb-2 font-light tracking-wide">
             {t.hero.subtitle}
           </p>
-          <p className="text-lg md:text-xl mb-8 max-w-2xl mx-auto">
+          <p className="text-base sm:text-lg md:text-xl mb-8 max-w-2xl mx-auto px-4">
             {t.hero.description}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -378,7 +426,7 @@ export default function Home() {
           </div>
 
           {/* Category Filter */}
-          <div className="flex flex-wrap justify-center gap-2 mb-8">
+          <div className="flex flex-wrap justify-center gap-2 mb-8 px-4">
             {categories.map((category) => (
               <Button
                 key={category}
@@ -392,7 +440,7 @@ export default function Home() {
           </div>
 
           {/* Menu Grid */}
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
             {filteredMenu.map((item) => (
               <Card key={item.id} className="overflow-hidden hover:shadow-xl transition-shadow group">
                 <div className="relative h-48 overflow-hidden bg-muted">
