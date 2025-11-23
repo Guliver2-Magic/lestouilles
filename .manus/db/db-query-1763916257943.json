@@ -1,0 +1,9 @@
+{
+  "query": "DELETE FROM products WHERE name LIKE '%Test%' OR name LIKE '%test%' OR name LIKE '%Update%'",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 494y6CgAR8Uu32w.cf8f73b2fa18 --database nG5FpW6QC2VPLHfftjzBXF --execute DELETE FROM products WHERE name LIKE '%Test%' OR name LIKE '%test%' OR name LIKE '%Update%'",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 65
+}

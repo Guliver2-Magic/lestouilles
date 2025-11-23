@@ -1,0 +1,35 @@
+{
+  "query": "SELECT id, name, category FROM products WHERE name LIKE '%Test%' OR name LIKE '%test%' OR name LIKE '%Update%'",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 494y6CgAR8Uu32w.cf8f73b2fa18 --database nG5FpW6QC2VPLHfftjzBXF --execute SELECT id, name, category FROM products WHERE name LIKE '%Test%' OR name LIKE '%test%' OR name LIKE '%Update%'",
+  "rows": [
+    {
+      "id": "120001",
+      "name": "Test Sandwich",
+      "category": "sandwiches"
+    },
+    {
+      "id": "120002",
+      "name": "Updated Product",
+      "category": "desserts"
+    },
+    {
+      "id": "120004",
+      "name": "Price Test Product",
+      "category": "sandwiches"
+    },
+    {
+      "id": "120005",
+      "name": "Decimal Price Test",
+      "category": "desserts"
+    },
+    {
+      "id": "120006",
+      "name": "Update Price Test",
+      "category": "traiteur"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tcategory\n120001\tTest Sandwich\tsandwiches\n120002\tUpdated Product\tdesserts\n120004\tPrice Test Product\tsandwiches\n120005\tDecimal Price Test\tdesserts\n120006\tUpdate Price Test\ttraiteur\n",
+  "stderr": "",
+  "execution_time_ms": 79
+}

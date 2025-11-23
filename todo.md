@@ -446,3 +446,13 @@
 - [x] Add English translations for nutritional tips (nutritionalTipEn)
 - [x] Update product cards to display translated nutritional tips
 - [x] Test language toggle switches all content correctly
+
+
+## Fix Menu Not Working - User Report
+- [x] Investigate what "menu ne fonctionne pas" means (navigation menu, product menu, mobile menu?)
+- [x] Check browser console for JavaScript errors
+- [x] Verify menu items are loading from database
+- [x] Identified issue: Test products are showing in menu (Decimal Price Test, Price Test Product, Test Sandwich, etc.)
+- [x] Delete all test products from database (5 test products removed)
+- [x] Verify only real menu items remain (21 real products confirmed)
+- [x] Test complete menu functionality - Menu works perfectly with 21 products, category filters working
