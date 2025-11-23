@@ -1,0 +1,42 @@
+{
+  "query": "SELECT id, name FROM products WHERE category IN ('Sandwiches', 'Salades', 'Boissons') ORDER BY category, name",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 494y6CgAR8Uu32w.cf8f73b2fa18 --database nG5FpW6QC2VPLHfftjzBXF --execute SELECT id, name FROM products WHERE category IN ('Sandwiches', 'Salades', 'Boissons') ORDER BY category, name",
+  "rows": [
+    {
+      "id": "30019",
+      "name": "Café"
+    },
+    {
+      "id": "30020",
+      "name": "Jus d'Orange"
+    },
+    {
+      "id": "30021",
+      "name": "Thé Glacé Maison"
+    },
+    {
+      "id": "30004",
+      "name": "Salade César"
+    },
+    {
+      "id": "30005",
+      "name": "Salade Grecque"
+    },
+    {
+      "id": "30002",
+      "name": "Le Poulet"
+    },
+    {
+      "id": "30003",
+      "name": "Le Smoked Meat"
+    },
+    {
+      "id": "30001",
+      "name": "Le Végétarien"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\n30019\tCafé\n30020\tJus d'Orange\n30021\tThé Glacé Maison\n30004\tSalade César\n30005\tSalade Grecque\n30002\tLe Poulet\n30003\tLe Smoked Meat\n30001\tLe Végétarien\n",
+  "stderr": "",
+  "execution_time_ms": 54
+}

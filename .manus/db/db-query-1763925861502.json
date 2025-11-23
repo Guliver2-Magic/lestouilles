@@ -1,0 +1,115 @@
+{
+  "query": "SELECT id, name, category FROM products ORDER BY id",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 494y6CgAR8Uu32w.cf8f73b2fa18 --database nG5FpW6QC2VPLHfftjzBXF --execute SELECT id, name, category FROM products ORDER BY id",
+  "rows": [
+    {
+      "id": "30001",
+      "name": "Le Végétarien",
+      "category": "sandwiches"
+    },
+    {
+      "id": "30002",
+      "name": "Le Poulet",
+      "category": "sandwiches"
+    },
+    {
+      "id": "30003",
+      "name": "Le Smoked Meat",
+      "category": "sandwiches"
+    },
+    {
+      "id": "30004",
+      "name": "Salade César",
+      "category": "salades"
+    },
+    {
+      "id": "30005",
+      "name": "Salade Grecque",
+      "category": "salades"
+    },
+    {
+      "id": "30006",
+      "name": "Lasagne",
+      "category": "plats-principaux"
+    },
+    {
+      "id": "30007",
+      "name": "Poulet Rôti",
+      "category": "plats-principaux"
+    },
+    {
+      "id": "30008",
+      "name": "Canapés Assortis",
+      "category": "traiteur-bouchees"
+    },
+    {
+      "id": "30009",
+      "name": "Mini Quiches",
+      "category": "traiteur-bouchees"
+    },
+    {
+      "id": "30010",
+      "name": "Brochettes de Poulet",
+      "category": "traiteur-bouchees"
+    },
+    {
+      "id": "30011",
+      "name": "Buffet Froid",
+      "category": "traiteur-buffets"
+    },
+    {
+      "id": "30012",
+      "name": "Buffet Chaud",
+      "category": "traiteur-buffets"
+    },
+    {
+      "id": "30013",
+      "name": "Boîte à Lunch Classique",
+      "category": "boites-lunch"
+    },
+    {
+      "id": "30014",
+      "name": "Boîte à Lunch Végétarienne",
+      "category": "boites-lunch"
+    },
+    {
+      "id": "30015",
+      "name": "Brownie au Chocolat",
+      "category": "desserts"
+    },
+    {
+      "id": "30016",
+      "name": "Carré aux Dattes",
+      "category": "desserts"
+    },
+    {
+      "id": "30017",
+      "name": "Tiramisu au Bailey's",
+      "category": "desserts"
+    },
+    {
+      "id": "30018",
+      "name": "Pain aux Bananes et Chocolat",
+      "category": "desserts"
+    },
+    {
+      "id": "30019",
+      "name": "Café",
+      "category": "boissons"
+    },
+    {
+      "id": "30020",
+      "name": "Jus d'Orange",
+      "category": "boissons"
+    },
+    {
+      "id": "30021",
+      "name": "Thé Glacé Maison",
+      "category": "boissons"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tcategory\n30001\tLe Végétarien\tsandwiches\n30002\tLe Poulet\tsandwiches\n30003\tLe Smoked Meat\tsandwiches\n30004\tSalade César\tsalades\n30005\tSalade Grecque\tsalades\n30006\tLasagne\tplats-principaux\n30007\tPoulet Rôti\tplats-principaux\n30008\tCanapés Assortis\ttraiteur-bouchees\n30009\tMini Quiches\ttraiteur-bouchees\n30010\tBrochettes de Poulet\ttraiteur-bouchees\n30011\tBuffet Froid\ttraiteur-buffets\n30012\tBuffet Chaud\ttraiteur-buffets\n30013\tBoîte à Lunch Classique\tboites-lunch\n30014\tBoîte à Lunch Végétarienne\tboites-lunch\n30015\tBrownie au Chocolat\tdesserts\n30016\tCarré aux Dattes\tdesserts\n30017\tTiramisu au Bailey's\tdesserts\n30018\tPain aux Bananes et Chocolat\tdesserts\n30019\tCafé\tboissons\n30020\tJus d'Orange\tboissons\n30021\tThé Glacé Maison\tboissons\n",
+  "stderr": "",
+  "execution_time_ms": 56
+}

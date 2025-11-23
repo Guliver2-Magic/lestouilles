@@ -1,0 +1,45 @@
+{
+  "query": "SELECT id, name, image FROM products WHERE name IN ('Le Poulet', 'Le Smoked Meat', 'Le Végétarien', 'Salade César', 'Café', 'Jus d''Orange', 'Thé Glacé Maison')",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 494y6CgAR8Uu32w.cf8f73b2fa18 --database nG5FpW6QC2VPLHfftjzBXF --execute SELECT id, name, image FROM products WHERE name IN ('Le Poulet', 'Le Smoked Meat', 'Le Végétarien', 'Salade César', 'Café', 'Jus d''Orange', 'Thé Glacé Maison')",
+  "rows": [
+    {
+      "id": "30001",
+      "name": "Le Végétarien",
+      "image": "https://files.manuscdn.com/user_upload_by_module/session_file/310419663030752959/GLXQumOimvoRJEeY.jpg"
+    },
+    {
+      "id": "30002",
+      "name": "Le Poulet",
+      "image": "https://files.manuscdn.com/user_upload_by_module/session_file/310419663030752959/XkFJuXKCVOKIOVAn.jpg"
+    },
+    {
+      "id": "30003",
+      "name": "Le Smoked Meat",
+      "image": "https://files.manuscdn.com/user_upload_by_module/session_file/310419663030752959/sUHfGLKLgurntLkx.jpg"
+    },
+    {
+      "id": "30004",
+      "name": "Salade César",
+      "image": "https://files.manuscdn.com/user_upload_by_module/session_file/310419663030752959/uGVMQcwPJUfiLwYs.jpg"
+    },
+    {
+      "id": "30019",
+      "name": "Café",
+      "image": "https://files.manuscdn.com/user_upload_by_module/session_file/310419663030752959/qThNujZUXiINjNfp.jpg"
+    },
+    {
+      "id": "30020",
+      "name": "Jus d'Orange",
+      "image": "https://files.manuscdn.com/user_upload_by_module/session_file/310419663030752959/KhxfYSjESGPDRCou.jpg"
+    },
+    {
+      "id": "30021",
+      "name": "Thé Glacé Maison",
+      "image": "https://files.manuscdn.com/user_upload_by_module/session_file/310419663030752959/AghmOnRJGuaLjOrG.jpg"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\timage\n30001\tLe Végétarien\thttps://files.manuscdn.com/user_upload_by_module/session_file/310419663030752959/GLXQumOimvoRJEeY.jpg\n30002\tLe Poulet\thttps://files.manuscdn.com/user_upload_by_module/session_file/310419663030752959/XkFJuXKCVOKIOVAn.jpg\n30003\tLe Smoked Meat\thttps://files.manuscdn.com/user_upload_by_module/session_file/310419663030752959/sUHfGLKLgurntLkx.jpg\n30004\tSalade César\thttps://files.manuscdn.com/user_upload_by_module/session_file/310419663030752959/uGVMQcwPJUfiLwYs.jpg\n30019\tCafé\thttps://files.manuscdn.com/user_upload_by_module/session_file/310419663030752959/qThNujZUXiINjNfp.jpg\n30020\tJus d'Orange\thttps://files.manuscdn.com/user_upload_by_module/session_file/310419663030752959/KhxfYSjESGPDRCou.jpg\n30021\tThé Glacé Maison\thttps://files.manuscdn.com/user_upload_by_module/session_file/310419663030752959/AghmOnRJGuaLjOrG.jpg\n",
+  "stderr": "",
+  "execution_time_ms": 101
+}

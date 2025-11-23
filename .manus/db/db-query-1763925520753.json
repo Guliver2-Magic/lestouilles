@@ -1,0 +1,157 @@
+{
+  "query": "SELECT id, name, description, image, category FROM products ORDER BY category, name",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 494y6CgAR8Uu32w.cf8f73b2fa18 --database nG5FpW6QC2VPLHfftjzBXF --execute SELECT id, name, description, image, category FROM products ORDER BY category, name",
+  "rows": [
+    {
+      "id": "30019",
+      "name": "Café",
+      "description": "Café fraîchement préparé",
+      "image": "https://d2xsxph8kpxj0f.cloudfront.net/310419663030752959/nG5FpW6QC2VPLHfftjzBXF/generated/1763830601119.png",
+      "category": "boissons"
+    },
+    {
+      "id": "30020",
+      "name": "Jus d'Orange",
+      "description": "Jus d'orange fraîchement pressé",
+      "image": "https://d2xsxph8kpxj0f.cloudfront.net/310419663030752959/nG5FpW6QC2VPLHfftjzBXF/generated/1763830611506.png",
+      "category": "boissons"
+    },
+    {
+      "id": "30021",
+      "name": "Thé Glacé Maison",
+      "description": "Thé glacé maison au citron",
+      "image": "https://d2xsxph8kpxj0f.cloudfront.net/310419663030752959/nG5FpW6QC2VPLHfftjzBXF/generated/1763830621051.png",
+      "category": "boissons"
+    },
+    {
+      "id": "30013",
+      "name": "Boîte à Lunch Classique",
+      "description": "Sandwich, salade, dessert et boisson",
+      "image": "https://d2xsxph8kpxj0f.cloudfront.net/310419663030752959/nG5FpW6QC2VPLHfftjzBXF/generated/1763830543063.png",
+      "category": "boites-lunch"
+    },
+    {
+      "id": "30014",
+      "name": "Boîte à Lunch Végétarienne",
+      "description": "Sandwich végé, salade, dessert et boisson",
+      "image": "https://d2xsxph8kpxj0f.cloudfront.net/310419663030752959/nG5FpW6QC2VPLHfftjzBXF/generated/1763830552933.png",
+      "category": "boites-lunch"
+    },
+    {
+      "id": "30015",
+      "name": "Brownie au Chocolat",
+      "description": "Brownie fondant au chocolat noir",
+      "image": "https://d2xsxph8kpxj0f.cloudfront.net/310419663030752959/nG5FpW6QC2VPLHfftjzBXF/generated/1763830562790.png",
+      "category": "desserts"
+    },
+    {
+      "id": "30016",
+      "name": "Carré aux Dattes",
+      "description": "Carré traditionnel aux dattes",
+      "image": "https://d2xsxph8kpxj0f.cloudfront.net/310419663030752959/nG5FpW6QC2VPLHfftjzBXF/generated/1763830572816.png",
+      "category": "desserts"
+    },
+    {
+      "id": "30018",
+      "name": "Pain aux Bananes et Chocolat",
+      "description": "Pain moelleux aux bananes et pépites de chocolat",
+      "image": "https://d2xsxph8kpxj0f.cloudfront.net/310419663030752959/nG5FpW6QC2VPLHfftjzBXF/generated/1763830591792.png",
+      "category": "desserts"
+    },
+    {
+      "id": "30017",
+      "name": "Tiramisu au Bailey's",
+      "description": "Tiramisu crémeux au Bailey's",
+      "image": "https://d2xsxph8kpxj0f.cloudfront.net/310419663030752959/nG5FpW6QC2VPLHfftjzBXF/generated/1763830581943.png",
+      "category": "desserts"
+    },
+    {
+      "id": "30006",
+      "name": "Lasagne",
+      "description": "Lasagne maison avec sauce bolognaise",
+      "image": "https://d2xsxph8kpxj0f.cloudfront.net/310419663030752959/nG5FpW6QC2VPLHfftjzBXF/generated/1763830473647.png",
+      "category": "plats-principaux"
+    },
+    {
+      "id": "30007",
+      "name": "Poulet Rôti",
+      "description": "Poulet rôti avec légumes de saison",
+      "image": "https://d2xsxph8kpxj0f.cloudfront.net/310419663030752959/nG5FpW6QC2VPLHfftjzBXF/generated/1763830482743.png",
+      "category": "plats-principaux"
+    },
+    {
+      "id": "30004",
+      "name": "Salade César",
+      "description": "Salade césar classique avec poulet grillé",
+      "image": "https://d2xsxph8kpxj0f.cloudfront.net/310419663030752959/nG5FpW6QC2VPLHfftjzBXF/generated/1763830454989.png",
+      "category": "salades"
+    },
+    {
+      "id": "30005",
+      "name": "Salade Grecque",
+      "description": "Salade grecque avec feta, olives et concombre",
+      "image": "https://d2xsxph8kpxj0f.cloudfront.net/310419663030752959/nG5FpW6QC2VPLHfftjzBXF/generated/1763830464904.png",
+      "category": "salades"
+    },
+    {
+      "id": "30002",
+      "name": "Le Poulet",
+      "description": "Sandwich au poulet grillé avec laitue et tomate",
+      "image": "https://d2xsxph8kpxj0f.cloudfront.net/310419663030752959/nG5FpW6QC2VPLHfftjzBXF/generated/1763830436141.png",
+      "category": "sandwiches"
+    },
+    {
+      "id": "30003",
+      "name": "Le Smoked Meat",
+      "description": "Sandwich au smoked meat de Montréal avec moutarde",
+      "image": "https://d2xsxph8kpxj0f.cloudfront.net/310419663030752959/nG5FpW6QC2VPLHfftjzBXF/generated/1763830445363.png",
+      "category": "sandwiches"
+    },
+    {
+      "id": "30001",
+      "name": "Le Végétarien",
+      "description": "Sandwich végétarien avec légumes grillés et houmous",
+      "image": "https://d2xsxph8kpxj0f.cloudfront.net/310419663030752959/nG5FpW6QC2VPLHfftjzBXF/generated/1763830425243.png",
+      "category": "sandwiches"
+    },
+    {
+      "id": "30010",
+      "name": "Brochettes de Poulet",
+      "description": "Brochettes de poulet mariné",
+      "image": "https://d2xsxph8kpxj0f.cloudfront.net/310419663030752959/nG5FpW6QC2VPLHfftjzBXF/generated/1763830512244.png",
+      "category": "traiteur-bouchees"
+    },
+    {
+      "id": "30008",
+      "name": "Canapés Assortis",
+      "description": "Assortiment de canapés variés",
+      "image": "https://d2xsxph8kpxj0f.cloudfront.net/310419663030752959/nG5FpW6QC2VPLHfftjzBXF/generated/1763830492468.png",
+      "category": "traiteur-bouchees"
+    },
+    {
+      "id": "30009",
+      "name": "Mini Quiches",
+      "description": "Mini quiches lorraines",
+      "image": "https://d2xsxph8kpxj0f.cloudfront.net/310419663030752959/nG5FpW6QC2VPLHfftjzBXF/generated/1763830502137.png",
+      "category": "traiteur-bouchees"
+    },
+    {
+      "id": "30012",
+      "name": "Buffet Chaud",
+      "description": "Buffet chaud avec plats mijotés",
+      "image": "https://d2xsxph8kpxj0f.cloudfront.net/310419663030752959/nG5FpW6QC2VPLHfftjzBXF/generated/1763830531690.png",
+      "category": "traiteur-buffets"
+    },
+    {
+      "id": "30011",
+      "name": "Buffet Froid",
+      "description": "Buffet froid avec charcuteries et fromages",
+      "image": "https://d2xsxph8kpxj0f.cloudfront.net/310419663030752959/nG5FpW6QC2VPLHfftjzBXF/generated/1763830521706.png",
+      "category": "traiteur-buffets"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tdescription\timage\tcategory\n30019\tCafé\tCafé fraîchement préparé\thttps://d2xsxph8kpxj0f.cloudfront.net/310419663030752959/nG5FpW6QC2VPLHfftjzBXF/generated/1763830601119.png\tboissons\n30020\tJus d'Orange\tJus d'orange fraîchement pressé\thttps://d2xsxph8kpxj0f.cloudfront.net/310419663030752959/nG5FpW6QC2VPLHfftjzBXF/generated/1763830611506.png\tboissons\n30021\tThé Glacé Maison\tThé glacé maison au citron\thttps://d2xsxph8kpxj0f.cloudfront.net/310419663030752959/nG5FpW6QC2VPLHfftjzBXF/generated/1763830621051.png\tboissons\n30013\tBoîte à Lunch Classique\tSandwich, salade, dessert et boisson\thttps://d2xsxph8kpxj0f.cloudfront.net/310419663030752959/nG5FpW6QC2VPLHfftjzBXF/generated/1763830543063.png\tboites-lunch\n30014\tBoîte à Lunch Végétarienne\tSandwich végé, salade, dessert et boisson\thttps://d2xsxph8kpxj0f.cloudfront.net/310419663030752959/nG5FpW6QC2VPLHfftjzBXF/generated/1763830552933.png\tboites-lunch\n30015\tBrownie au Chocolat\tBrownie fondant au chocolat noir\thttps://d2xsxph8kpxj0f.cloudfront.net/310419663030752959/nG5FpW6QC2VPLHfftjzBXF/generated/1763830562790.png\tdesserts\n30016\tCarré aux Dattes\tCarré traditionnel aux dattes\thttps://d2xsxph8kpxj0f.cloudfront.net/310419663030752959/nG5FpW6QC2VPLHfftjzBXF/generated/1763830572816.png\tdesserts\n30018\tPain aux Bananes et Chocolat\tPain moelleux aux bananes et pépites de chocolat\thttps://d2xsxph8kpxj0f.cloudfront.net/310419663030752959/nG5FpW6QC2VPLHfftjzBXF/generated/1763830591792.png\tdesserts\n30017\tTiramisu au Bailey's\tTiramisu crémeux au Bailey's\thttps://d2xsxph8kpxj0f.cloudfront.net/310419663030752959/nG5FpW6QC2VPLHfftjzBXF/generated/1763830581943.png\tdesserts\n30006\tLasagne\tLasagne maison avec sauce bolognaise\thttps://d2xsxph8kpxj0f.cloudfront.net/310419663030752959/nG5FpW6QC2VPLHfftjzBXF/generated/1763830473647.png\tplats-principaux\n30007\tPoulet Rôti\tPoulet rôti avec légumes de saison\thttps://d2xsxph8kpxj0f.cloudfront.net/310419663030752959/nG5FpW6QC2VPLHfftjzBXF/generated/1763830482743.png\tplats-principaux\n30004\tSalade César\tSalade césar classique avec poulet grillé\thttps://d2xsxph8kpxj0f.cloudfront.net/310419663030752959/nG5FpW6QC2VPLHfftjzBXF/generated/1763830454989.png\tsalades\n30005\tSalade Grecque\tSalade grecque avec feta, olives et concombre\thttps://d2xsxph8kpxj0f.cloudfront.net/310419663030752959/nG5FpW6QC2VPLHfftjzBXF/generated/1763830464904.png\tsalades\n30002\tLe Poulet\tSandwich au poulet grillé avec laitue et tomate\thttps://d2xsxph8kpxj0f.cloudfront.net/310419663030752959/nG5FpW6QC2VPLHfftjzBXF/generated/1763830436141.png\tsandwiches\n30003\tLe Smoked Meat\tSandwich au smoked meat de Montréal avec moutarde\thttps://d2xsxph8kpxj0f.cloudfront.net/310419663030752959/nG5FpW6QC2VPLHfftjzBXF/generated/1763830445363.png\tsandwiches\n30001\tLe Végétarien\tSandwich végétarien avec légumes grillés et houmous\thttps://d2xsxph8kpxj0f.cloudfront.net/310419663030752959/nG5FpW6QC2VPLHfftjzBXF/generated/1763830425243.png\tsandwiches\n30010\tBrochettes de Poulet\tBrochettes de poulet mariné\thttps://d2xsxph8kpxj0f.cloudfront.net/310419663030752959/nG5FpW6QC2VPLHfftjzBXF/generated/1763830512244.png\ttraiteur-bouchees\n30008\tCanapés Assortis\tAssortiment de canapés variés\thttps://d2xsxph8kpxj0f.cloudfront.net/310419663030752959/nG5FpW6QC2VPLHfftjzBXF/generated/1763830492468.png\ttraiteur-bouchees\n30009\tMini Quiches\tMini quiches lorraines\thttps://d2xsxph8kpxj0f.cloudfront.net/310419663030752959/nG5FpW6QC2VPLHfftjzBXF/generated/1763830502137.png\ttraiteur-bouchees\n30012\tBuffet Chaud\tBuffet chaud avec plats mijotés\thttps://d2xsxph8kpxj0f.cloudfront.net/310419663030752959/nG5FpW6QC2VPLHfftjzBXF/generated/1763830531690.png\ttraiteur-buffets\n30011\tBuffet Froid\tBuffet froid avec charcuteries et fromages\thttps://d2xsxph8kpxj0f.cloudfront.net/310419663030752959/nG5FpW6QC2VPLHfftjzBXF/generated/1763830521706.png\ttraiteur-buffets\n",
+  "stderr": "",
+  "execution_time_ms": 70
+}
