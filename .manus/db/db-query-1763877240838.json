@@ -1,0 +1,40 @@
+{
+  "query": "SELECT id, name, nutritionalTip, nutritionalTipEn FROM products WHERE nutritionalTip IS NOT NULL LIMIT 5",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 494y6CgAR8Uu32w.cf8f73b2fa18 --database nG5FpW6QC2VPLHfftjzBXF --execute SELECT id, name, nutritionalTip, nutritionalTipEn FROM products WHERE nutritionalTip IS NOT NULL LIMIT 5",
+  "rows": [
+    {
+      "id": "30001",
+      "name": "Le Végétarien",
+      "nutritionalTip": "Riche en fibres et en protéines végétales",
+      "nutritionalTipEn": "Rich in fiber and plant-based proteins"
+    },
+    {
+      "id": "30002",
+      "name": "Le Poulet",
+      "nutritionalTip": "Excellente source de protéines maigres",
+      "nutritionalTipEn": "Excellent source of lean protein"
+    },
+    {
+      "id": "30003",
+      "name": "Le Smoked Meat",
+      "nutritionalTip": "Riche en protéines, à consommer avec modération",
+      "nutritionalTipEn": "High in protein, consume in moderation"
+    },
+    {
+      "id": "30004",
+      "name": "Salade César",
+      "nutritionalTip": "Pour réduire la teneur en matières grasses, demandez la vinaigrette César sur le côté et utilisez-en seulement une petite quantité.",
+      "nutritionalTipEn": "To reduce fat content, ask for Caesar dressing on the side and use only a small amount."
+    },
+    {
+      "id": "30005",
+      "name": "Salade Grecque",
+      "nutritionalTip": "Riche en antioxydants et en gras sains",
+      "nutritionalTipEn": "Rich in antioxidants and healthy fats"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tnutritionalTip\tnutritionalTipEn\n30001\tLe Végétarien\tRiche en fibres et en protéines végétales\tRich in fiber and plant-based proteins\n30002\tLe Poulet\tExcellente source de protéines maigres\tExcellent source of lean protein\n30003\tLe Smoked Meat\tRiche en protéines, à consommer avec modération\tHigh in protein, consume in moderation\n30004\tSalade César\tPour réduire la teneur en matières grasses, demandez la vinaigrette César sur le côté et utilisez-en seulement une petite quantité.\tTo reduce fat content, ask for Caesar dressing on the side and use only a small amount.\n30005\tSalade Grecque\tRiche en antioxydants et en gras sains\tRich in antioxidants and healthy fats\n",
+  "stderr": "",
+  "execution_time_ms": 58
+}

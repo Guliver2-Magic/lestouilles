@@ -414,3 +414,35 @@
 - [x] Create detailed configuration guide for user
 - [ ] Test webhook with sample chatbot message
 - [ ] Verify end-to-end chatbot functionality
+
+
+## n8n Webhook Troubleshooting - User Action Required
+- [ ] Verify n8n workflow "Respond to Webhook" node is properly configured
+- [ ] Check that OpenAI API key is correctly set in n8n
+- [ ] Test workflow manually in n8n to ensure it returns JSON response
+- [ ] Verify webhook returns proper JSON format: {"response": "text", "shouldCaptureLead": false}
+
+
+## Complete Bilingual Translation System - User Request
+- [ ] Add English translations for all products (names, descriptions, nutritional tips)
+- [ ] Add English translations for all UI sections (hero, features, testimonials, footer)
+- [ ] Create translation context/hook for language management
+- [ ] Update Home page to use translations for all sections
+- [ ] Update product cards to display translated content
+- [ ] Update navigation menu to translate all links
+- [ ] Update chatbot to support both French and English
+- [ ] Update contact form labels and placeholders
+- [ ] Update cart and checkout pages with translations
+- [ ] Test complete language switching functionality
+
+
+## Complete Bilingual Translation System - User Request
+- [x] Add English translation columns to products table (nameEn, descriptionEn)
+- [x] Populate English translations for all existing products
+- [x] Create translation utility for category names
+- [x] Update Home.tsx to use product translations based on language
+- [x] Update category filter buttons to show translated names
+- [x] Update all UI sections (hero, features, testimonial, footer) to use translations
+- [x] Add English translations for nutritional tips (nutritionalTipEn)
+- [x] Update product cards to display translated nutritional tips
+- [x] Test language toggle switches all content correctly

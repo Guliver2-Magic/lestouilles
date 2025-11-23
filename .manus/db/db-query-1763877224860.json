@@ -1,0 +1,60 @@
+{
+  "query": "SELECT id, name, nutritionalTip FROM products WHERE nutritionalTip IS NOT NULL LIMIT 10",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 494y6CgAR8Uu32w.cf8f73b2fa18 --database nG5FpW6QC2VPLHfftjzBXF --execute SELECT id, name, nutritionalTip FROM products WHERE nutritionalTip IS NOT NULL LIMIT 10",
+  "rows": [
+    {
+      "id": "30001",
+      "name": "Le Végétarien",
+      "nutritionalTip": "Riche en fibres et en protéines végétales"
+    },
+    {
+      "id": "30002",
+      "name": "Le Poulet",
+      "nutritionalTip": "Excellente source de protéines maigres"
+    },
+    {
+      "id": "30003",
+      "name": "Le Smoked Meat",
+      "nutritionalTip": "Riche en protéines, à consommer avec modération"
+    },
+    {
+      "id": "30004",
+      "name": "Salade César",
+      "nutritionalTip": "Pour réduire la teneur en matières grasses, demandez la vinaigrette César sur le côté et utilisez-en seulement une petite quantité."
+    },
+    {
+      "id": "30005",
+      "name": "Salade Grecque",
+      "nutritionalTip": "Riche en antioxydants et en gras sains"
+    },
+    {
+      "id": "30006",
+      "name": "Lasagne",
+      "nutritionalTip": "Plat complet et réconfortant"
+    },
+    {
+      "id": "30007",
+      "name": "Poulet Rôti",
+      "nutritionalTip": "Excellente source de protéines maigres"
+    },
+    {
+      "id": "30008",
+      "name": "Canapés Assortis",
+      "nutritionalTip": "Parfait pour les cocktails"
+    },
+    {
+      "id": "30009",
+      "name": "Mini Quiches",
+      "nutritionalTip": "Riche en protéines"
+    },
+    {
+      "id": "30010",
+      "name": "Brochettes de Poulet",
+      "nutritionalTip": "Privilégiez la cuisson au grill ou au four pour minimiser l'ajout de matières grasses et augmenter l'apport en protéines maigres."
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tnutritionalTip\n30001\tLe Végétarien\tRiche en fibres et en protéines végétales\n30002\tLe Poulet\tExcellente source de protéines maigres\n30003\tLe Smoked Meat\tRiche en protéines, à consommer avec modération\n30004\tSalade César\tPour réduire la teneur en matières grasses, demandez la vinaigrette César sur le côté et utilisez-en seulement une petite quantité.\n30005\tSalade Grecque\tRiche en antioxydants et en gras sains\n30006\tLasagne\tPlat complet et réconfortant\n30007\tPoulet Rôti\tExcellente source de protéines maigres\n30008\tCanapés Assortis\tParfait pour les cocktails\n30009\tMini Quiches\tRiche en protéines\n30010\tBrochettes de Poulet\tPrivilégiez la cuisson au grill ou au four pour minimiser l'ajout de matières grasses et augmenter l'apport en protéines maigres.\n",
+  "stderr": "",
+  "execution_time_ms": 62
+}

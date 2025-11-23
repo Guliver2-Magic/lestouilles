@@ -23,6 +23,7 @@ import {
   ChevronRight
 } from "lucide-react";
 import { APP_LOGO, APP_TITLE } from "@/const";
+import { translateCategory } from "@/lib/categoryTranslations";
 import { Link } from "wouter";
 
 const carouselImages = [
@@ -79,7 +80,7 @@ export default function Home() {
       ...(product.isGlutenFree ? ['glutenfree' as const] : []),
       ...(product.isDairyFree ? ['dairyfree' as const] : []),
     ],
-    nutritionalTip: product.nutritionalTip,
+    nutritionalTip: { fr: product.nutritionalTip || '', en: product.nutritionalTipEn || product.nutritionalTip || '' },
   }));
 
   // Get unique categories from products
@@ -434,7 +435,7 @@ export default function Home() {
                 onClick={() => setSelectedCategory(category)}
                 className="rounded-full"
               >
-                {language === "fr" ? category : category}
+                {category === "Tous" ? (language === "fr" ? "Tous" : "All") : translateCategory(category, language)}
               </Button>
             ))}
           </div>
@@ -515,7 +516,7 @@ export default function Home() {
                     <div className="mb-3 p-2 bg-green-50 dark:bg-green-900/20 rounded-md border border-green-200 dark:border-green-800">
                       <p className="text-xs text-green-700 dark:text-green-300 flex items-start gap-1">
                         <span className="text-green-600 dark:text-green-400 font-bold">💡</span>
-                        <span>{item.nutritionalTip}</span>
+                        <span>{item.nutritionalTip[language]}</span>
                       </p>
                     </div>
                   )}
