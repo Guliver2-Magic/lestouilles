@@ -827,3 +827,17 @@
 - [x] Create .dockerignore file for optimized builds
 - [ ] Test Docker build locally
 - [ ] Provide deployment package to user
+
+## Replace Manus Dependencies for Standalone Deployment
+- [x] Replace Manus Forge image generation with OpenAI DALL-E
+- [x] Update imageGeneration.ts to use OpenAI API
+- [x] Create local authentication system (email/password)
+- [x] Add password hashing with bcrypt
+- [x] Create login/register pages
+- [x] Update database schema for local auth
+- [x] Remove OAuth Manus dependencies
+- [x] Update environment variables documentation
+- [x] Create SQL migration script (MIGRATION_LOCAL_AUTH.sql)
+- [x] Create standalone deployment guide (STANDALONE_DEPLOYMENT.md)
+- [ ] Test image generation with OpenAI
+- [ ] Test local authentication flow after database migration

@@ -2,6 +2,11 @@
 
 ## Required Environment Variables for Docker Deployment
 
+⚠️ **Important Changes:**
+- **OpenAI API** now used for image generation (replaces Manus Forge)
+- **Local Authentication** system (email/password) replaces OAuth Manus
+- Run `MIGRATION_LOCAL_AUTH.sql` on your database before deployment
+
 ### Database Configuration
 ```bash
 MYSQL_ROOT_PASSWORD=your_secure_root_password_here
@@ -17,14 +22,12 @@ NODE_ENV=production
 JWT_SECRET=your_jwt_secret_key_min_32_characters_long
 ```
 
-### Manus OAuth Configuration
+### OpenAI Configuration (for AI image generation)
 ```bash
-VITE_APP_ID=your_manus_app_id
-OAUTH_SERVER_URL=https://api.manus.im
-VITE_OAUTH_PORTAL_URL=https://auth.manus.im
-OWNER_OPEN_ID=your_owner_open_id
-OWNER_NAME=Your Name
+OPENAI_API_KEY=sk-your_openai_api_key_here
 ```
+**How to get:** Sign up at https://platform.openai.com/api-keys
+**Cost:** ~$0.04 per image with DALL-E 3
 
 ### Application Branding
 ```bash
@@ -37,12 +40,13 @@ VITE_APP_LOGO=/logo.png
 N8N_CHATBOT_WEBHOOK_URL=https://your-n8n-instance.com/webhook/chatbot-response
 ```
 
-### Manus Forge API (Built-in Services)
+### Optional: Legacy Manus Configuration (not required)
 ```bash
-BUILT_IN_FORGE_API_URL=https://api.manus.im/forge
-BUILT_IN_FORGE_API_KEY=your_forge_api_key
-VITE_FRONTEND_FORGE_API_KEY=your_frontend_forge_api_key
-VITE_FRONTEND_FORGE_API_URL=https://api.manus.im/forge
+# These are no longer required but kept for reference
+# VITE_APP_ID=your_manus_app_id
+# OAUTH_SERVER_URL=https://api.manus.im
+# OWNER_OPEN_ID=your_owner_open_id
+# OWNER_NAME=Your Name
 ```
 
 ### Stripe Payment Configuration

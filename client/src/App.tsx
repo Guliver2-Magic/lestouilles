@@ -18,15 +18,20 @@ import AdminProducts from "./pages/AdminProducts";
 import AdminDailySpecials from "./pages/AdminDailySpecials";
 import AdminFAQ from "./pages/AdminFAQ";
 import MealPlanner from "./pages/MealPlanner";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 import { Chatbot } from "./components/Chatbot";
 
 function Router() {
   return (
     <Switch>
       <Route path={"/"} component={Home} />
+      <Route path={"/login"} component={Login} />
+      <Route path={"/register"} component={Register} />
       <Route path={"/about"} component={About} />
       <Route path={"/contact"} component={Contact} />
-      <Route path={"/checkout"} component={Checkout} />      <Route path={"/portfolio"} component={Portfolio} />
+      <Route path={"/checkout"} component={Checkout} />
+      <Route path={"/portfolio"} component={Portfolio} />
       <Route path={"/reservations"} component={Reservations} />
       <Route path={"/meal-planner"} component={MealPlanner} />
       <Route path={"/admin/orders"} component={AdminOrders} />
