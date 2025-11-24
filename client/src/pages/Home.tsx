@@ -411,7 +411,9 @@ export default function Home() {
       <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b">
         <div className="container flex items-center justify-between h-16">
           <Link href="/" className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity">
-            <img src={APP_LOGO} alt={APP_TITLE} className="h-12 w-auto" />
+            <div className="bg-gradient-to-br from-emerald-600 to-emerald-700 p-2 rounded-lg shadow-md">
+              <img src={APP_LOGO} alt={APP_TITLE} className="h-10 w-auto" />
+            </div>
           </Link>
           
           <nav className="hidden lg:flex items-center gap-6">

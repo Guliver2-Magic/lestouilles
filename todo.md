@@ -665,3 +665,16 @@
 - [x] Create tRPC procedures for FAQ CRUD operations
 - [x] Test FAQ display in admin interface
 - [x] Add FAQ route to App.tsx
+
+
+## Fix n8n Chatbot Connection - User Report
+- [ ] Check n8n workflow URL and webhook configuration
+- [ ] Verify chatbot is calling correct n8n webhook
+- [ ] Test n8n workflow execution
+- [ ] Debug connection issues
+- [ ] Verify chatbot receives responses from n8n
+
+## Fix Logo Visibility on White Background - User Report
+- [x] Logo is white and disappears on white header background
+- [x] Add emerald green gradient background with rounded corners to logo
+- [x] Test logo visibility on all pages
