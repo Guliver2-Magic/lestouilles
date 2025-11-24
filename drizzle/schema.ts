@@ -252,6 +252,9 @@ export const products = mysqlTable("products", {
   nutritionalTipEn: text("nutritionalTipEn"),
   
   // Availability and status
+  isVisible: boolean("isVisible").default(true).notNull(), // Show/hide product (stock, seasonal)
+  isCateringOnly: boolean("isCateringOnly").default(false).notNull(), // Special order only, not available online
+  showDietaryTags: boolean("showDietaryTags").default(true).notNull(), // Display dietary tags on product card
   isActive: boolean("isActive").default(true).notNull(),
   displayOrder: int("displayOrder").default(0).notNull(),
   

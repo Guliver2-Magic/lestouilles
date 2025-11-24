@@ -130,6 +130,9 @@ function DailySpecialsSection() {
                           fat: null,
                           nutritionalTip: null,
                           nutritionalTipEn: null,
+                          isVisible: true,
+                          isCateringOnly: false,
+                          showDietaryTags: true,
                           isActive: true,
                           displayOrder: 0,
                           createdAt: new Date(),
@@ -694,16 +697,32 @@ export default function Home() {
                       ${item.price.toFixed(2)}
                     </span>
                   </div>
-                  <Button 
-                    className="w-full" 
-                    onClick={() => {
+                  {(() => {
                     const dbProduct = dbProducts.find(p => p.id === Number(item.id));
-                    if (dbProduct) addItem(dbProduct);
-                  }}
-                  >
-                    <ShoppingCart className="h-4 w-4 mr-2" />
-                    {t.menu.addToCart}
-                  </Button>
+                    if (dbProduct?.isCateringOnly) {
+                      return (
+                        <div className="w-full p-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-md text-center">
+                          <p className="text-sm text-amber-700 dark:text-amber-300 font-medium">
+                            {language === 'fr' ? '📞 Commande spéciale uniquement' : '📞 Special order only'}
+                          </p>
+                          <p className="text-xs text-amber-600 dark:text-amber-400 mt-1">
+                            {language === 'fr' ? 'Contactez-nous pour commander' : 'Contact us to order'}
+                          </p>
+                        </div>
+                      );
+                    }
+                    return (
+                      <Button 
+                        className="w-full" 
+                        onClick={() => {
+                          if (dbProduct) addItem(dbProduct);
+                        }}
+                      >
+                        <ShoppingCart className="h-4 w-4 mr-2" />
+                        {t.menu.addToCart}
+                      </Button>
+                    );
+                  })()}
                 </CardContent>
               </Card>
             ))}

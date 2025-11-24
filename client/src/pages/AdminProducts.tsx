@@ -54,6 +54,9 @@ type Product = {
   fat: number | null;
   nutritionalTip: string | null;
   nutritionalTipEn: string | null;
+  isVisible: boolean;
+  isCateringOnly: boolean;
+  showDietaryTags: boolean;
   isActive: boolean;
   displayOrder: number;
   createdAt: Date;
@@ -156,6 +159,9 @@ export default function AdminProducts() {
       fat: formData.get("fat") ? parseInt(formData.get("fat") as string) : undefined,
       nutritionalTip: formData.get("nutritionalTip") as string || undefined,
       nutritionalTipEn: formData.get("nutritionalTipEn") as string || undefined,
+      isVisible: formData.get("isVisible") === "on",
+      isCateringOnly: formData.get("isCateringOnly") === "on",
+      showDietaryTags: formData.get("showDietaryTags") === "on",
       isActive: formData.get("isActive") === "on",
       displayOrder: formData.get("displayOrder") ? parseInt(formData.get("displayOrder") as string) : 0,
     };
@@ -169,6 +175,7 @@ export default function AdminProducts() {
 
   const handleEdit = (product: Product) => {
     setEditingProduct(product);
+    setImagePreview(null); // Clear image preview when editing a different product
     setIsDialogOpen(true);
   };
 
@@ -181,6 +188,7 @@ export default function AdminProducts() {
   const handleDialogClose = () => {
     setIsDialogOpen(false);
     setEditingProduct(null);
+    setImagePreview(null); // Clear image preview when closing dialog
   };
 
   return (
@@ -189,7 +197,7 @@ export default function AdminProducts() {
         <h1 className="text-3xl font-bold">Gestion des Produits</h1>
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
-            <Button onClick={() => setEditingProduct(null)}>
+            <Button onClick={() => { setEditingProduct(null); setImagePreview(null); }}>
               <Plus className="mr-2 h-4 w-4" />
               Nouveau Produit
             </Button>
@@ -605,15 +613,50 @@ export default function AdminProducts() {
                 />
               </div>
 
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="isActive"
-                  name="isActive"
-                  defaultChecked={editingProduct?.isActive ?? true}
-                />
-                <Label htmlFor="isActive" className="font-normal">
-                  Produit actif (visible sur le site)
-                </Label>
+              <div className="space-y-2 border-t pt-4">
+                <Label>Options de disponibilité</Label>
+                <div className="space-y-2">
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="isVisible"
+                      name="isVisible"
+                      defaultChecked={editingProduct?.isVisible ?? true}
+                    />
+                    <Label htmlFor="isVisible" className="font-normal">
+                      Afficher le produit (décocher en cas de rupture de stock ou hors saison)
+                    </Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="isCateringOnly"
+                      name="isCateringOnly"
+                      defaultChecked={editingProduct?.isCateringOnly ?? false}
+                    />
+                    <Label htmlFor="isCateringOnly" className="font-normal">
+                      Commande spéciale uniquement (non commandable en ligne)
+                    </Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="showDietaryTags"
+                      name="showDietaryTags"
+                      defaultChecked={editingProduct?.showDietaryTags ?? true}
+                    />
+                    <Label htmlFor="showDietaryTags" className="font-normal">
+                      Afficher les tags de régime alimentaire
+                    </Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="isActive"
+                      name="isActive"
+                      defaultChecked={editingProduct?.isActive ?? true}
+                    />
+                    <Label htmlFor="isActive" className="font-normal">
+                      Produit actif (système interne)
+                    </Label>
+                  </div>
+                </div>
               </div>
 
               <div className="flex justify-end space-x-2">

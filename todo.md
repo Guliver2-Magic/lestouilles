@@ -523,3 +523,17 @@
 - [x] Update category filter logic in Home.tsx with grouping support
 - [x] Add bilingual labels for all categories in translations.ts
 - [x] Test category filtering with grouped categories - Successfully reduced from 16 to 13 categories
+
+
+## Improve Admin Product Management - User Request
+- [x] Fix image preview bug - clear image when editing different product
+- [x] Pre-select category in edit form (already working with defaultValue)
+- [x] Add "isVisible" field to hide products (out of stock, seasonal)
+- [x] Add "isCateringOnly" field for special order items not available online
+- [x] Add "showDietaryTags" field to optionally display dietary tags
+- [x] Update database schema with new fields (migration 0006 applied)
+- [x] Update admin product form with new options (3 new checkboxes added)
+- [x] Update Home page to respect isVisible flag (getActiveProducts filters by isVisible)
+- [x] Update Home page to respect isCateringOnly flag (shows "Special order only" message instead of Add to Cart button)
+- [x] Shorten all nutritional tips to be more concise (36 out of 83 products updated to max 50 chars)
+- [x] Test all new features in admin panel - All 3 new checkboxes visible and functional

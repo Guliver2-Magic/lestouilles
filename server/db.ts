@@ -376,8 +376,12 @@ export async function getActiveProducts() {
   }
 
   const { products } = await import("../drizzle/schema");
+  const { and } = await import("drizzle-orm");
   const result = await db.select().from(products)
-    .where(eq(products.isActive, true))
+    .where(and(
+      eq(products.isActive, true),
+      eq(products.isVisible, true)
+    ))
     .orderBy(products.displayOrder, products.name);
   return result;
 }

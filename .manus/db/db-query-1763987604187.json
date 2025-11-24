@@ -1,0 +1,130 @@
+{
+  "query": "SELECT id, name, nutritionalTip, nutritionalTipEn FROM products WHERE nutritionalTip IS NOT NULL AND nutritionalTip != '' LIMIT 20;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 494y6CgAR8Uu32w.cf8f73b2fa18 --database nG5FpW6QC2VPLHfftjzBXF --execute SELECT id, name, nutritionalTip, nutritionalTipEn FROM products WHERE nutritionalTip IS NOT NULL AND nutritionalTip != '' LIMIT 20;",
+  "rows": [
+    {
+      "id": "30001",
+      "name": "Le Végétarien",
+      "nutritionalTip": "Riche en fibres et en protéines végétales",
+      "nutritionalTipEn": "Rich in fiber and plant-based proteins"
+    },
+    {
+      "id": "30002",
+      "name": "Le Poulet",
+      "nutritionalTip": "Excellente source de protéines maigres",
+      "nutritionalTipEn": "Excellent source of lean protein"
+    },
+    {
+      "id": "30003",
+      "name": "Le Smoked Meat",
+      "nutritionalTip": "Riche en protéines, à consommer avec modération",
+      "nutritionalTipEn": "High in protein, consume in moderation"
+    },
+    {
+      "id": "30004",
+      "name": "Salade César",
+      "nutritionalTip": "Pour réduire la teneur en matières grasses, demandez la vinaigrette César sur le côté et utilisez-en seulement une petite quantité.",
+      "nutritionalTipEn": "To reduce fat content, ask for Caesar dressing on the side and use only a small amount."
+    },
+    {
+      "id": "30005",
+      "name": "Salade Grecque",
+      "nutritionalTip": "Riche en antioxydants et en gras sains",
+      "nutritionalTipEn": "Rich in antioxidants and healthy fats"
+    },
+    {
+      "id": "30006",
+      "name": "Lasagne",
+      "nutritionalTip": "Plat complet et réconfortant",
+      "nutritionalTipEn": "Complete and comforting dish"
+    },
+    {
+      "id": "30007",
+      "name": "Poulet Rôti",
+      "nutritionalTip": "Excellente source de protéines maigres",
+      "nutritionalTipEn": "Excellent source of lean protein"
+    },
+    {
+      "id": "30008",
+      "name": "Canapés Assortis",
+      "nutritionalTip": "Parfait pour les cocktails",
+      "nutritionalTipEn": "Perfect for cocktails"
+    },
+    {
+      "id": "30009",
+      "name": "Mini Quiches",
+      "nutritionalTip": "Riche en protéines",
+      "nutritionalTipEn": "High in protein"
+    },
+    {
+      "id": "30010",
+      "name": "Brochettes de Poulet",
+      "nutritionalTip": "Privilégiez la cuisson au grill ou au four pour minimiser l'ajout de matières grasses et augmenter l'apport en protéines maigres.",
+      "nutritionalTipEn": "Prefer grilling or oven cooking to minimize added fat and increase lean protein intake."
+    },
+    {
+      "id": "30011",
+      "name": "Buffet Froid",
+      "nutritionalTip": "Varié et équilibré",
+      "nutritionalTipEn": "Varied and balanced"
+    },
+    {
+      "id": "30012",
+      "name": "Buffet Chaud",
+      "nutritionalTip": "Réconfortant et copieux",
+      "nutritionalTipEn": "Comforting and hearty"
+    },
+    {
+      "id": "30013",
+      "name": "Boîte à Lunch Classique",
+      "nutritionalTip": "Pour améliorer l'équilibre, optez pour un sandwich au pain complet, une vinaigrette légère pour la salade et un dessert à base de fruits frais.",
+      "nutritionalTipEn": "To improve balance, opt for a whole grain sandwich, light dressing for the salad, and a fresh fruit-based dessert."
+    },
+    {
+      "id": "30014",
+      "name": "Boîte à Lunch Végétarienne",
+      "nutritionalTip": "Option santé et savoureuse",
+      "nutritionalTipEn": "Healthy and tasty option"
+    },
+    {
+      "id": "30015",
+      "name": "Brownie au Chocolat",
+      "nutritionalTip": "Riche en chocolat noir",
+      "nutritionalTipEn": "Rich in dark chocolate"
+    },
+    {
+      "id": "30016",
+      "name": "Carré aux Dattes",
+      "nutritionalTip": "Source naturelle de fibres",
+      "nutritionalTipEn": "Natural source of fiber"
+    },
+    {
+      "id": "30017",
+      "name": "Tiramisu au Bailey's",
+      "nutritionalTip": "Dessert onctueux et raffiné",
+      "nutritionalTipEn": "Creamy and refined dessert"
+    },
+    {
+      "id": "30018",
+      "name": "Pain aux Bananes et Chocolat",
+      "nutritionalTip": "Bon pour le moral",
+      "nutritionalTipEn": "Good for morale"
+    },
+    {
+      "id": "30019",
+      "name": "Café",
+      "nutritionalTip": "Stimulant naturel",
+      "nutritionalTipEn": "Natural stimulant"
+    },
+    {
+      "id": "30020",
+      "name": "Jus d'Orange",
+      "nutritionalTip": "Riche en vitamine C",
+      "nutritionalTipEn": "Rich in vitamin C"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tnutritionalTip\tnutritionalTipEn\n30001\tLe Végétarien\tRiche en fibres et en protéines végétales\tRich in fiber and plant-based proteins\n30002\tLe Poulet\tExcellente source de protéines maigres\tExcellent source of lean protein\n30003\tLe Smoked Meat\tRiche en protéines, à consommer avec modération\tHigh in protein, consume in moderation\n30004\tSalade César\tPour réduire la teneur en matières grasses, demandez la vinaigrette César sur le côté et utilisez-en seulement une petite quantité.\tTo reduce fat content, ask for Caesar dressing on the side and use only a small amount.\n30005\tSalade Grecque\tRiche en antioxydants et en gras sains\tRich in antioxidants and healthy fats\n30006\tLasagne\tPlat complet et réconfortant\tComplete and comforting dish\n30007\tPoulet Rôti\tExcellente source de protéines maigres\tExcellent source of lean protein\n30008\tCanapés Assortis\tParfait pour les cocktails\tPerfect for cocktails\n30009\tMini Quiches\tRiche en protéines\tHigh in protein\n30010\tBrochettes de Poulet\tPrivilégiez la cuisson au grill ou au four pour minimiser l'ajout de matières grasses et augmenter l'apport en protéines maigres.\tPrefer grilling or oven cooking to minimize added fat and increase lean protein intake.\n30011\tBuffet Froid\tVarié et équilibré\tVaried and balanced\n30012\tBuffet Chaud\tRéconfortant et copieux\tComforting and hearty\n30013\tBoîte à Lunch Classique\tPour améliorer l'équilibre, optez pour un sandwich au pain complet, une vinaigrette légère pour la salade et un dessert à base de fruits frais.\tTo improve balance, opt for a whole grain sandwich, light dressing for the salad, and a fresh fruit-based dessert.\n30014\tBoîte à Lunch Végétarienne\tOption santé et savoureuse\tHealthy and tasty option\n30015\tBrownie au Chocolat\tRiche en chocolat noir\tRich in dark chocolate\n30016\tCarré aux Dattes\tSource naturelle de fibres\tNatural source of fiber\n30017\tTiramisu au Bailey's\tDessert onctueux et raffiné\tCreamy and refined dessert\n30018\tPain aux Bananes et Chocolat\tBon pour le moral\tGood for morale\n30019\tCafé\tStimulant naturel\tNatural stimulant\n30020\tJus d'Orange\tRiche en vitamine C\tRich in vitamin C\n",
+  "stderr": "",
+  "execution_time_ms": 63
+}
