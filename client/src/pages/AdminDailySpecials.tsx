@@ -14,7 +14,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, Edit, Plus, Trash2, DollarSign, Image as ImageIcon } from "lucide-react";
+import { Calendar, Edit, Plus, Trash2, DollarSign, Image as ImageIcon, Sparkles, Upload } from "lucide-react";
 import { toast } from "sonner";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Switch } from "@/components/ui/switch";
@@ -55,6 +55,11 @@ export default function AdminDailySpecials() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [formData, setFormData] = useState<DailySpecialForm>(emptyForm);
   const [isEditing, setIsEditing] = useState(false);
+  const [showProductSelector, setShowProductSelector] = useState(false);
+  const [isGeneratingImage, setIsGeneratingImage] = useState(false);
+  const [imagePreview, setImagePreview] = useState("");
+
+  const { data: products = [] } = trpc.products.listActive.useQuery();
 
   const utils = trpc.useUtils();
   const { data: specials = [], isLoading } = trpc.dailySpecials.getAll.useQuery();
@@ -157,7 +162,56 @@ export default function AdminDailySpecials() {
   const handleOpenDialog = () => {
     setFormData(emptyForm);
     setIsEditing(false);
+    setImagePreview("");
     setIsDialogOpen(true);
+  };
+
+  const handleSelectProduct = (product: any) => {
+    setFormData({
+      ...formData,
+      name: product.name,
+      nameEn: product.nameEn || "",
+      description: product.description,
+      descriptionEn: product.descriptionEn || "",
+      price: (product.price / 100).toFixed(2),
+      image: product.image || "",
+      imageAlt: product.imageAlt || "",
+    });
+    setImagePreview(product.image || "");
+    setShowProductSelector(false);
+    toast.success(language === "fr" ? "Produit sélectionné" : "Product selected");
+  };
+
+  const handleGenerateImage = async () => {
+    if (!formData.name || !formData.description) {
+      toast.error(language === "fr" ? "Veuillez remplir le nom et la description" : "Please fill in name and description");
+      return;
+    }
+
+    setIsGeneratingImage(true);
+    try {
+      const result = await fetch("/api/trpc/products.generateImage", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          json: {
+            name: formData.name,
+            description: formData.description,
+          },
+        }),
+      });
+
+      const data = await result.json();
+      if (data.result?.data?.json?.url) {
+        setFormData({ ...formData, image: data.result.data.json.url });
+        setImagePreview(data.result.data.json.url);
+        toast.success(language === "fr" ? "Image générée avec succès" : "Image generated successfully");
+      }
+    } catch (error) {
+      toast.error(language === "fr" ? "Erreur lors de la génération" : "Generation error");
+    } finally {
+      setIsGeneratingImage(false);
+    }
   };
 
   if (isLoading) {
@@ -280,11 +334,52 @@ export default function AdminDailySpecials() {
             </DialogTitle>
             <DialogDescription>
               {language === "fr"
-                ? "Remplissez les informations du plat spécial"
-                : "Fill in the special dish information"}
+                ? "Remplissez les informations du plat spécial ou sélectionnez un produit existant"
+                : "Fill in the special dish information or select an existing product"}
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleSubmit} className="space-y-6">
+            {!isEditing && (
+              <div className="flex gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setShowProductSelector(!showProductSelector)}
+                  className="flex-1"
+                >
+                  <Plus className="mr-2 h-4 w-4" />
+                  {language === "fr" ? "Sélectionner un produit" : "Select a product"}
+                </Button>
+              </div>
+            )}
+
+            {showProductSelector && (
+              <div className="border rounded-lg p-4 max-h-60 overflow-y-auto">
+                <p className="text-sm font-medium mb-2">
+                  {language === "fr" ? "Choisissez un produit :" : "Choose a product:"}
+                </p>
+                <div className="space-y-2">
+                  {products.map((product: any) => (
+                    <button
+                      key={product.id}
+                      type="button"
+                      onClick={() => handleSelectProduct(product)}
+                      className="w-full text-left p-2 hover:bg-accent rounded-md transition-colors"
+                    >
+                      <div className="flex items-center gap-3">
+                        {product.image && (
+                          <img src={product.image} alt={product.name} className="w-12 h-12 object-cover rounded" />
+                        )}
+                        <div className="flex-1">
+                          <p className="font-medium">{product.name}</p>
+                          <p className="text-sm text-muted-foreground">${(product.price / 100).toFixed(2)}</p>
+                        </div>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="name">
@@ -369,18 +464,35 @@ export default function AdminDailySpecials() {
 
             <div className="space-y-2">
               <Label htmlFor="image">
-                URL de l'image <span className="text-destructive">*</span>
+                {language === "fr" ? "Image du produit" : "Product Image"} <span className="text-destructive">*</span>
               </Label>
+              <div className="flex gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={handleGenerateImage}
+                  disabled={isGeneratingImage}
+                  className="flex-1"
+                >
+                  <Sparkles className="mr-2 h-4 w-4" />
+                  {isGeneratingImage
+                    ? language === "fr" ? "Génération..." : "Generating..."
+                    : language === "fr" ? "Générer avec l'IA" : "Generate with AI"}
+                </Button>
+              </div>
               <Input
                 id="image"
                 type="url"
                 value={formData.image}
-                onChange={(e) => setFormData({ ...formData, image: e.target.value })}
+                onChange={(e) => {
+                  setFormData({ ...formData, image: e.target.value });
+                  setImagePreview(e.target.value);
+                }}
                 placeholder="https://..."
                 required
               />
-              {formData.image && (
-                <img src={formData.image} alt="Preview" className="mt-2 w-full h-48 object-cover rounded-md" />
+              {(imagePreview || formData.image) && (
+                <img src={imagePreview || formData.image} alt="Preview" className="mt-2 w-full h-48 object-cover rounded-md" />
               )}
             </div>
 

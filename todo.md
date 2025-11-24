@@ -537,3 +537,11 @@
 - [x] Update Home page to respect isCateringOnly flag (shows "Special order only" message instead of Add to Cart button)
 - [x] Shorten all nutritional tips to be more concise (36 out of 83 products updated to max 50 chars)
 - [x] Test all new features in admin panel - All 3 new checkboxes visible and functional
+
+
+## Fix Truncated Nutritional Tips + Improve Daily Specials + Add Search Bar - User Request
+- [x] Fix truncated nutritional tips (removed "..." endings from 36 products)
+- [x] Update AdminDailySpecials to allow selecting existing products from database
+- [x] Add AI features to Daily Specials module (image generation with AI button)
+- [ ] Add search bar to menu page for searching by product name or ingredient
+- [ ] Test all new features

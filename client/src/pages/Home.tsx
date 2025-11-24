@@ -20,7 +20,8 @@ import {
   Clock,
   Star,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Search
 } from "lucide-react";
 import { APP_LOGO, APP_TITLE } from "@/const";
 import { translateCategory } from "@/lib/categoryTranslations";
@@ -173,6 +174,7 @@ export default function Home() {
   const { language, toggleLanguage } = useLanguage();
   const { addItem, cartOpen, setCartOpen, items, itemCount } = useCart();
   const [selectedCategory, setSelectedCategory] = useState("Tous");
+  const [searchQuery, setSearchQuery] = useState("");
   const [scrollY, setScrollY] = useState(0);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -246,19 +248,31 @@ export default function Home() {
   }, [dbProducts]);
 
   const filteredMenu = useMemo(() => {
-    if (selectedCategory === "Tous") return allProducts;
+    let filtered = allProducts;
     
-    // Check if selected category is a group
-    const groupCategories = CATEGORY_GROUPS[selectedCategory];
-    
-    if (groupCategories) {
-      // Filter by any category in the group
-      return allProducts.filter(item => groupCategories.includes(item.category));
-    } else {
-      // Filter by exact category
-      return allProducts.filter(item => item.category === selectedCategory);
+    // Filter by category
+    if (selectedCategory !== "Tous") {
+      const groupCategories = CATEGORY_GROUPS[selectedCategory];
+      
+      if (groupCategories) {
+        filtered = filtered.filter(item => groupCategories.includes(item.category));
+      } else {
+        filtered = filtered.filter(item => item.category === selectedCategory);
+      }
     }
-  }, [selectedCategory, allProducts]);
+    
+    // Filter by search query
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter(item => {
+        const name = item.name[language].toLowerCase();
+        const description = item.description[language].toLowerCase();
+        return name.includes(query) || description.includes(query);
+      });
+    }
+    
+    return filtered;
+  }, [selectedCategory, searchQuery, allProducts, language]);
 
   const cartItemCount = itemCount;
 
@@ -305,7 +319,9 @@ export default function Home() {
         subtitle: "Découvrez notre variété",
         all: "Tous",
         addToCart: "Ajouter au panier",
-        servings: "Portions"
+        servings: "Portions",
+        search: "Rechercher un plat ou ingrédient...",
+        noResults: "Aucun produit trouvé"
       },
       testimonial: {
         quote: "Une bouffe hallucinante et une gang tellement agréable! Allez-y tous. Engagez-les!",
@@ -361,7 +377,9 @@ export default function Home() {
         subtitle: "Discover our variety",
         all: "All",
         addToCart: "Add to Cart",
-        servings: "Servings"
+        servings: "Servings",
+        search: "Search for a dish or ingredient...",
+        noResults: "No products found"
       },
       testimonial: {
         quote: "Amazing food and such a pleasant team! Everyone should go. Hire them!",
@@ -596,6 +614,20 @@ export default function Home() {
             <p className="text-lg text-muted-foreground">{t.menu.subtitle}</p>
           </div>
 
+          {/* Search Bar */}
+          <div className="max-w-2xl mx-auto mb-8 px-4">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+              <input
+                type="text"
+                placeholder={t.menu.search}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-10 pr-4 py-3 rounded-full border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+              />
+            </div>
+          </div>
+
           {/* Category Filter */}
           <div className="flex flex-wrap justify-center gap-2 mb-8 px-4">
             {categories.map((category) => (
@@ -611,8 +643,13 @@ export default function Home() {
           </div>
 
           {/* Menu Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
-            {filteredMenu.map((item) => (
+          {filteredMenu.length === 0 ? (
+            <div className="text-center py-12">
+              <p className="text-lg text-muted-foreground">{t.menu.noResults}</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+              {filteredMenu.map((item) => (
               <Card key={item.id} className="overflow-hidden hover:shadow-xl transition-shadow group">
                 <div className="relative h-48 overflow-hidden bg-muted">
                   {item.image ? (
@@ -727,6 +764,7 @@ export default function Home() {
               </Card>
             ))}
           </div>
+        )}
         </div>
       </section>
 

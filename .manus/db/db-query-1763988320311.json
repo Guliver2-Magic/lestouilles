@@ -1,0 +1,226 @@
+{
+  "query": "SELECT id, name, nutritionalTip, nutritionalTipEn FROM products WHERE nutritionalTip LIKE '%...' OR nutritionalTipEn LIKE '%...' LIMIT 50;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 494y6CgAR8Uu32w.cf8f73b2fa18 --database nG5FpW6QC2VPLHfftjzBXF --execute SELECT id, name, nutritionalTip, nutritionalTipEn FROM products WHERE nutritionalTip LIKE '%...' OR nutritionalTipEn LIKE '%...' LIMIT 50;",
+  "rows": [
+    {
+      "id": "30004",
+      "name": "Salade César",
+      "nutritionalTip": "Pour réduire la teneur en matières grasses, d...",
+      "nutritionalTipEn": "To reduce fat content, ask for Caesar dressin..."
+    },
+    {
+      "id": "30010",
+      "name": "Brochettes de Poulet",
+      "nutritionalTip": "Privilégiez la cuisson au grill ou au four po...",
+      "nutritionalTipEn": "Prefer grilling or oven cooking to minimize a..."
+    },
+    {
+      "id": "30013",
+      "name": "Boîte à Lunch Classique",
+      "nutritionalTip": "Pour améliorer l'équilibre, optez pour un san...",
+      "nutritionalTipEn": "To improve balance, opt for a whole grain san..."
+    },
+    {
+      "id": "150001",
+      "name": "Soupe à l'Oignon Gratinée",
+      "nutritionalTip": "Bien que riche en saveurs, la soupe à l'oigno...",
+      "nutritionalTipEn": "Rich in flavors, comforting"
+    },
+    {
+      "id": "150008",
+      "name": "Boeuf Bourguignon",
+      "nutritionalTip": "Pour réduire l'apport calorique, privilégiez ...",
+      "nutritionalTipEn": "Traditional French dish rich in protein"
+    },
+    {
+      "id": "150009",
+      "name": "Coq au Vin",
+      "nutritionalTip": "Pour réduire la teneur en lipides, privilégie...",
+      "nutritionalTipEn": "French cuisine classic"
+    },
+    {
+      "id": "150010",
+      "name": "Osso Buco",
+      "nutritionalTip": "L'Osso Buco est riche en protéines et en coll...",
+      "nutritionalTipEn": "Rich in collagen and protein"
+    },
+    {
+      "id": "150011",
+      "name": "Moussaka",
+      "nutritionalTip": "Pour alléger la Moussaka, utilisez de la vian...",
+      "nutritionalTipEn": "Balanced Mediterranean dish"
+    },
+    {
+      "id": "150012",
+      "name": "Paella Valenciana",
+      "nutritionalTip": "Pour une version plus légère, privilégiez le ...",
+      "nutritionalTipEn": "Rich in protein and flavors"
+    },
+    {
+      "id": "150014",
+      "name": "Curry Thaï aux Crevettes",
+      "nutritionalTip": "Privilégiez l'accompagnement avec des légumes...",
+      "nutritionalTipEn": "Rich in lean protein"
+    },
+    {
+      "id": "150015",
+      "name": "Risotto aux Champignons",
+      "nutritionalTip": "Le risotto est souvent riche en lipides satur...",
+      "nutritionalTipEn": "Rich in complex carbohydrates"
+    },
+    {
+      "id": "150018",
+      "name": "Ratatouille Provençale",
+      "nutritionalTip": "Ce plat est riche en fibres et en antioxydant...",
+      "nutritionalTipEn": "Rich in antioxidants"
+    },
+    {
+      "id": "150021",
+      "name": "Saumon Teriyaki",
+      "nutritionalTip": "Le saumon est une excellente source d'acides ...",
+      "nutritionalTipEn": "Rich in omega-3"
+    },
+    {
+      "id": "150022",
+      "name": "Chili con Carne",
+      "nutritionalTip": "Privilégiez la viande hachée maigre (5% de ma...",
+      "nutritionalTipEn": "Rich in protein and fiber"
+    },
+    {
+      "id": "150023",
+      "name": "Côtelettes d'Agneau Grillées",
+      "nutritionalTip": "L'agneau est une excellente source de fer hém...",
+      "nutritionalTipEn": "Excellent source of protein and iron"
+    },
+    {
+      "id": "150024",
+      "name": "Filet Mignon de Boeuf",
+      "nutritionalTip": "Le filet mignon est une excellente source de ...",
+      "nutritionalTipEn": "Tender and flavorful meat"
+    },
+    {
+      "id": "150026",
+      "name": "Côtes Levées BBQ",
+      "nutritionalTip": "Privilégiez une sauce barbecue maison faible ...",
+      "nutritionalTipEn": "Slow-cooked for tenderness"
+    },
+    {
+      "id": "150027",
+      "name": "Bavette de Boeuf Marinée",
+      "nutritionalTip": "La bavette de boeuf est une excellente source...",
+      "nutritionalTipEn": "Flavorful and economical cut"
+    },
+    {
+      "id": "150028",
+      "name": "Cuisse de Poulet Confite",
+      "nutritionalTip": "Étant très riche en graisses saturées et en s...",
+      "nutritionalTipEn": "Tender and juicy"
+    },
+    {
+      "id": "150030",
+      "name": "Légumes Grillés",
+      "nutritionalTip": "Pour maximiser l'absorption des vitamines lip...",
+      "nutritionalTipEn": "Rich in vitamins and antioxidants"
+    },
+    {
+      "id": "150031",
+      "name": "Ratatouille",
+      "nutritionalTip": "La ratatouille est riche en fibres et en anti...",
+      "nutritionalTipEn": "Healthy Mediterranean dish"
+    },
+    {
+      "id": "150032",
+      "name": "Purée de Pommes de Terre",
+      "nutritionalTip": "Pour réduire la teneur en matières grasses, r...",
+      "nutritionalTipEn": "Comforting and creamy"
+    },
+    {
+      "id": "150033",
+      "name": "Haricots Verts Amandine",
+      "nutritionalTip": "Les haricots verts sont riches en fibres et e...",
+      "nutritionalTipEn": "Rich in fiber and vitamin K"
+    },
+    {
+      "id": "150034",
+      "name": "Gratin Dauphinois",
+      "nutritionalTip": "Bien que délicieux, le gratin dauphinois est ...",
+      "nutritionalTipEn": "Indulgent side dish"
+    },
+    {
+      "id": "150035",
+      "name": "Épinards à la Crème",
+      "nutritionalTip": "Bien que riches en vitamines et minéraux prov...",
+      "nutritionalTipEn": "Rich in iron and calcium"
+    },
+    {
+      "id": "150036",
+      "name": "Carottes Glacées au Miel",
+      "nutritionalTip": "Bien que riches en vitamine A grâce aux carot...",
+      "nutritionalTipEn": "Rich in beta-carotene"
+    },
+    {
+      "id": "150037",
+      "name": "Bruschetta Tomate Basilic",
+      "nutritionalTip": "Pour réduire l'apport en lipides, privilégiez...",
+      "nutritionalTipEn": "Fresh and light"
+    },
+    {
+      "id": "150040",
+      "name": "Tarte Tatin",
+      "nutritionalTip": "Étant riche en sucres et en graisses saturées...",
+      "nutritionalTipEn": "French classic"
+    },
+    {
+      "id": "150041",
+      "name": "Crème Brûlée",
+      "nutritionalTip": "Étant donné sa richesse en graisses saturées ...",
+      "nutritionalTipEn": "Refined dessert"
+    },
+    {
+      "id": "150043",
+      "name": "Mousse au Chocolat",
+      "nutritionalTip": "Privilégiez les mousses faites maison avec de...",
+      "nutritionalTipEn": "Rich in antioxidants"
+    },
+    {
+      "id": "150046",
+      "name": "Mille-Feuille",
+      "nutritionalTip": "Étant riche en sucres et en graisses saturées...",
+      "nutritionalTipEn": "Classic pastry"
+    },
+    {
+      "id": "150048",
+      "name": "Boîte Poulet Nuggets",
+      "nutritionalTip": "Privilégiez une boisson sans sucre ajouté et ...",
+      "nutritionalTipEn": "Kid-friendly"
+    },
+    {
+      "id": "150051",
+      "name": "Boîte Saumon Grillé",
+      "nutritionalTip": "Privilégiez les légumes et le riz complet pou...",
+      "nutritionalTipEn": "Rich in omega-3"
+    },
+    {
+      "id": "150052",
+      "name": "Boîte Poulet Teriyaki",
+      "nutritionalTip": "Privilégiez le riz brun et demandez la sauce ...",
+      "nutritionalTipEn": "Asian flavors"
+    },
+    {
+      "id": "150053",
+      "name": "Boîte Boeuf Grillé",
+      "nutritionalTip": "Pour réduire l'apport calorique, privilégiez ...",
+      "nutritionalTipEn": "High in protein"
+    },
+    {
+      "id": "150054",
+      "name": "Boîte Végétarienne Complète",
+      "nutritionalTip": "Ce repas est riche en fibres grâce au quinoa ...",
+      "nutritionalTipEn": "Rich in plant protein"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tnutritionalTip\tnutritionalTipEn\n30004\tSalade César\tPour réduire la teneur en matières grasses, d...\tTo reduce fat content, ask for Caesar dressin...\n30010\tBrochettes de Poulet\tPrivilégiez la cuisson au grill ou au four po...\tPrefer grilling or oven cooking to minimize a...\n30013\tBoîte à Lunch Classique\tPour améliorer l'équilibre, optez pour un san...\tTo improve balance, opt for a whole grain san...\n150001\tSoupe à l'Oignon Gratinée\tBien que riche en saveurs, la soupe à l'oigno...\tRich in flavors, comforting\n150008\tBoeuf Bourguignon\tPour réduire l'apport calorique, privilégiez ...\tTraditional French dish rich in protein\n150009\tCoq au Vin\tPour réduire la teneur en lipides, privilégie...\tFrench cuisine classic\n150010\tOsso Buco\tL'Osso Buco est riche en protéines et en coll...\tRich in collagen and protein\n150011\tMoussaka\tPour alléger la Moussaka, utilisez de la vian...\tBalanced Mediterranean dish\n150012\tPaella Valenciana\tPour une version plus légère, privilégiez le ...\tRich in protein and flavors\n150014\tCurry Thaï aux Crevettes\tPrivilégiez l'accompagnement avec des légumes...\tRich in lean protein\n150015\tRisotto aux Champignons\tLe risotto est souvent riche en lipides satur...\tRich in complex carbohydrates\n150018\tRatatouille Provençale\tCe plat est riche en fibres et en antioxydant...\tRich in antioxidants\n150021\tSaumon Teriyaki\tLe saumon est une excellente source d'acides ...\tRich in omega-3\n150022\tChili con Carne\tPrivilégiez la viande hachée maigre (5% de ma...\tRich in protein and fiber\n150023\tCôtelettes d'Agneau Grillées\tL'agneau est une excellente source de fer hém...\tExcellent source of protein and iron\n150024\tFilet Mignon de Boeuf\tLe filet mignon est une excellente source de ...\tTender and flavorful meat\n150026\tCôtes Levées BBQ\tPrivilégiez une sauce barbecue maison faible ...\tSlow-cooked for tenderness\n150027\tBavette de Boeuf Marinée\tLa bavette de boeuf est une excellente source...\tFlavorful and economical cut\n150028\tCuisse de Poulet Confite\tÉtant très riche en graisses saturées et en s...\tTender and juicy\n150030\tLégumes Grillés\tPour maximiser l'absorption des vitamines lip...\tRich in vitamins and antioxidants\n150031\tRatatouille\tLa ratatouille est riche en fibres et en anti...\tHealthy Mediterranean dish\n150032\tPurée de Pommes de Terre\tPour réduire la teneur en matières grasses, r...\tComforting and creamy\n150033\tHaricots Verts Amandine\tLes haricots verts sont riches en fibres et e...\tRich in fiber and vitamin K\n150034\tGratin Dauphinois\tBien que délicieux, le gratin dauphinois est ...\tIndulgent side dish\n150035\tÉpinards à la Crème\tBien que riches en vitamines et minéraux prov...\tRich in iron and calcium\n150036\tCarottes Glacées au Miel\tBien que riches en vitamine A grâce aux carot...\tRich in beta-carotene\n150037\tBruschetta Tomate Basilic\tPour réduire l'apport en lipides, privilégiez...\tFresh and light\n150040\tTarte Tatin\tÉtant riche en sucres et en graisses saturées...\tFrench classic\n150041\tCrème Brûlée\tÉtant donné sa richesse en graisses saturées ...\tRefined dessert\n150043\tMousse au Chocolat\tPrivilégiez les mousses faites maison avec de...\tRich in antioxidants\n150046\tMille-Feuille\tÉtant riche en sucres et en graisses saturées...\tClassic pastry\n150048\tBoîte Poulet Nuggets\tPrivilégiez une boisson sans sucre ajouté et ...\tKid-friendly\n150051\tBoîte Saumon Grillé\tPrivilégiez les légumes et le riz complet pou...\tRich in omega-3\n150052\tBoîte Poulet Teriyaki\tPrivilégiez le riz brun et demandez la sauce ...\tAsian flavors\n150053\tBoîte Boeuf Grillé\tPour réduire l'apport calorique, privilégiez ...\tHigh in protein\n150054\tBoîte Végétarienne Complète\tCe repas est riche en fibres grâce au quinoa ...\tRich in plant protein\n",
+  "stderr": "",
+  "execution_time_ms": 181
+}
