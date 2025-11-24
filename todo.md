@@ -668,11 +668,13 @@
 
 
 ## Fix n8n Chatbot Connection - User Report
-- [ ] Check n8n workflow URL and webhook configuration
-- [ ] Verify chatbot is calling correct n8n webhook
-- [ ] Test n8n workflow execution
-- [ ] Debug connection issues
-- [ ] Verify chatbot receives responses from n8n
+- [x] Check n8n workflow URL and webhook configuration
+- [x] Verify chatbot is calling correct n8n webhook (https://vps-e53ac5fb.vps.ovh.ca/webhook/chatbot-response)
+- [x] Test n8n workflow execution (webhook responds HTTP 200 but returns empty)
+- [x] Debug connection issues (AI Agent output field mapping problem)
+- [x] Create v4-FINAL workflow with corrected output handling
+- [ ] User must import v4-FINAL workflow in n8n and activate it
+- [ ] Verify chatbot receives responses from n8n after activation
 
 ## Fix Logo Visibility on White Background - User Report
 - [x] Logo is white and disappears on white header background

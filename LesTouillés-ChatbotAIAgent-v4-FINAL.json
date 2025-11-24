@@ -1,0 +1,158 @@
+{
+  "name": "Les Touillés - Chatbot AI Agent v4",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "chatbot-response",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "39a8887d-26b1-40eb-b183-f2c955932c84",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [-336, -32],
+      "webhookId": "chatbot-response"
+    },
+    {
+      "parameters": {
+        "agent": "conversationalAgent",
+        "promptType": "define",
+        "text": "=Vous êtes l'assistant virtuel des Touillés, un service de traiteur québécois spécialisé dans les plats sous-vide prêts en 15 minutes.\n\n**Votre rôle** :\n- Répondre aux questions sur le menu (plats, prix, ingrédients, allergènes)\n- Aider avec les réservations d'événements (mariages, corporatifs, fêtes)\n- Guider les clients pour passer commande (ramassage, livraison, Uber Eats)\n- Fournir des informations (horaires, livraison, contact)\n- Capturer les leads intéressés (nom, email, demande)\n\n**Ton** : Professionnel, chaleureux, et serviable. Utilisez le tutoiement en français.\n\n**Informations clés** :\n- **Concept** : Plats sous-vide de qualité traiteur, prêts en 15 minutes\n- **Préparation** : Déposer le sachet dans l'eau chaude, c'est prêt !\n- **Menu** : Plats principaux, boîtes à lunch, entrées, desserts, buffets traiteur\n- **Prix** : Entre 11$ et 32$ selon les plats\n- **Livraison** : Ramassage, livraison à domicile, ou Uber Eats\n- **Contact** : Via le site web ou formulaire de réservation\n\n**Instructions** :\n1. Détectez automatiquement la langue du client (français ou anglais)\n2. Répondez dans la même langue que le client\n3. Si le client demande un devis ou veut réserver, demandez : nom, email, type d'événement\n4. Soyez concis mais complet (2-3 phrases maximum)\n5. Proposez toujours une action suivante (\"Voulez-vous voir le menu?\", \"Puis-je vous aider à réserver?\")\n\n**Message du client** : {{ $json.body.message }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=Vous êtes l'assistant virtuel professionnel des Touillés. Répondez de manière concise, chaleureuse et utile."
+        }
+      },
+      "id": "93db2a8a-9057-4c85-af07-41f0bba784c7",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [-112, -32]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "response-text",
+              "name": "response",
+              "value": "={{ $('AI Agent').item.json.output || $('AI Agent').item.json.text || $json.output || $json.text || 'Désolé, je n\\u0027ai pas pu générer de réponse.' }}",
+              "type": "string"
+            },
+            {
+              "id": "should-capture",
+              "name": "shouldCaptureLead",
+              "value": false,
+              "type": "boolean"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "a4b60a6f-1901-4adf-84fb-e3056552e985",
+      "name": "Format Response",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [256, -32]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "9554e8fe-410d-40a6-b2e3-022ee59fc5e3",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [528, -32]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [-144, 240],
+      "id": "a0d506aa-ef9d-4025-aed3-13e6bc1ad79c",
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "Pq7U6TsW1hDgCC4i",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [-16, 240],
+      "id": "171e69ac-384f-4022-9f24-e106c885749e",
+      "name": "Simple Memory"
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Format Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Response": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true
+  }
+}
