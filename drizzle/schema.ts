@@ -262,3 +262,43 @@ export const products = mysqlTable("products", {
 
 export type Product = typeof products.$inferSelect;
 export type InsertProduct = typeof products.$inferInsert;
+
+/**
+ * Daily specials table
+ * Stores featured dishes that change daily/weekly
+ */
+export const dailySpecials = mysqlTable("dailySpecials", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Product reference (optional - can be null for custom specials)
+  productId: int("productId"),
+  
+  // Custom special information (overrides product if provided)
+  name: varchar("name", { length: 255 }).notNull(),
+  nameEn: varchar("nameEn", { length: 255 }),
+  description: text("description").notNull(),
+  descriptionEn: text("descriptionEn"),
+  
+  // Pricing (can be different from regular product price)
+  price: int("price").notNull(), // in cents
+  originalPrice: int("originalPrice"), // in cents, for showing discount
+  
+  // Image
+  image: text("image").notNull(),
+  imageAlt: varchar("imageAlt", { length: 255 }),
+  
+  // Availability
+  startDate: timestamp("startDate").notNull(),
+  endDate: timestamp("endDate").notNull(),
+  isActive: boolean("isActive").default(true).notNull(),
+  
+  // Display order
+  displayOrder: int("displayOrder").default(0).notNull(),
+  
+  // Metadata
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type DailySpecial = typeof dailySpecials.$inferSelect;
+export type InsertDailySpecial = typeof dailySpecials.$inferInsert;

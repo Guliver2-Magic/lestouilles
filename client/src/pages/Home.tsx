@@ -26,6 +26,133 @@ import { APP_LOGO, APP_TITLE } from "@/const";
 import { translateCategory } from "@/lib/categoryTranslations";
 import { Link } from "wouter";
 
+// Daily Specials Component
+function DailySpecialsSection() {
+  const { language } = useLanguage();
+  const { addItem } = useCart();
+  const { data: specials = [], isLoading } = trpc.dailySpecials.getActive.useQuery();
+
+  if (isLoading || specials.length === 0) {
+    return null;
+  }
+
+  const t = {
+    fr: {
+      title: "Plats du Jour",
+      subtitle: "Découvrez nos spécialités du moment",
+      addToCart: "Ajouter au panier",
+      save: "Économisez",
+    },
+    en: {
+      title: "Daily Specials",
+      subtitle: "Discover our special dishes of the moment",
+      addToCart: "Add to Cart",
+      save: "Save",
+    },
+  }[language];
+
+  return (
+    <section className="py-20 bg-gradient-to-b from-primary/5 to-background">
+      <div className="container">
+        <div className="text-center mb-12">
+          <Badge className="mb-4 text-sm px-4 py-1">
+            {language === "fr" ? "✨ Spécial" : "✨ Special"}
+          </Badge>
+          <h2 className="text-3xl md:text-4xl font-serif font-bold mb-4">
+            {t.title}
+          </h2>
+          <p className="text-lg text-muted-foreground">{t.subtitle}</p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+          {specials.map((special) => {
+            const name = language === "en" && special.nameEn ? special.nameEn : special.name;
+            const description = language === "en" && special.descriptionEn ? special.descriptionEn : special.description;
+            const hasDiscount = special.originalPrice && special.originalPrice > special.price;
+            const discountPercent = hasDiscount 
+              ? Math.round(((special.originalPrice! - special.price) / special.originalPrice!) * 100)
+              : 0;
+
+            return (
+              <Card key={special.id} className="overflow-hidden hover:shadow-2xl transition-all duration-300 border-2 border-primary/20">
+                <div className="relative">
+                  {hasDiscount && (
+                    <Badge className="absolute top-4 right-4 z-10 bg-destructive text-destructive-foreground">
+                      -{discountPercent}%
+                    </Badge>
+                  )}
+                  <div className="relative h-56 overflow-hidden">
+                    <img
+                      src={special.image}
+                      alt={special.imageAlt || name}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                    />
+                  </div>
+                </div>
+                <CardContent className="p-6">
+                  <h3 className="text-xl font-bold mb-2">{name}</h3>
+                  <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
+                    {description}
+                  </p>
+                  
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-2xl font-bold text-primary">
+                        ${(special.price / 100).toFixed(2)}
+                      </span>
+                      {hasDiscount && (
+                        <span className="text-sm text-muted-foreground line-through">
+                          ${(special.originalPrice! / 100).toFixed(2)}
+                        </span>
+                      )}
+                    </div>
+                    <Button
+                      onClick={() => {
+                        addItem({
+                          id: special.id,
+                          name,
+                          nameEn: special.nameEn || null,
+                          description,
+                          descriptionEn: special.descriptionEn || null,
+                          category: "plats-du-jour",
+                          subcategory: null,
+                          price: special.price,
+                          servingSize: null,
+                          image: special.image,
+                          imageAlt: special.imageAlt || null,
+                          isVegetarian: false,
+                          isVegan: false,
+                          isGlutenFree: false,
+                          isDairyFree: false,
+                          calories: null,
+                          protein: null,
+                          carbs: null,
+                          fat: null,
+                          nutritionalTip: null,
+                          nutritionalTipEn: null,
+                          isActive: true,
+                          displayOrder: 0,
+                          createdAt: new Date(),
+                          updatedAt: new Date(),
+                        }, 1);
+                      }}
+                      size="sm"
+                      className="gap-2"
+                    >
+                      <ShoppingCart className="h-4 w-4" />
+                      {t.addToCart}
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 const carouselImages = [
   "/images/carousel/catering1.jpg",
   "/images/carousel/catering2.jpg",
@@ -415,6 +542,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Daily Specials Section */}
+      <DailySpecialsSection />
 
       {/* Menu Section */}
       <section id="menu" className="py-20 bg-muted/30">

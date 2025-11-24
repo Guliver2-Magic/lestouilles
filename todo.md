@@ -472,3 +472,16 @@
   - [x] Thé Glacé Maison - generate image of iced tea with lemon
 - [x] Upload images to S3 and update database with new URLs
 - [x] Test all product images display correctly - Images updated successfully in database, browser cache may take time to refresh
+
+
+## Daily Specials Section with Admin Panel - User Request
+- [x] Design database schema for daily specials (dailySpecials table)
+- [x] Add migration to create dailySpecials table
+- [x] Create tRPC procedures for CRUD operations on daily specials
+- [x] Build admin panel page at /admin/daily-specials
+- [x] Add UI to create/edit/delete daily specials
+- [x] Add UI to set active date range for each special
+- [x] Display active daily specials on homepage
+- [x] Add bilingual support (FR/EN) for daily specials
+- [x] Write vitest tests for daily specials procedures (9 tests passing)
+- [x] Test complete workflow (admin create → homepage display)

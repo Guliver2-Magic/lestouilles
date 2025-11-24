@@ -752,6 +752,112 @@ Fournis UNIQUEMENT un objet JSON valide (sans markdown, sans \`\`\`) avec cette 
         return { url };
       }),
   }),
+
+  dailySpecials: router({
+    // Public procedures
+    getActive: publicProcedure.query(async () => {
+      const { getActiveDailySpecials } = await import("./db");
+      return await getActiveDailySpecials();
+    }),
+
+    // Admin procedures
+    getAll: protectedProcedure.query(async ({ ctx }) => {
+      if (ctx.user.role !== "admin") {
+        throw new Error("Unauthorized");
+      }
+      const { getAllDailySpecials } = await import("./db");
+      return await getAllDailySpecials();
+    }),
+
+    getById: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .query(async ({ input, ctx }) => {
+        if (ctx.user.role !== "admin") {
+          throw new Error("Unauthorized");
+        }
+        const { getDailySpecialById } = await import("./db");
+        return await getDailySpecialById(input.id);
+      }),
+
+    create: protectedProcedure
+      .input(
+        z.object({
+          productId: z.number().optional(),
+          name: z.string(),
+          nameEn: z.string().optional(),
+          description: z.string(),
+          descriptionEn: z.string().optional(),
+          price: z.number(),
+          originalPrice: z.number().optional(),
+          image: z.string(),
+          imageAlt: z.string().optional(),
+          startDate: z.string(),
+          endDate: z.string(),
+          isActive: z.boolean().default(true),
+          displayOrder: z.number().default(0),
+        })
+      )
+      .mutation(async ({ input, ctx }) => {
+        if (ctx.user.role !== "admin") {
+          throw new Error("Unauthorized");
+        }
+        const { createDailySpecial } = await import("./db");
+        return await createDailySpecial({
+          ...input,
+          productId: input.productId || null,
+          nameEn: input.nameEn || null,
+          descriptionEn: input.descriptionEn || null,
+          originalPrice: input.originalPrice || null,
+          imageAlt: input.imageAlt || null,
+          startDate: new Date(input.startDate),
+          endDate: new Date(input.endDate),
+        });
+      }),
+
+    update: protectedProcedure
+      .input(
+        z.object({
+          id: z.number(),
+          productId: z.number().optional(),
+          name: z.string().optional(),
+          nameEn: z.string().optional(),
+          description: z.string().optional(),
+          descriptionEn: z.string().optional(),
+          price: z.number().optional(),
+          originalPrice: z.number().optional(),
+          image: z.string().optional(),
+          imageAlt: z.string().optional(),
+          startDate: z.string().optional(),
+          endDate: z.string().optional(),
+          isActive: z.boolean().optional(),
+          displayOrder: z.number().optional(),
+        })
+      )
+      .mutation(async ({ input, ctx }) => {
+        if (ctx.user.role !== "admin") {
+          throw new Error("Unauthorized");
+        }
+        const { id, ...data } = input;
+        const { updateDailySpecial } = await import("./db");
+        
+        // Convert date strings to Date objects if provided
+        const updateData: any = { ...data };
+        if (data.startDate) updateData.startDate = new Date(data.startDate);
+        if (data.endDate) updateData.endDate = new Date(data.endDate);
+        
+        return await updateDailySpecial(id, updateData);
+      }),
+
+    delete: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input, ctx }) => {
+        if (ctx.user.role !== "admin") {
+          throw new Error("Unauthorized");
+        }
+        const { deleteDailySpecial } = await import("./db");
+        return await deleteDailySpecial(input.id);
+      }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;

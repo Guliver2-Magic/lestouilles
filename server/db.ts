@@ -10,7 +10,10 @@ import {
   contactSubmissions,
   InsertContactSubmission,
   newsletterSubscriptions,
-  InsertNewsletterSubscription
+  InsertNewsletterSubscription,
+  dailySpecials,
+  InsertDailySpecial,
+  DailySpecial
 } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
@@ -473,4 +476,80 @@ export async function deleteProduct(id: number) {
   const { products } = await import("../drizzle/schema");
   const result = await db.delete(products).where(eq(products.id, id));
   return result;
+}
+
+
+// ============================================
+// Daily Specials Database Helpers
+// ============================================
+
+export async function getAllDailySpecials() {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get daily specials: database not available");
+    return [];
+  }
+  return await db.select().from(dailySpecials);
+}
+
+export async function getActiveDailySpecials() {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get active daily specials: database not available");
+    return [];
+  }
+  
+  const now = new Date();
+  const result = await db.select().from(dailySpecials);
+  
+  // Filter active specials within date range
+  return result.filter(special => 
+    special.isActive && 
+    new Date(special.startDate) <= now && 
+    new Date(special.endDate) >= now
+  ).sort((a, b) => a.displayOrder - b.displayOrder);
+}
+
+export async function getDailySpecialById(id: number) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get daily special: database not available");
+    return undefined;
+  }
+  
+  const result = await db.select().from(dailySpecials).where(eq(dailySpecials.id, id)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function createDailySpecial(special: InsertDailySpecial) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot create daily special: database not available");
+    throw new Error("Database not available");
+  }
+  
+  const result = await db.insert(dailySpecials).values(special);
+  return result;
+}
+
+export async function updateDailySpecial(id: number, special: Partial<InsertDailySpecial>) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot update daily special: database not available");
+    throw new Error("Database not available");
+  }
+  
+  await db.update(dailySpecials).set(special).where(eq(dailySpecials.id, id));
+  return await getDailySpecialById(id);
+}
+
+export async function deleteDailySpecial(id: number) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot delete daily special: database not available");
+    throw new Error("Database not available");
+  }
+  
+  await db.delete(dailySpecials).where(eq(dailySpecials.id, id));
+  return { success: true };
 }
