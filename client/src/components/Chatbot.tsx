@@ -104,7 +104,7 @@ export function Chatbot() {
       {isOpen && (
         <Card className="fixed bottom-6 right-6 w-[380px] h-[600px] shadow-2xl z-50 flex flex-col">
           {/* Header */}
-          <div className="flex items-center justify-between p-4 border-b bg-primary text-primary-foreground">
+          <div className="flex items-center justify-between p-4 border-b bg-black text-white">
             <div className="flex items-center gap-2">
               <MessageCircle className="h-5 w-5" />
               <span className="font-semibold">{t('chat.title')}</span>
@@ -112,7 +112,7 @@ export function Chatbot() {
             <Button
               variant="ghost"
               size="sm"
-              className="h-8 w-8 p-0 hover:bg-primary-foreground/20"
+              className="h-8 w-8 p-0 hover:bg-white/20"
               onClick={() => setIsOpen(false)}
             >
               <X className="h-4 w-4" />

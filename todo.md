@@ -739,3 +739,15 @@
 - [x] Apply subtle border styling consistent with design
 - [x] Ensure focus state is clean and professional
 - [x] Test input box appearance on different screen sizes
+
+## Chatbot Input Box Disappearing After N8N Response
+- [ ] Diagnose why input box disappears after n8n sends response
+- [ ] Check if input box is being conditionally hidden
+- [ ] Verify input box remains visible after message mutations complete
+- [ ] Ensure users can continue conversation after n8n response
+- [ ] Test multi-turn conversation flow
+
+## Chatbot Header Color Change
+- [x] Change chatbot header background from green to black
+- [x] Ensure text remains readable on black background
+- [x] Test header appearance
