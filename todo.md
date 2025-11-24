@@ -582,3 +582,9 @@
 ## Replace with Company Logo - User Request
 - [x] Copy company logo to /logo.png
 - [x] Test logo display on all pages
+
+
+## Remove Logo Text - User Request
+- [x] Remove "Les Touillés" text next to logo in header
+- [x] Keep only the logo icon
+- [x] Test display on all pages
