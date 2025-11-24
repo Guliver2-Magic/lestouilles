@@ -577,3 +577,8 @@
 - [x] Email field already present in reservation form
 - [x] Write and run unit tests for email service (8 tests passing)
 - [ ] Configure n8n workflow to handle email sending (requires n8n setup)
+
+
+## Replace with Company Logo - User Request
+- [x] Copy company logo to /logo.png
+- [x] Test logo display on all pages
