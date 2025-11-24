@@ -166,7 +166,7 @@ const carouselImages = [
 
 // Category grouping configuration
 const CATEGORY_GROUPS: Record<string, string[]> = {
-  "Boîtes à Lunch": ["boites-lunch-adultes", "boites-lunch-enfants"],
+  "Boîtes à Lunch": ["boites-lunch", "boites-lunch-adultes"],
   "Entrées & Bouchées": ["entrees", "traiteur-bouchees"],
 };
 

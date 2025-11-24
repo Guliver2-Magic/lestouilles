@@ -545,3 +545,19 @@
 - [x] Add AI features to Daily Specials module (image generation with AI button)
 - [ ] Add search bar to menu page for searching by product name or ingredient
 - [ ] Test all new features
+
+
+## Fix Duplicate Lunch Box Categories - User Report
+- [x] Investigate why two "Boîtes à Lunch" categories are showing in menu
+- [x] Check database for category naming inconsistencies
+- [x] Verify category grouping logic in Home.tsx
+- [x] Fix category display to show only one grouped "Boîtes à Lunch" button
+- [x] Test menu displays correctly with single lunch box category
+
+
+## Fix AI Image Generation Button in Daily Specials Admin - User Report
+- [x] Investigate why "Générer avec l'IA" button is not working in /admin/daily-specials
+- [x] Check event handler connection for AI image generation button
+- [x] Verify generateImage function is properly imported and called
+- [x] Test AI image generation functionality
+- [x] Ensure generated images are properly saved and displayed

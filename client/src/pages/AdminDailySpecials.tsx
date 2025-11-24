@@ -59,6 +59,8 @@ export default function AdminDailySpecials() {
   const [isGeneratingImage, setIsGeneratingImage] = useState(false);
   const [imagePreview, setImagePreview] = useState("");
 
+  const generateImageMutation = trpc.products.generateImage.useMutation();
+
   const { data: products = [] } = trpc.products.listActive.useQuery();
 
   const utils = trpc.useUtils();
@@ -190,24 +192,18 @@ export default function AdminDailySpecials() {
 
     setIsGeneratingImage(true);
     try {
-      const result = await fetch("/api/trpc/products.generateImage", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          json: {
-            name: formData.name,
-            description: formData.description,
-          },
-        }),
+      const result = await generateImageMutation.mutateAsync({
+        productName: formData.name,
+        description: formData.description,
       });
-
-      const data = await result.json();
-      if (data.result?.data?.json?.url) {
-        setFormData({ ...formData, image: data.result.data.json.url });
-        setImagePreview(data.result.data.json.url);
+      
+      if (result.url) {
+        setFormData({ ...formData, image: result.url });
+        setImagePreview(result.url);
         toast.success(language === "fr" ? "Image générée avec succès" : "Image generated successfully");
       }
     } catch (error) {
+      console.error("Image generation error:", error);
       toast.error(language === "fr" ? "Erreur lors de la génération" : "Generation error");
     } finally {
       setIsGeneratingImage(false);
