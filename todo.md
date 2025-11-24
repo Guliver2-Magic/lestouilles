@@ -6,10 +6,10 @@
 - [x] Responsive design for mobile and desktop
 - [x] Menu system with categories and product cards
 - [x] Shopping cart with add/remove/quantity controls
-- [ ] Order configuration (pickup, delivery, Uber Eats)
+- [x] Order configuration (pickup, delivery, Uber Eats)
 - [x] Contact form with event type selection
-- [ ] Customer testimonials section
-- [ ] Portfolio/gallery with event photos
+- [x] Customer testimonials section
+- [x] Portfolio/gallery with event photos
 - [x] Chatbot with n8n webhook integration
 - [x] Hero section with CTAs
 - [x] Nutritional information display
@@ -680,3 +680,11 @@
 - [x] Logo is white and disappears on white header background
 - [x] Add emerald green gradient background with rounded corners to logo
 - [x] Test logo visibility on all pages
+
+
+## Debug n8n Workflow Execution Error #6120 - User Report
+- [ ] Analyze error message from n8n execution
+- [ ] Identify which node is failing
+- [ ] Fix the workflow configuration
+- [ ] Test corrected workflow
+- [ ] Provide working workflow JSON
