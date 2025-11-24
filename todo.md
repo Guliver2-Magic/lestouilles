@@ -713,3 +713,9 @@
 - [x] Ensure message bubbles expand correctly
 - [x] Test with various message lengths
 - [x] Verify both user and bot messages display correctly
+
+## Chatbot FAQ - Identity Question
+- [x] Add FAQ entry for "qui es tu" / "who are you"
+- [x] Write appropriate identity response in French and English
+- [x] Test that question matches FAQ instead of going to n8n
+- [x] Verify response is helpful and on-brand
