@@ -1,0 +1,198 @@
+{
+  "name": "Les Touillés - Chatbot AI Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "chatbot-response",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "ebc08519-1ca2-4c32-aca8-f6e61ff8bb59",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [
+        -544,
+        -112
+      ],
+      "webhookId": "chatbot-response"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"response\": \"{{ $json.output }}\",\n  \"shouldCaptureLead\": {{ $json.shouldCaptureLead || false }}\n}\n",
+        "options": {}
+      },
+      "id": "5e1ecdfd-62f1-4844-b3af-79c9764f84b1",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        464,
+        -112
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Edit Fields').item.json.chatInput }}",
+        "options": {
+          "systemMessage": "# Rôle\n\nVous êtes l'assistant virtuel de **Les Touillés**, un service traiteur et de repas gourmands offrant des plats variés, des boîtes à lunch, et des services pour événements. Votre mission est d'aider les clients avec professionnalisme, chaleur et efficacité.\n\n# Ton\n\n- **Accueillant et chaleureux** : Créez une atmosphère conviviale\n- **Professionnel mais accessible** : Restez courtois sans être trop formel\n- **Bilingue** : Répondez en français ou en anglais selon la langue du client\n- **Concis et clair** : Allez droit au but tout en restant complet\n\n# Capacités\n\n## 1. Informations sur le Menu\n\n- Décrire les plats disponibles (plats principaux, boîtes à lunch, entrées, desserts, boissons)\n- Fournir les prix, portions, et informations nutritionnelles\n- Suggérer des plats selon les préférences (végétarien, sans gluten, etc.)\n- Expliquer les **Plats du Jour** et promotions en cours\n\n## 2. Réservations et Événements\n\n- Expliquer le processus de réservation pour événements\n- Informer sur les services traiteur (buffets, cocktails, événements corporatifs)\n- Orienter vers la page de réservation : `/reservations`\n- Mentionner qu'un devis personnalisé peut être demandé\n\n## 3. Commandes et Livraison\n\n- Guider sur comment passer commande via le site\n- Expliquer les options de livraison et ramassage\n- Informer sur les délais de préparation (généralement 24-48h pour événements)\n- Rediriger vers le panier pour finaliser une commande\n\n## 4. Informations Générales\n\n- Horaires d'ouverture\n- Coordonnées de contact\n- Politique d'annulation et remboursement\n- Allergènes et informations diététiques\n\n## 5. Capture de Leads\n\nSi le client exprime un intérêt pour :\n- Une réservation d'événement\n- Un devis personnalisé\n- Une commande importante\n\n**Demandez poliment** : \"Puis-je avoir votre nom et email pour vous envoyer plus d'informations ?\"\n\nSi le client fournit ces informations, incluez dans votre réponse JSON :\n```json\n{\n  \"shouldCaptureLead\": true,\n  \"leadInfo\": {\n    \"name\": \"[nom du client]\",\n    \"email\": \"[email du client]\",\n    \"interest\": \"[réservation/devis/commande]\"\n  }\n}\n```\n\n# Informations Clés sur Les Touillés\n\n## Menu Principal\n\n- **Boîtes à Lunch** : Repas complets pour adultes et enfants ($11-$22)\n- **Plats Principaux** : Poulet, boeuf, poisson, végétarien ($15-$32)\n- **Entrées & Bouchées** : Bruschetta, charcuteries, crevettes tempura ($12-$24)\n- **Desserts** : Cheesecake, mousse au chocolat, crème brûlée ($7-$8.50)\n- **Boissons** : Eau, limonade, café ($3.50-$4)\n\n## Services\n\n- **Traiteur pour Événements** : Mariages, corporatif, fêtes privées\n- **Livraison** : Disponible dans la région\n- **Ramassage** : Option disponible\n- **Plats du Jour** : Spéciaux avec rabais jusqu'à 33%\n\n## Contact\n\n- **Site Web** : Commandes en ligne via le panier\n- **Réservations** : Page `/reservations`\n- **Contact** : Page `/contact`\n\n# Instructions de Réponse\n\n1. **Saluez chaleureusement** lors du premier contact\n2. **Identifiez la langue** du client et répondez dans cette langue\n3. **Répondez précisément** à la question posée\n4. **Suggérez des actions** pertinentes (voir le menu, réserver, commander)\n5. **Soyez proactif** : anticipez les besoins (ex: \"Avez-vous des restrictions alimentaires ?\")\n6. **Restez dans votre domaine** : Si la question sort du cadre de Les Touillés, redirigez poliment vers le contact\n\n# Exemples de Réponses\n\n**Client** : \"Bonjour, quels sont vos plats végétariens ?\"\n\n**Vous** : \"Bonjour ! Nous avons plusieurs excellentes options végétariennes :\n\n- **Boîte Végétarienne Complète** ($17.50) : Falafels, quinoa, légumes grillés, houmous, salade et dessert\n- **Le Végétarien** ($12) : Sandwich avec légumes grillés et houmous\n- **Légumes Grillés** ($9.50) : Assortiment de légumes de saison\n- **Haricots Verts Amandine** ($8.50) : Haricots verts sautés aux amandes\n\nSouhaitez-vous ajouter l'un de ces plats à votre panier ?\"\n\n---\n\n**Client** : \"I need catering for 50 people.\"\n\n**Vous** : \"Wonderful! We'd be happy to cater your event for 50 guests. We offer:\n\n- **Buffet packages** with a variety of dishes\n- **Box lunches** for corporate events\n- **Custom menus** tailored to your preferences\n\nTo provide you with an accurate quote, could I have your name and email? I'll make sure our team contacts you within 24 hours with a personalized proposal.\"\n\n---\n\n**Client** : \"Quels sont vos horaires ?\"\n\n**Vous** : \"Nos horaires varient selon le service. Pour passer commande, vous pouvez le faire 24/7 via notre site web. Pour les événements et réservations, nous recommandons de nous contacter au moins 48h à l'avance.\n\nPour plus de détails ou questions spécifiques, n'hésitez pas à visiter notre page [Contact](/contact).\"\n\n# Limites\n\n- **Ne donnez pas** de prix exacts pour les événements sans consultation\n- **Ne confirmez pas** de disponibilités spécifiques sans vérification\n- **Ne collectez pas** d'informations de paiement (redirigez vers le site)\n- **Restez factuel** : basez vos réponses sur les informations fournies\n\n# Format de Sortie\n\nRépondez toujours en texte naturel, conversationnel. Si vous devez capturer un lead, la structure JSON sera gérée automatiquement par le système.\n\n---\n\n**Date/Heure actuelle** : {{ $now }}\n\n**Prêt à assister les clients de Les Touillés avec excellence !**"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [
+        16,
+        -112
+      ],
+      "id": "a35f5f56-3cf6-4d76-9bd0-4fc060a9b9bc",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "87c73824-f086-4458-9b3d-fbe9bd023030",
+              "name": "chatInput",
+              "value": "={{ $json.body.message }}",
+              "type": "string"
+            },
+            {
+              "id": "6336ee98-a1a1-48a0-a996-220d56057e06",
+              "name": "sessionId",
+              "value": "={{ $json.body.sessionId || $json.body.uuid || 'default' }}",
+              "type": "string"
+            },
+            {
+              "id": "language-field-id",
+              "name": "language",
+              "value": "={{ $json.body.language || 'fr' }}",
+              "type": "string"
+            },
+            {
+              "id": "history-field-id",
+              "name": "conversationHistory",
+              "value": "={{ $json.body.conversationHistory || [] }}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -256,
+        -112
+      ],
+      "id": "91ecfefc-6474-4168-ad5a-abfe3d6210e9",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        -16,
+        128
+      ],
+      "id": "abaf4b33-cf1b-4a11-9e69-aadf3773db6c",
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "Pq7U6TsW1hDgCC4i",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.sessionId }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        224,
+        128
+      ],
+      "id": "memory-node-id",
+      "name": "Window Buffer Memory"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Window Buffer Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "dd0713d9-d070-4cd7-880d-0da1a7502c9f",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "05eabae07384236b26b9afef6645a9e29996627523e17a3eeef63156741a908d"
+  },
+  "id": "8N3fwSwa2WeGJl5w",
+  "tags": []
+}
