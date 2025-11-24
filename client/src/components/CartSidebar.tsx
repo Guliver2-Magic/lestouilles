@@ -5,10 +5,17 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTr
 import { ShoppingCart, Plus, Minus, Trash2 } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
+import { useLocation } from "wouter";
 
 export function CartSidebar() {
   const { items, updateQuantity, removeItem, clearCart, total, itemCount, cartOpen, setCartOpen } = useCart();
   const { language, t } = useLanguage();
+  const [, setLocation] = useLocation();
+
+  const handleCheckout = () => {
+    setCartOpen(false);
+    setLocation('/checkout');
+  };
 
   return (
     <Sheet open={cartOpen} onOpenChange={setCartOpen}>
@@ -84,7 +91,7 @@ export function CartSidebar() {
                 <span className="text-primary">${(total / 100).toFixed(2)}</span>
               </div>
               <div className="space-y-2">
-                <Button className="w-full" size="lg">
+                <Button className="w-full" size="lg" onClick={handleCheckout}>
                   {t('cart.checkout')}
                 </Button>
                 <Button

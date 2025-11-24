@@ -526,7 +526,7 @@ export default function Home() {
       {/* Promotional Teaser Banner */}
       <div className="fixed top-16 left-0 right-0 z-40 bg-gradient-to-r from-gray-900 to-black text-white shadow-lg">
         <div className="container py-3 px-4">
-          <div className="flex flex-col md:flex-row items-center justify-center gap-2 md:gap-6 text-center">
+          <div className="flex flex-col md:flex-row items-center justify-center gap-2 md:gap-6 text-center" style={{backgroundColor: '#ff2424'}}>
             <div className="flex items-center gap-2">
               <Clock className="h-5 w-5 flex-shrink-0" />
               <span className="font-semibold text-sm md:text-base">

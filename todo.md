@@ -803,3 +803,15 @@
 ## Voir le Menu Button Color
 - [x] Change "Voir le Menu" button from black to red
 - [x] Ensure consistency with other red action buttons
+
+## Commander Button Not Working
+- [x] Diagnose why Commander button in cart doesn't respond
+- [x] Fix button click handler
+- [x] Ensure checkout navigation works
+- [ ] Test complete checkout flow
+
+## Chatbot UI Issues - User Reported
+- [x] Fix chatbot scrolling - messages overflow and cannot be scrolled
+- [x] Fix chatbot input visibility - input field not accessible when messages fill the window
+- [x] Ensure chat messages area has proper scrolling container
+- [x] Ensure input field stays fixed at bottom and always visible
