@@ -261,7 +261,11 @@ export async function createReservation(reservation: {
     status: reservation.status || "pending",
   });
 
-  return result;
+  // Return the inserted ID (cast result to any to access insertId)
+  const insertId = (result as any).insertId || 0;
+  return {
+    insertId: Number(insertId),
+  };
 }
 
 export async function getAllReservations() {

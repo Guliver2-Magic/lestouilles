@@ -561,3 +561,19 @@
 - [x] Verify generateImage function is properly imported and called
 - [x] Test AI image generation functionality
 - [x] Ensure generated images are properly saved and displayed
+
+
+## Remove Manus.ai Logo - User Request
+- [x] Generate custom Les Touillés logo with AI
+- [x] Replace /logo.png with new custom logo
+- [x] Test the changes to ensure no Manus branding remains
+
+## Email Notification System for Order Confirmations - User Request
+- [x] Design email notification architecture
+- [x] Set up email service integration (using n8n webhook)
+- [x] Create email templates for order/reservation confirmations (HTML, bilingual)
+- [x] Implement backend email sending function (emailService.ts)
+- [x] Integrate email notifications with reservation creation
+- [x] Email field already present in reservation form
+- [x] Write and run unit tests for email service (8 tests passing)
+- [ ] Configure n8n workflow to handle email sending (requires n8n setup)

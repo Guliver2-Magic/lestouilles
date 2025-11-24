@@ -394,6 +394,7 @@ export const appRouter = router({
       .mutation(async ({ input }) => {
         const { createReservation, getAllReservations } = await import("./db");
         const { notifyOwner } = await import("./_core/notification");
+        const { sendReservationConfirmation } = await import("./emailService");
         
         // Check if date is already reserved
         const existingReservations = await getAllReservations();
@@ -411,7 +412,7 @@ export const appRouter = router({
           );
         }
         
-        await createReservation({
+        const reservationResult = await createReservation({
           customerName: input.customerName,
           customerEmail: input.customerEmail,
           customerPhone: input.customerPhone,
@@ -425,6 +426,26 @@ export const appRouter = router({
           estimatedBudget: input.estimatedBudget,
           status: "pending",
         });
+
+        // Send confirmation email to customer
+        try {
+          await sendReservationConfirmation({
+            reservationId: reservationResult.insertId,
+            customerName: input.customerName,
+            customerEmail: input.customerEmail,
+            eventType: input.eventType,
+            eventDate: new Date(input.eventDate),
+            eventTime: input.eventTime,
+            guestCount: input.guestCount,
+            venue: input.venue,
+            specialRequirements: input.specialRequirements,
+            dietaryRestrictions: input.dietaryRestrictions,
+            language: input.language,
+          });
+        } catch (error) {
+          console.error("Failed to send reservation confirmation email:", error);
+          // Don't fail the reservation if email fails
+        }
 
         // Notify owner of new reservation
         const eventTypeLabels = {
