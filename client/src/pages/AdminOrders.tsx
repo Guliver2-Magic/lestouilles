@@ -21,13 +21,15 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { useLocation } from "wouter";
-import { Loader2, Search, DollarSign, ShoppingCart, Clock } from "lucide-react";
+import { Loader2, Search, DollarSign, ShoppingCart, Clock, Printer } from "lucide-react";
+import { OrderPrintView } from "@/components/OrderPrintView";
 
 export default function AdminOrders() {
   const { user, loading: authLoading } = useAuth();
   const [, setLocation] = useLocation();
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
+  const [printingOrder, setPrintingOrder] = useState<{order: any, items: any[]} | null>(null);
 
   // Redirect if not admin
   if (!authLoading && (!user || user.role !== "admin")) {
@@ -36,6 +38,11 @@ export default function AdminOrders() {
   }
 
   const { data: orders, isLoading, refetch } = trpc.orders.listAll.useQuery();
+  const [selectedOrderId, setSelectedOrderId] = useState<number | null>(null);
+  const { data: orderItems } = trpc.orders.getItems.useQuery(
+    { orderId: selectedOrderId! },
+    { enabled: !!selectedOrderId }
+  );
   const updateStatusMutation = trpc.orders.updateStatus.useMutation({
     onSuccess: () => {
       refetch();
@@ -216,6 +223,24 @@ export default function AdminOrders() {
                       </TableCell>
                       <TableCell>{getStatusBadge(order.status)}</TableCell>
                       <TableCell>
+                        <div className="flex gap-2">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={async () => {
+                              setSelectedOrderId(order.id);
+                              // Wait a bit for the query to fetch items
+                              setTimeout(() => {
+                                const items = orderItems || [];
+                                setPrintingOrder({ order, items });
+                              }, 500);
+                            }}
+                          >
+                            <Printer className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                      <TableCell>
                         <Select
                           value={order.status}
                           onValueChange={(newStatus) =>
@@ -253,6 +278,15 @@ export default function AdminOrders() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Print View Modal */}
+      {printingOrder && (
+        <OrderPrintView
+          order={printingOrder.order}
+          items={printingOrder.items}
+          onClose={() => setPrintingOrder(null)}
+        />
+      )}
     </div>
   );
 }

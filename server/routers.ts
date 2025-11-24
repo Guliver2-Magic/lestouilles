@@ -362,6 +362,15 @@ export const appRouter = router({
         await db(input.orderId, input.status);
         return { success: true };
       }),
+
+    getItems: publicProcedure
+      .input(z.object({ orderId: z.number() }))
+      .query(async ({ input, ctx }) => {
+        if (!ctx.user || ctx.user.role !== "admin") {
+          throw new Error("Unauthorized");
+        }
+        return await getOrderItems(input.orderId);
+      }),
   }),
 
   reservations: router({

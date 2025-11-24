@@ -485,3 +485,15 @@
 - [x] Add bilingual support (FR/EN) for daily specials
 - [x] Write vitest tests for daily specials procedures (9 tests passing)
 - [x] Test complete workflow (admin create → homepage display)
+
+
+## Printer Integration for Orders - User Request
+- [x] Design print layout for kitchen orders (order number, items, quantities, special instructions)
+- [x] Create print-friendly CSS styles (@media print)
+- [x] Add print button to AdminOrders page
+- [x] Implement browser print dialog functionality
+- [x] Add tRPC procedure to get order items for printing
+- [x] Add option to print order receipt for customers
+- [x] Test print layout - verified working with professional layout
+- [x] Modal displays correctly with all order information
+- [ ] Add auto-print option when order status changes (optional future enhancement)
