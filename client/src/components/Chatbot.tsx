@@ -134,7 +134,7 @@ export function Chatbot() {
                         : "bg-muted"
                     }`}
                   >
-                    <p className="text-sm">{message.text}</p>
+                    <p className="text-sm whitespace-pre-wrap break-words">{message.text}</p>
                     <span className="text-xs opacity-70 mt-1 block">
                       {message.timestamp.toLocaleTimeString(language, {
                         hour: "2-digit",

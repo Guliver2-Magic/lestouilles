@@ -697,3 +697,19 @@
 - [x] Test end-to-end chatbot with complex questions
 - [x] Verify FAQ system still works for predefined questions
 - [x] Document final workflow configuration
+
+## Chatbot Typing Indicator
+- [ ] Create typing indicator component with animated dots
+- [ ] Add loading state to chatbot UI
+- [ ] Show indicator when sending message to API
+- [ ] Hide indicator when response is received
+- [ ] Test typing indicator with FAQ responses
+- [ ] Test typing indicator with n8n AI responses
+- [ ] Ensure bilingual support (FR/EN) for typing message
+
+## Chatbot Message Display Fix
+- [x] Fix text wrapping for long messages from n8n
+- [x] Add proper word-break and overflow handling
+- [x] Ensure message bubbles expand correctly
+- [x] Test with various message lengths
+- [x] Verify both user and bot messages display correctly
