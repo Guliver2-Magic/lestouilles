@@ -760,3 +760,24 @@
 - [x] Update accent colors and highlights
 - [x] Test all pages for color consistency
 - [x] Ensure text remains readable on black backgrounds
+
+## FAQ Blocking Menu Questions from N8N
+- [ ] Identify which FAQ is matching "donnes moi des idees de menu pour un evenement corporatif"
+- [ ] Review FAQ keywords for menu/event-related questions
+- [ ] Ensure complex menu requests go to n8n for personalized responses
+- [ ] Test various menu question formats
+- [ ] Verify n8n provides detailed menu suggestions
+
+## Weekly Meal Planner Feature
+- [x] Design database schema for meal plans (user_id, week_start_date, meals per day)
+- [x] Create meal_plans and meal_plan_items tables
+- [x] Build UI: Weekly calendar view (Mon-Sun)
+- [x] Implement dish selection modal for each meal slot
+- [x] Add drag-and-drop or click-to-add functionality
+- [x] Calculate total calories and cost for the week)
+- [x] Implement "Add All to Cart" button
+- [ ] Add save/load meal plan functionality
+- [ ] Create tRPC procedures for CRUD operations
+- [x] Add navigation link to meal planner page
+- [ ] Test complete workflow
+- [ ] Write vitest tests for meal planner procedures

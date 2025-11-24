@@ -1,0 +1,16 @@
+{
+  "query": "SELECT id, questionFr, keywordsFr, answerFr FROM faqs WHERE id = 8;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 494y6CgAR8Uu32w.cf8f73b2fa18 --database nG5FpW6QC2VPLHfftjzBXF --execute SELECT id, questionFr, keywordsFr, answerFr FROM faqs WHERE id = 8;",
+  "rows": [
+    {
+      "id": "8",
+      "questionFr": "Comment réserver pour un événement ?",
+      "keywordsFr": "réservation,réserver,événement,mariage,corporatif,fête,traiteur,buffet",
+      "answerFr": "Visitez notre page 'Réservations' et remplissez le formulaire avec les détails de votre événement (type, nombre d'invités, date). Nous vous contacterons dans les 24h pour confirmer et personnaliser votre menu."
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tquestionFr\tkeywordsFr\tanswerFr\n8\tComment réserver pour un événement ?\tréservation,réserver,événement,mariage,corporatif,fête,traiteur,buffet\tVisitez notre page 'Réservations' et remplissez le formulaire avec les détails de votre événement (type, nombre d'invités, date). Nous vous contacterons dans les 24h pour confirmer et personnaliser votre menu.\n",
+  "stderr": "",
+  "execution_time_ms": 51
+}

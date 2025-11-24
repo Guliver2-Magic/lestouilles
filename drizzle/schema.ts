@@ -337,3 +337,37 @@ export const faqs = mysqlTable("faqs", {
 
 export type FAQ = typeof faqs.$inferSelect;
 export type InsertFAQ = typeof faqs.$inferInsert;
+
+/**
+ * Meal Plans table
+ * Stores weekly meal plans created by users
+ */
+export const mealPlans = mysqlTable("mealPlans", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(), // References users.id
+  name: varchar("name", { length: 255 }).notNull(), // e.g., "Ma semaine du 20 jan"
+  weekStartDate: timestamp("weekStartDate").notNull(), // Monday of the week
+  isActive: int("isActive").default(1).notNull(), // 1 = active, 0 = archived
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type MealPlan = typeof mealPlans.$inferSelect;
+export type InsertMealPlan = typeof mealPlans.$inferInsert;
+
+/**
+ * Meal Plan Items table
+ * Stores individual meal selections within a meal plan
+ */
+export const mealPlanItems = mysqlTable("mealPlanItems", {
+  id: int("id").autoincrement().primaryKey(),
+  mealPlanId: int("mealPlanId").notNull(), // References mealPlans.id
+  productId: int("productId").notNull(), // References products.id
+  dayOfWeek: int("dayOfWeek").notNull(), // 0=Monday, 1=Tuesday, ..., 6=Sunday
+  mealType: mysqlEnum("mealType", ["breakfast", "lunch", "dinner", "snack"]).notNull(),
+  quantity: int("quantity").default(1).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type MealPlanItem = typeof mealPlanItems.$inferSelect;
+export type InsertMealPlanItem = typeof mealPlanItems.$inferInsert;

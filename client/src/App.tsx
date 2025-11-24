@@ -17,6 +17,7 @@ import AdminReservations from "./pages/AdminReservations";
 import AdminProducts from "./pages/AdminProducts";
 import AdminDailySpecials from "./pages/AdminDailySpecials";
 import AdminFAQ from "./pages/AdminFAQ";
+import MealPlanner from "./pages/MealPlanner";
 import { Chatbot } from "./components/Chatbot";
 
 function Router() {
@@ -27,6 +28,7 @@ function Router() {
       <Route path={"/contact"} component={Contact} />
       <Route path={"/checkout"} component={Checkout} />      <Route path={"/portfolio"} component={Portfolio} />
       <Route path={"/reservations"} component={Reservations} />
+      <Route path={"/meal-planner"} component={MealPlanner} />
       <Route path={"/admin/orders"} component={AdminOrders} />
       <Route path={"/admin/reservations"} component={AdminReservations} />
       <Route path={"/admin/products"} component={AdminProducts} />

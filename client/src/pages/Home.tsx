@@ -432,6 +432,9 @@ export default function Home() {
             <a href="/reservations" className="hover:text-primary transition-colors">
               {language === "fr" ? "Réservations" : "Reservations"}
             </a>
+            <a href="/meal-planner" className="hover:text-primary transition-colors">
+              {language === "fr" ? "Planificateur" : "Meal Planner"}
+            </a>
             <a href="/contact" className="hover:text-primary transition-colors">
               {t.nav.contact}
             </a>
@@ -495,6 +498,9 @@ export default function Home() {
               </a>
               <a href="/reservations" className="hover:text-primary transition-colors" onClick={() => setMobileMenuOpen(false)}>
                 {language === "fr" ? "Réservations" : "Reservations"}
+              </a>
+              <a href="/meal-planner" className="hover:text-primary transition-colors" onClick={() => setMobileMenuOpen(false)}>
+                {language === "fr" ? "Planificateur" : "Meal Planner"}
               </a>
               <a href="/contact" className="hover:text-primary transition-colors" onClick={() => setMobileMenuOpen(false)}>
                 {t.nav.contact}
