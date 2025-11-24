@@ -166,7 +166,7 @@ export function Chatbot() {
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyPress={handleKeyPress}
                 placeholder={t('chat.placeholder')}
-                className="flex-1"
+                className="flex-1 border-input focus-visible:ring-1 focus-visible:ring-ring"
               />
               <Button
                 onClick={handleSend}

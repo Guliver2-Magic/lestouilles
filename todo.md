@@ -733,3 +733,9 @@
 - [x] Add max-width constraint to message bubbles
 - [x] Ensure proper word wrapping and line breaks
 - [x] Test with various n8n response lengths
+
+## Chatbot Input Box Styling
+- [x] Remove thick green border from input box
+- [x] Apply subtle border styling consistent with design
+- [x] Ensure focus state is clean and professional
+- [x] Test input box appearance on different screen sizes
