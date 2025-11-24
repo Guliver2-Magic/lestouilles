@@ -588,3 +588,10 @@
 - [x] Remove "Les Touillés" text next to logo in header
 - [x] Keep only the logo icon
 - [x] Test display on all pages
+
+
+## Fix Cart Button Not Working - User Report
+- [x] Investigate why cart button doesn't open when clicked
+- [x] Check cart button click handler
+- [x] Fix cart sidebar opening functionality
+- [x] Test cart button on all pages
