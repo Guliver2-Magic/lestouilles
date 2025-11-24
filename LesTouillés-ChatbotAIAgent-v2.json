@@ -21,7 +21,7 @@
     {
       "parameters": {
         "respondWith": "json",
-        "responseBody": "={\n  \"response\": \"{{ $json.output }}\",\n  \"shouldCaptureLead\": {{ $json.shouldCaptureLead || false }}\n}\n",
+        "responseBody": "={\n  \"response\": \"{{ $('AI Agent').item.json.text || $('AI Agent').item.json.output || 'Désolé, je n\'ai pas pu générer de réponse.' }}\",\n  \"shouldCaptureLead\": false\n}\n",
         "options": {}
       },
       "id": "5e1ecdfd-62f1-4844-b3af-79c9764f84b1",

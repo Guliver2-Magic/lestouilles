@@ -605,3 +605,11 @@
 - [x] Test webhook integration end-to-end
 - [x] Create comprehensive setup documentation (N8N-CHATBOT-SETUP.md)
 - [ ] User must import and activate workflow in n8n (manual step required)
+
+
+## Fix n8n Webhook Response Issue - User Report
+- [x] Analyze n8n workflow execution logs
+- [x] Identify the response format problem in "Respond to Webhook" node
+- [x] Fix the response format to use correct AI Agent output field
+- [ ] User must reimport updated workflow in n8n
+- [ ] Test chatbot end-to-end on website after reimport
