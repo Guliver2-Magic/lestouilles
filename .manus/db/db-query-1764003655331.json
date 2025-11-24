@@ -1,0 +1,76 @@
+{
+  "query": "SELECT id, questionFr, keywordsFr, category FROM faqs WHERE isActive = 1 ORDER BY displayOrder",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 494y6CgAR8Uu32w.cf8f73b2fa18 --database nG5FpW6QC2VPLHfftjzBXF --execute SELECT id, questionFr, keywordsFr, category FROM faqs WHERE isActive = 1 ORDER BY displayOrder",
+  "rows": [
+    {
+      "id": "1",
+      "questionFr": "Quels sont vos horaires d'ouverture ?",
+      "keywordsFr": "horaire,heure,ouvert,fermeture,ouverture,quand,jour,semaine",
+      "category": "hours"
+    },
+    {
+      "id": "30001",
+      "questionFr": "Qui es-tu ?",
+      "keywordsFr": "qui es tu,qui etes vous,c'est qui,tu es qui,assistant,chatbot,bot,qui",
+      "category": "general"
+    },
+    {
+      "id": "2",
+      "questionFr": "Quelles sont les options de livraison ?",
+      "keywordsFr": "livraison,delivery,ramassage,pickup,uber,eats,frais,coût,gratuit",
+      "category": "delivery"
+    },
+    {
+      "id": "3",
+      "questionFr": "Quel est le délai de livraison ?",
+      "keywordsFr": "délai,temps,combien,rapide,quand,prêt,attendre",
+      "category": "delivery"
+    },
+    {
+      "id": "4",
+      "questionFr": "Comment savoir si un plat contient des allergènes ?",
+      "keywordsFr": "allergène,allergie,gluten,lactose,noix,arachide,fruits de mer,intolérance",
+      "category": "allergens"
+    },
+    {
+      "id": "5",
+      "questionFr": "Quels sont vos prix ?",
+      "keywordsFr": "prix,coût,combien,tarif,cher,budget,argent",
+      "category": "pricing"
+    },
+    {
+      "id": "6",
+      "questionFr": "Offrez-vous des rabais ou promotions ?",
+      "keywordsFr": "rabais,promotion,spécial,réduction,code,promo,économiser",
+      "category": "pricing"
+    },
+    {
+      "id": "7",
+      "questionFr": "Comment préparer les plats sous-vide ?",
+      "keywordsFr": "préparer,préparation,cuire,cuisson,réchauffer,sous-vide,sachet,comment",
+      "category": "preparation"
+    },
+    {
+      "id": "8",
+      "questionFr": "Comment réserver pour un événement ?",
+      "keywordsFr": "réservation,réserver,événement,mariage,corporatif,fête,traiteur,buffet",
+      "category": "reservations"
+    },
+    {
+      "id": "9",
+      "questionFr": "Comment vous contacter ?",
+      "keywordsFr": "contact,contacter,joindre,téléphone,email,message,aide,support",
+      "category": "contact"
+    },
+    {
+      "id": "10",
+      "questionFr": "Y a-t-il un montant minimum de commande ?",
+      "keywordsFr": "minimum,commande,montant,combien,moins",
+      "category": "ordering"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tquestionFr\tkeywordsFr\tcategory\n1\tQuels sont vos horaires d'ouverture ?\thoraire,heure,ouvert,fermeture,ouverture,quand,jour,semaine\thours\n30001\tQui es-tu ?\tqui es tu,qui etes vous,c'est qui,tu es qui,assistant,chatbot,bot,qui\tgeneral\n2\tQuelles sont les options de livraison ?\tlivraison,delivery,ramassage,pickup,uber,eats,frais,coût,gratuit\tdelivery\n3\tQuel est le délai de livraison ?\tdélai,temps,combien,rapide,quand,prêt,attendre\tdelivery\n4\tComment savoir si un plat contient des allergènes ?\tallergène,allergie,gluten,lactose,noix,arachide,fruits de mer,intolérance\tallergens\n5\tQuels sont vos prix ?\tprix,coût,combien,tarif,cher,budget,argent\tpricing\n6\tOffrez-vous des rabais ou promotions ?\trabais,promotion,spécial,réduction,code,promo,économiser\tpricing\n7\tComment préparer les plats sous-vide ?\tpréparer,préparation,cuire,cuisson,réchauffer,sous-vide,sachet,comment\tpreparation\n8\tComment réserver pour un événement ?\tréservation,réserver,événement,mariage,corporatif,fête,traiteur,buffet\treservations\n9\tComment vous contacter ?\tcontact,contacter,joindre,téléphone,email,message,aide,support\tcontact\n10\tY a-t-il un montant minimum de commande ?\tminimum,commande,montant,combien,moins\tordering\n",
+  "stderr": "",
+  "execution_time_ms": 124
+}

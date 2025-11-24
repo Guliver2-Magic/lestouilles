@@ -128,13 +128,13 @@ export function Chatbot() {
                   className={`flex ${message.sender === "user" ? "justify-end" : "justify-start"}`}
                 >
                   <div
-                    className={`max-w-[80%] rounded-lg px-4 py-2 ${
+                    className={`max-w-[85%] rounded-lg px-4 py-2 ${
                       message.sender === "user"
                         ? "bg-primary text-primary-foreground"
                         : "bg-muted"
                     }`}
                   >
-                    <p className="text-sm whitespace-pre-wrap break-words">{message.text}</p>
+                    <p className="text-sm whitespace-pre-wrap break-words overflow-wrap-anywhere">{message.text}</p>
                     <span className="text-xs opacity-70 mt-1 block">
                       {message.timestamp.toLocaleTimeString(language, {
                         hour: "2-digit",

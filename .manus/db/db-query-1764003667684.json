@@ -1,0 +1,17 @@
+{
+  "query": "SELECT id, questionFr, answerFr, keywordsFr, category FROM faqs WHERE id = 9",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 494y6CgAR8Uu32w.cf8f73b2fa18 --database nG5FpW6QC2VPLHfftjzBXF --execute SELECT id, questionFr, answerFr, keywordsFr, category FROM faqs WHERE id = 9",
+  "rows": [
+    {
+      "id": "9",
+      "questionFr": "Comment vous contacter ?",
+      "answerFr": "Vous pouvez nous joindre via le formulaire de contact sur notre site web, ou directement par ce chatbot. Pour les urgences, appelez-nous pendant nos heures d'ouverture.",
+      "keywordsFr": "contact,contacter,joindre,téléphone,email,message,aide,support",
+      "category": "contact"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tquestionFr\tanswerFr\tkeywordsFr\tcategory\n9\tComment vous contacter ?\tVous pouvez nous joindre via le formulaire de contact sur notre site web, ou directement par ce chatbot. Pour les urgences, appelez-nous pendant nos heures d'ouverture.\tcontact,contacter,joindre,téléphone,email,message,aide,support\tcontact\n",
+  "stderr": "",
+  "execution_time_ms": 55
+}

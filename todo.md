@@ -719,3 +719,17 @@
 - [x] Write appropriate identity response in French and English
 - [x] Test that question matches FAQ instead of going to n8n
 - [x] Verify response is helpful and on-brand
+
+## FAQ Routing Issue - Complex Questions
+- [x] Identify which FAQ is incorrectly matching "aide moi a organiser ma bouffe pour mon party privée"
+- [x] Review FAQ keywords that are too broad (e.g., "aide", "aider")
+- [x] Adjust FAQ matching logic to require minimum keyword matches or exact phrase matching
+- [x] Ensure complex/specific questions go to n8n instead of generic FAQ
+- [x] Test with various complex questions to verify n8n routing
+- [x] Document FAQ best practices for keyword selection
+
+## N8N Response Text Overflow
+- [x] Fix text overflow in bot message bubbles for long n8n responses
+- [x] Add max-width constraint to message bubbles
+- [x] Ensure proper word wrapping and line breaks
+- [x] Test with various n8n response lengths
