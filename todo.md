@@ -799,3 +799,7 @@
 - [x] Change "Info Nutrition" button to red
 - [x] Keep main header/navigation black
 - [x] Test visual balance and contrast
+
+## Voir le Menu Button Color
+- [x] Change "Voir le Menu" button from black to red
+- [x] Ensure consistency with other red action buttons
