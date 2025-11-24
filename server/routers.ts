@@ -193,7 +193,7 @@ export const appRouter = router({
           customerName: z.string(),
           customerEmail: z.string().email(),
           customerPhone: z.string(),
-          deliveryMethod: z.enum(["pickup", "delivery"]),
+          deliveryMethod: z.enum(["pickup", "delivery", "uber_eats"]),
           deliveryDate: z.string(),
           deliveryTime: z.string(),
           deliveryAddress: z.string().optional(),

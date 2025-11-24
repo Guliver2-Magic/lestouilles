@@ -25,7 +25,7 @@ export default function Checkout() {
   const [customerName, setCustomerName] = useState("");
   const [customerEmail, setCustomerEmail] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
-  const [deliveryMethod, setDeliveryMethod] = useState<"pickup" | "delivery">("pickup");
+  const [deliveryMethod, setDeliveryMethod] = useState<"pickup" | "delivery" | "uber_eats">("pickup");
   const [deliveryDate, setDeliveryDate] = useState<Date>();
   const [deliveryTime, setDeliveryTime] = useState("");
   const [deliveryAddress, setDeliveryAddress] = useState("");
@@ -67,6 +67,8 @@ export default function Checkout() {
         method: "Méthode de livraison",
         pickup: "Ramassage en magasin",
         deliveryOption: "Livraison à domicile",
+        uberEats: "Commander via Uber Eats",
+        uberEatsDesc: "Vous serez redirigé vers Uber Eats pour finaliser votre commande",
         date: "Date de livraison",
         time: "Heure de livraison",
         address: "Adresse de livraison",
@@ -113,6 +115,8 @@ export default function Checkout() {
         method: "Delivery Method",
         pickup: "Store Pickup",
         deliveryOption: "Home Delivery",
+        uberEats: "Order via Uber Eats",
+        uberEatsDesc: "You will be redirected to Uber Eats to complete your order",
         date: "Delivery Date",
         time: "Delivery Time",
         address: "Delivery Address",
@@ -157,6 +161,15 @@ export default function Checkout() {
   ];
 
   const handleCheckout = async () => {
+    // Handle Uber Eats redirect
+    if (deliveryMethod === "uber_eats") {
+      // TODO: Replace with actual Uber Eats restaurant link
+      const uberEatsUrl = "https://www.ubereats.com/ca/store/les-touilles";
+      window.open(uberEatsUrl, "_blank");
+      toast.success(language === "fr" ? "Redirection vers Uber Eats..." : "Redirecting to Uber Eats...");
+      return;
+    }
+
     // Validation
     if (!customerName || !customerEmail || !customerPhone) {
       toast.error(t.validation.fillFields);
@@ -289,10 +302,23 @@ export default function Checkout() {
                         {t.delivery.deliveryOption} (+${deliveryFee.toFixed(2)})
                       </Label>
                     </div>
+                    <div className="flex items-center space-x-2 p-4 border rounded-lg cursor-pointer hover:bg-muted/50">
+                      <RadioGroupItem value="uber_eats" id="uber_eats" />
+                      <Label htmlFor="uber_eats" className="flex flex-col gap-1 cursor-pointer flex-1">
+                        <div className="flex items-center gap-2">
+                          <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
+                          </svg>
+                          {t.delivery.uberEats}
+                        </div>
+                        <span className="text-xs text-muted-foreground">{t.delivery.uberEatsDesc}</span>
+                      </Label>
+                    </div>
                   </RadioGroup>
                 </div>
 
-                {/* Delivery Date */}
+                {/* Delivery Date - Hidden for Uber Eats */}
+                {deliveryMethod !== "uber_eats" && (
                 <div>
                   <Label>{t.delivery.date} *</Label>
                   <Popover>
@@ -313,8 +339,10 @@ export default function Checkout() {
                     </PopoverContent>
                   </Popover>
                 </div>
+                )}
 
-                {/* Delivery Time */}
+                {/* Delivery Time - Hidden for Uber Eats */}
+                {deliveryMethod !== "uber_eats" && (
                 <div>
                   <Label htmlFor="time">{t.delivery.time} *</Label>
                   <select
@@ -330,6 +358,7 @@ export default function Checkout() {
                     ))}
                   </select>
                 </div>
+                )}
 
                 {/* Delivery Address (if delivery selected) */}
                 {deliveryMethod === "delivery" && (

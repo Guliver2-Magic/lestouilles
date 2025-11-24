@@ -1,0 +1,1 @@
+ALTER TABLE `orders` MODIFY COLUMN `deliveryMethod` enum('pickup','delivery','uber_eats') NOT NULL;

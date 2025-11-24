@@ -502,6 +502,28 @@ export default function Home() {
         )}
       </header>
 
+      {/* Promotional Teaser Banner */}
+      <div className="fixed top-16 left-0 right-0 z-40 bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-lg">
+        <div className="container py-3 px-4">
+          <div className="flex flex-col md:flex-row items-center justify-center gap-2 md:gap-6 text-center">
+            <div className="flex items-center gap-2">
+              <Clock className="h-5 w-5 flex-shrink-0" />
+              <span className="font-semibold text-sm md:text-base">
+                {language === "fr" 
+                  ? "Simple, rapide, qualité traiteur" 
+                  : "Simple, fast, catering quality"}
+              </span>
+            </div>
+            <div className="hidden md:block h-6 w-px bg-white/30" />
+            <p className="text-xs md:text-sm max-w-2xl">
+              {language === "fr"
+                ? "Dépose ton sachet sous-vide Les Touillés dans une casserole d'eau chaude. En quelques minutes, c'est prêt. En moins de 15 minutes : un souper complet, savoureux, santé… et sans effort."
+                : "Drop your Les Touillés vacuum-sealed bag in a pot of hot water. In a few minutes, it's ready. In less than 15 minutes: a complete, delicious, healthy dinner… effortlessly."}
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* Hero Section with Image Carousel */}
       <section 
         id="home"

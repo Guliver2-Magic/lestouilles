@@ -620,3 +620,26 @@
 - [x] Fix JSON escaping errors (apostrophes in fallback message)
 - [x] Verify JSON is valid with Python json.tool
 - [x] Provide valid workflow file
+
+
+## Add Order Configuration (Pickup, Delivery, Uber Eats) - User Request
+- [x] Design database schema for order delivery options
+- [x] Add delivery method field to orders table (pickup/delivery/uber_eats)
+- [x] Add delivery address fields to orders table
+- [x] Create backend API for order configuration
+- [x] Build checkout flow UI with delivery method selection
+- [x] Add pickup option with store address display
+- [x] Add delivery option with address form
+- [x] Add Uber Eats option with external link and redirect
+- [x] Hide date/time/address fields when Uber Eats selected
+- [x] Calculate delivery fees based on method
+- [x] Update cart and checkout components
+
+
+## Add Promotional Teaser Banner - User Request
+- [x] Design teaser banner component for homepage
+- [x] Add French content about sous-vide concept and 15-min prep
+- [x] Add English translation
+- [x] Place banner at top of homepage (fixed position below header)
+- [x] Style with attractive emerald gradient design
+- [x] Test display on desktop and mobile

@@ -118,7 +118,7 @@ export const orders = mysqlTable("orders", {
   customerPhone: varchar("customerPhone", { length: 50 }).notNull(),
   
   // Delivery information
-  deliveryMethod: mysqlEnum("deliveryMethod", ["pickup", "delivery"]).notNull(),
+  deliveryMethod: mysqlEnum("deliveryMethod", ["pickup", "delivery", "uber_eats"]).notNull(),
   deliveryDate: timestamp("deliveryDate").notNull(),
   deliveryTime: varchar("deliveryTime", { length: 20 }).notNull(),
   deliveryAddress: text("deliveryAddress"),
