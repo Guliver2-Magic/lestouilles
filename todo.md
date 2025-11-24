@@ -652,3 +652,16 @@
 - [x] Use proper n8n expression syntax for AI Agent output
 - [x] Validate JSON syntax with Python json.tool
 - [x] Provide working workflow JSON file (v3-FIXED)
+
+
+## Create Automated FAQ System - User Request
+- [x] Design FAQ database schema (questions, answers, keywords, category)
+- [x] Create FAQ table with 10 columns (id, questionFr, questionEn, answerFr, answerEn, keywordsFr, keywordsEn, category, isActive, displayOrder)
+- [x] Create FAQ seed data for 10 common questions (hours, allergens, delivery, pricing, preparation, reservations, contact, ordering)
+- [x] Implement backend FAQ search/matching logic with keyword detection (searchFAQ, getAllFAQs functions)
+- [x] Integrate FAQ system with chatbot (check FAQ before calling n8n AI)
+- [x] Add FAQ management interface in admin panel (/admin/faq)
+- [x] Support bilingual FAQ (FR/EN) with automatic language detection
+- [x] Create tRPC procedures for FAQ CRUD operations
+- [x] Test FAQ display in admin interface
+- [x] Add FAQ route to App.tsx

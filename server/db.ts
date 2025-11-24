@@ -13,7 +13,9 @@ import {
   InsertNewsletterSubscription,
   dailySpecials,
   InsertDailySpecial,
-  DailySpecial
+  DailySpecial,
+  faqs,
+  FAQ
 } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
@@ -560,4 +562,85 @@ export async function deleteDailySpecial(id: number) {
   
   await db.delete(dailySpecials).where(eq(dailySpecials.id, id));
   return { success: true };
+}
+
+// ==================== FAQ Functions ====================
+
+/**
+ * Get all active FAQs
+ */
+export async function getAllFAQs() {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get FAQs: database not available");
+    return [];
+  }
+  
+  const result = await db.select().from(faqs).where(eq(faqs.isActive, 1)).orderBy(faqs.displayOrder);
+  return result;
+}
+
+/**
+ * Search FAQ by message content using keyword matching
+ * Returns the best matching FAQ or null if no match found
+ */
+export async function searchFAQ(message: string, language: "fr" | "en" = "fr"): Promise<FAQ | null> {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot search FAQ: database not available");
+    return null;
+  }
+  
+  // Get all active FAQs
+  const allFAQs = await getAllFAQs();
+  if (allFAQs.length === 0) {
+    return null;
+  }
+  
+  // Normalize message: lowercase and remove accents
+  const normalizedMessage = message
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+  
+  // Score each FAQ based on keyword matches
+  const scoredFAQs = allFAQs.map((faq) => {
+    const keywords = language === "fr" ? faq.keywordsFr : faq.keywordsEn;
+    const keywordList = keywords.split(",").map(k => k.trim().toLowerCase());
+    
+    // Count how many keywords are found in the message
+    let score = 0;
+    for (const keyword of keywordList) {
+      if (normalizedMessage.includes(keyword)) {
+        score++;
+      }
+    }
+    
+    return { faq, score };
+  });
+  
+  // Sort by score (highest first)
+  scoredFAQs.sort((a, b) => b.score - a.score);
+  
+  // Return the best match if score > 0
+  const bestMatch = scoredFAQs[0];
+  if (bestMatch && bestMatch.score > 0) {
+    return bestMatch.faq;
+  }
+  
+  return null;
+}
+
+/**
+ * Get FAQ by ID
+ */
+export async function getFAQById(id: number) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get FAQ: database not available");
+    return undefined;
+  }
+  
+  const result = await db.select().from(faqs).where(eq(faqs.id, id)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
 }

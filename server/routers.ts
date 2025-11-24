@@ -10,6 +10,7 @@ import {
   saveLead,
   saveContactSubmission,
   saveNewsletterSubscription,
+  searchFAQ,
 } from "./db";
 import {
   createOrder,
@@ -68,13 +69,28 @@ export const appRouter = router({
             content: conv.message,
           }));
 
-        // Get bot response from n8n webhook
-        const botResponse = await getBotResponseFromN8n({
-          sessionId: input.sessionId,
-          message: input.message,
-          language: input.language,
-          conversationHistory: formattedHistory,
-        });
+        // First, check if there's a FAQ match for instant response
+        const faqMatch = await searchFAQ(input.message, input.language);
+        
+        let botResponse: { response: string; shouldCaptureLead: boolean };
+        
+        if (faqMatch) {
+          // Use FAQ answer for instant response
+          const answer = input.language === "fr" ? faqMatch.answerFr : faqMatch.answerEn;
+          botResponse = {
+            response: answer,
+            shouldCaptureLead: false,
+          };
+          console.log(`[FAQ] Matched FAQ #${faqMatch.id} for message: ${input.message.substring(0, 50)}...`);
+        } else {
+          // No FAQ match, get bot response from n8n webhook
+          botResponse = await getBotResponseFromN8n({
+            sessionId: input.sessionId,
+            message: input.message,
+            language: input.language,
+            conversationHistory: formattedHistory,
+          });
+        }
 
         // Save bot response
         await saveConversation({
@@ -886,6 +902,85 @@ Fournis UNIQUEMENT un objet JSON valide (sans markdown, sans \`\`\`) avec cette 
         }
         const { deleteDailySpecial } = await import("./db");
         return await deleteDailySpecial(input.id);
+      }),
+  }),
+
+  faq: router({
+    // Public procedure to list all active FAQs
+    list: publicProcedure.query(async () => {
+      const { getAllFAQs } = await import("./db");
+      return await getAllFAQs();
+    }),
+
+    // Admin procedures
+    create: protectedProcedure
+      .input(
+        z.object({
+          questionFr: z.string(),
+          questionEn: z.string(),
+          answerFr: z.string(),
+          answerEn: z.string(),
+          keywordsFr: z.string(),
+          keywordsEn: z.string(),
+          category: z.string(),
+          isActive: z.number().default(1),
+          displayOrder: z.number().default(0),
+        })
+      )
+      .mutation(async ({ input, ctx }) => {
+        if (ctx.user.role !== "admin") {
+          throw new Error("Unauthorized");
+        }
+        const db = await import("./db").then(m => m.getDb());
+        if (!db) throw new Error("Database not available");
+        
+        const { faqs } = await import("../drizzle/schema");
+        await db.insert(faqs).values(input);
+        return { success: true };
+      }),
+
+    update: protectedProcedure
+      .input(
+        z.object({
+          id: z.number(),
+          questionFr: z.string().optional(),
+          questionEn: z.string().optional(),
+          answerFr: z.string().optional(),
+          answerEn: z.string().optional(),
+          keywordsFr: z.string().optional(),
+          keywordsEn: z.string().optional(),
+          category: z.string().optional(),
+          isActive: z.number().optional(),
+          displayOrder: z.number().optional(),
+        })
+      )
+      .mutation(async ({ input, ctx }) => {
+        if (ctx.user.role !== "admin") {
+          throw new Error("Unauthorized");
+        }
+        const db = await import("./db").then(m => m.getDb());
+        if (!db) throw new Error("Database not available");
+        
+        const { faqs } = await import("../drizzle/schema");
+        const { eq } = await import("drizzle-orm");
+        const { id, ...data } = input;
+        await db.update(faqs).set(data).where(eq(faqs.id, id));
+        return { success: true };
+      }),
+
+    delete: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input, ctx }) => {
+        if (ctx.user.role !== "admin") {
+          throw new Error("Unauthorized");
+        }
+        const db = await import("./db").then(m => m.getDb());
+        if (!db) throw new Error("Database not available");
+        
+        const { faqs } = await import("../drizzle/schema");
+        const { eq } = await import("drizzle-orm");
+        await db.delete(faqs).where(eq(faqs.id, input.id));
+        return { success: true };
       }),
   }),
 });

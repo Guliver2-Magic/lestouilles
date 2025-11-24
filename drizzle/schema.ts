@@ -305,3 +305,35 @@ export const dailySpecials = mysqlTable("dailySpecials", {
 
 export type DailySpecial = typeof dailySpecials.$inferSelect;
 export type InsertDailySpecial = typeof dailySpecials.$inferInsert;
+
+/**
+ * FAQ (Frequently Asked Questions) table
+ * Stores predefined questions and answers for instant chatbot responses
+ */
+export const faqs = mysqlTable("faqs", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Question and answer in both languages
+  questionFr: text("questionFr").notNull(),
+  questionEn: text("questionEn").notNull(),
+  answerFr: text("answerFr").notNull(),
+  answerEn: text("answerEn").notNull(),
+  
+  // Keywords for matching (comma-separated, lowercase)
+  keywordsFr: text("keywordsFr").notNull(), // e.g., "horaire,heure,ouvert,fermeture"
+  keywordsEn: text("keywordsEn").notNull(), // e.g., "hours,open,close,schedule"
+  
+  // Category for organization
+  category: varchar("category", { length: 100 }).notNull(), // e.g., "hours", "delivery", "allergens", "pricing"
+  
+  // Display order and status
+  displayOrder: int("displayOrder").default(0).notNull(),
+  isActive: int("isActive").default(1).notNull(), // 1 = active, 0 = inactive
+  
+  // Metadata
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type FAQ = typeof faqs.$inferSelect;
+export type InsertFAQ = typeof faqs.$inferInsert;
