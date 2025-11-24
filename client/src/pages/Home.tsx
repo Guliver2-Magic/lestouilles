@@ -173,8 +173,21 @@ const CATEGORY_GROUPS: Record<string, string[]> = {
 export default function Home() {
   const { language, toggleLanguage } = useLanguage();
   const { addItem, cartOpen, setCartOpen, items, itemCount } = useCart();
-  const [selectedCategory, setSelectedCategory] = useState("Tous");
+  const [selectedCategory, setSelectedCategory] = useState<string>("Tous");
+  const [expandedNutrition, setExpandedNutrition] = useState<Set<string>>(new Set());
   const [searchQuery, setSearchQuery] = useState("");
+
+  const toggleNutrition = (productId: string) => {
+    setExpandedNutrition(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(productId)) {
+        newSet.delete(productId);
+      } else {
+        newSet.add(productId);
+      }
+      return newSet;
+    });
+  };
   const [scrollY, setScrollY] = useState(0);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -725,25 +738,36 @@ export default function Home() {
 
                   {/* Nutrition Information */}
                   {item.nutrition && (
-                    <div className="mb-3 p-2 bg-amber-50 dark:bg-amber-900/20 rounded-md border border-amber-200 dark:border-amber-800">
-                      <div className="grid grid-cols-4 gap-1 text-xs text-center">
-                        <div>
-                          <div className="font-bold text-amber-700 dark:text-amber-300">{item.nutrition.calories}</div>
-                          <div className="text-muted-foreground">cal</div>
+                    <div className="mb-3">
+                      <button
+                        onClick={() => toggleNutrition(item.id)}
+                        className="w-full text-left text-sm text-primary hover:underline flex items-center gap-1 mb-2"
+                      >
+                        ℹ️ {language === 'fr' ? 'Info Nutrition' : 'Nutrition Info'}
+                        <span className="text-xs">{expandedNutrition.has(item.id) ? '▼' : '▶'}</span>
+                      </button>
+                      {expandedNutrition.has(item.id) && (
+                        <div className="p-2 bg-red-50 dark:bg-red-900/20 rounded-md border border-red-200 dark:border-red-800">
+                          <div className="grid grid-cols-4 gap-1 text-xs text-center">
+                            <div>
+                              <div className="font-bold text-red-700 dark:text-red-300">{item.nutrition.calories}</div>
+                              <div className="text-muted-foreground">cal</div>
+                            </div>
+                            <div>
+                              <div className="font-bold text-red-700 dark:text-red-300">{item.nutrition.protein}g</div>
+                              <div className="text-muted-foreground">prot</div>
+                            </div>
+                            <div>
+                              <div className="font-bold text-red-700 dark:text-red-300">{item.nutrition.carbs}g</div>
+                              <div className="text-muted-foreground">gluc</div>
+                            </div>
+                            <div>
+                              <div className="font-bold text-red-700 dark:text-red-300">{item.nutrition.fat}g</div>
+                              <div className="text-muted-foreground">lip</div>
+                            </div>
+                          </div>
                         </div>
-                        <div>
-                          <div className="font-bold text-amber-700 dark:text-amber-300">{item.nutrition.protein}g</div>
-                          <div className="text-muted-foreground">prot</div>
-                        </div>
-                        <div>
-                          <div className="font-bold text-amber-700 dark:text-amber-300">{item.nutrition.carbs}g</div>
-                          <div className="text-muted-foreground">gluc</div>
-                        </div>
-                        <div>
-                          <div className="font-bold text-amber-700 dark:text-amber-300">{item.nutrition.fat}g</div>
-                          <div className="text-muted-foreground">lip</div>
-                        </div>
-                      </div>
+                      )}
                     </div>
                   )}
 

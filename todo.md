@@ -781,3 +781,14 @@
 - [x] Add navigation link to meal planner page
 - [ ] Test complete workflow
 - [ ] Write vitest tests for meal planner procedures
+
+## Nutritional Badge Color Change
+- [x] Change nutritional info badge colors from yellow/orange to red
+- [x] Update all product cards with red badges
+- [x] Test color visibility and contrast
+
+## Collapsible Nutrition Information
+- [x] Hide nutrition info by default
+- [x] Add "Info Nutrition" button/icon to each product card
+- [x] Implement toggle state for nutrition visibility
+- [x] Test click interaction
