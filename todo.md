@@ -688,3 +688,12 @@
 - [ ] Fix the workflow configuration
 - [ ] Test corrected workflow
 - [ ] Provide working workflow JSON
+
+## N8N AI Chatbot Integration
+- [x] Diagnose current n8n webhook empty JSON response issue
+- [x] Test n8n workflow with actual message payload
+- [x] Verify OpenRouter credentials are configured correctly
+- [x] Fix workflow data path issues (message input and AI output)
+- [x] Test end-to-end chatbot with complex questions
+- [x] Verify FAQ system still works for predefined questions
+- [x] Document final workflow configuration
