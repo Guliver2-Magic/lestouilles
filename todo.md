@@ -613,3 +613,10 @@
 - [x] Fix the response format to use correct AI Agent output field
 - [ ] User must reimport updated workflow in n8n
 - [ ] Test chatbot end-to-end on website after reimport
+
+
+## Fix n8n Workflow JSON Validation - User Report
+- [x] Validate JSON syntax
+- [x] Fix JSON escaping errors (apostrophes in fallback message)
+- [x] Verify JSON is valid with Python json.tool
+- [x] Provide valid workflow file
