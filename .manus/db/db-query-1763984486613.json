@@ -1,0 +1,74 @@
+{
+  "query": "SELECT category, COUNT(*) as count FROM products GROUP BY category ORDER BY category;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 494y6CgAR8Uu32w.cf8f73b2fa18 --database nG5FpW6QC2VPLHfftjzBXF --execute SELECT category, COUNT(*) as count FROM products GROUP BY category ORDER BY category;",
+  "rows": [
+    {
+      "category": "boissons",
+      "count": "6"
+    },
+    {
+      "category": "boites-lunch",
+      "count": "2"
+    },
+    {
+      "category": "boites-lunch-adultes",
+      "count": "4"
+    },
+    {
+      "category": "boites-lunch-enfants",
+      "count": "3"
+    },
+    {
+      "category": "desserts",
+      "count": "12"
+    },
+    {
+      "category": "entrees",
+      "count": "3"
+    },
+    {
+      "category": "legumes",
+      "count": "7"
+    },
+    {
+      "category": "plats-prepares",
+      "count": "15"
+    },
+    {
+      "category": "plats-principaux",
+      "count": "2"
+    },
+    {
+      "category": "salades",
+      "count": "2"
+    },
+    {
+      "category": "sandwiches",
+      "count": "3"
+    },
+    {
+      "category": "sauces",
+      "count": "5"
+    },
+    {
+      "category": "soupes",
+      "count": "7"
+    },
+    {
+      "category": "traiteur-bouchees",
+      "count": "3"
+    },
+    {
+      "category": "traiteur-buffets",
+      "count": "2"
+    },
+    {
+      "category": "viandes",
+      "count": "7"
+    }
+  ],
+  "messages": [],
+  "stdout": "category\tcount\nboissons\t6\nboites-lunch\t2\nboites-lunch-adultes\t4\nboites-lunch-enfants\t3\ndesserts\t12\nentrees\t3\nlegumes\t7\nplats-prepares\t15\nplats-principaux\t2\nsalades\t2\nsandwiches\t3\nsauces\t5\nsoupes\t7\ntraiteur-bouchees\t3\ntraiteur-buffets\t2\nviandes\t7\n",
+  "stderr": "",
+  "execution_time_ms": 89
+}

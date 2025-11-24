@@ -40,8 +40,19 @@ export const translations = {
       desserts: "Desserts",
       boissons: "Boissons",
       "boites-lunch": "Boîtes à Lunch",
+      "boites-lunch-adultes": "Boîtes à Lunch",
+      "boites-lunch-enfants": "Boîtes à Lunch",
       "traiteur-bouchees": "Bouchées Traiteur",
       "traiteur-buffets": "Buffets Traiteur",
+      entrees: "Entrées & Bouchées",
+      soupes: "Soupes",
+      sauces: "Sauces",
+      viandes: "Viandes",
+      legumes: "Légumes",
+      "plats-prepares": "Plats Préparés",
+      // Grouped categories
+      "Boîtes à Lunch": "Boîtes à Lunch",
+      "Entrées & Bouchées": "Entrées & Bouchées",
     },
     
     // Dietary Tags
@@ -153,8 +164,19 @@ export const translations = {
       desserts: "Desserts",
       boissons: "Beverages",
       "boites-lunch": "Lunch Boxes",
+      "boites-lunch-adultes": "Lunch Boxes",
+      "boites-lunch-enfants": "Lunch Boxes",
       "traiteur-bouchees": "Catering Bites",
       "traiteur-buffets": "Catering Buffets",
+      entrees: "Appetizers & Bites",
+      soupes: "Soups",
+      sauces: "Sauces",
+      viandes: "Meats",
+      legumes: "Vegetables",
+      "plats-prepares": "Prepared Dishes",
+      // Grouped categories
+      "Boîtes à Lunch": "Lunch Boxes",
+      "Entrées & Bouchées": "Appetizers & Bites",
     },
     
     // Dietary Tags

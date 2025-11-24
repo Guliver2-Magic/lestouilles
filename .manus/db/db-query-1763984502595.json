@@ -1,0 +1,9 @@
+{
+  "query": "UPDATE products SET category = 'boites-lunch-adultes' WHERE category = 'boites-lunch';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 494y6CgAR8Uu32w.cf8f73b2fa18 --database nG5FpW6QC2VPLHfftjzBXF --execute UPDATE products SET category = 'boites-lunch-adultes' WHERE category = 'boites-lunch';",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 61
+}

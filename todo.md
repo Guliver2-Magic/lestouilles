@@ -514,3 +514,12 @@
 - [x] Upload images to S3 (60 images uploaded)
 - [x] Insert all products into database (62 products inserted successfully)
 - [x] Test menu display with new categories - All 62 products displaying correctly with AI-generated images
+
+
+## Optimize Category Filters - User Request
+- [x] Analyze current categories and define groupings (16 categories → 13 grouped categories)
+- [x] Group "boites-lunch-adultes" and "boites-lunch-enfants" under "Boîtes à Lunch"
+- [x] Group "entrees" and "traiteur-bouchees" under "Entrées & Bouchées"
+- [x] Update category filter logic in Home.tsx with grouping support
+- [x] Add bilingual labels for all categories in translations.ts
+- [x] Test category filtering with grouped categories - Successfully reduced from 16 to 13 categories

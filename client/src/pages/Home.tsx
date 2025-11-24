@@ -160,6 +160,12 @@ const carouselImages = [
   "/images/carousel/catering4.jpg",
 ];
 
+// Category grouping configuration
+const CATEGORY_GROUPS: Record<string, string[]> = {
+  "Boîtes à Lunch": ["boites-lunch-adultes", "boites-lunch-enfants"],
+  "Entrées & Bouchées": ["entrees", "traiteur-bouchees"],
+};
+
 export default function Home() {
   const { language, toggleLanguage } = useLanguage();
   const { addItem, cartOpen, setCartOpen, items, itemCount } = useCart();
@@ -210,15 +216,46 @@ export default function Home() {
     nutritionalTip: { fr: product.nutritionalTip || '', en: product.nutritionalTipEn || product.nutritionalTip || '' },
   }));
 
-  // Get unique categories from products
+  // Get unique categories from products with grouping
   const categories = useMemo(() => {
-    const uniqueCategories = Array.from(new Set(dbProducts.map(p => p.category)));
-    return ["Tous", ...uniqueCategories.sort()];
+    const rawCategories = Array.from(new Set(dbProducts.map(p => p.category)));
+    const groupedCategories = new Set<string>();
+    const usedSubcategories = new Set<string>();
+    
+    // First pass: identify which subcategories belong to groups
+    Object.keys(CATEGORY_GROUPS).forEach(groupName => {
+      const subcats = CATEGORY_GROUPS[groupName];
+      const hasAnySubcat = subcats.some(subcat => rawCategories.includes(subcat));
+      if (hasAnySubcat) {
+        groupedCategories.add(groupName);
+        subcats.forEach(subcat => usedSubcategories.add(subcat));
+      }
+    });
+    
+    // Second pass: add categories that are not part of any group
+    rawCategories.forEach(cat => {
+      if (!usedSubcategories.has(cat)) {
+        groupedCategories.add(cat);
+      }
+    });
+    
+    return ["Tous", ...Array.from(groupedCategories).sort()];
   }, [dbProducts]);
 
-  const filteredMenu = selectedCategory === "Tous" 
-    ? allProducts 
-    : allProducts.filter(item => item.category === selectedCategory);
+  const filteredMenu = useMemo(() => {
+    if (selectedCategory === "Tous") return allProducts;
+    
+    // Check if selected category is a group
+    const groupCategories = CATEGORY_GROUPS[selectedCategory];
+    
+    if (groupCategories) {
+      // Filter by any category in the group
+      return allProducts.filter(item => groupCategories.includes(item.category));
+    } else {
+      // Filter by exact category
+      return allProducts.filter(item => item.category === selectedCategory);
+    }
+  }, [selectedCategory, allProducts]);
 
   const cartItemCount = itemCount;
 
