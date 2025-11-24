@@ -50,7 +50,7 @@ export default function AdminReservations() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="h-8 w-8 animate-spin text-emerald-600" />
+        <Loader2 className="h-8 w-8 animate-spin text-gray-900" />
       </div>
     );
   }
@@ -123,7 +123,7 @@ export default function AdminReservations() {
             <Link href="/">
               <div className="flex items-center space-x-3 cursor-pointer">
                 <img src={APP_LOGO} alt={APP_TITLE} className="h-12 w-12 object-contain" />
-                <span className="text-2xl font-bold text-emerald-600">{APP_TITLE}</span>
+                <span className="text-2xl font-bold text-gray-900">{APP_TITLE}</span>
               </div>
             </Link>
             <div className="flex items-center gap-4">
@@ -170,7 +170,7 @@ export default function AdminReservations() {
               <CardTitle className="text-sm font-medium text-gray-600">Confirmées</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-emerald-600">
+              <div className="text-2xl font-bold text-gray-900">
                 {reservations?.filter((r) => r.status === "confirmed").length || 0}
               </div>
             </CardContent>
@@ -233,7 +233,7 @@ export default function AdminReservations() {
           <CardContent>
             {isLoading ? (
               <div className="flex items-center justify-center py-8">
-                <Loader2 className="h-8 w-8 animate-spin text-emerald-600" />
+                <Loader2 className="h-8 w-8 animate-spin text-gray-900" />
               </div>
             ) : filteredReservations && filteredReservations.length > 0 ? (
               <div className="overflow-x-auto">

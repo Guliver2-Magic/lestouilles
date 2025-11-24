@@ -45,16 +45,16 @@
 }
 
 :root {
-  /* Emerald green and warm amber color scheme */
-  --primary: oklch(0.55 0.15 165); /* Emerald green */
+  /* Black and warm amber color scheme */
+  --primary: oklch(0.2 0 0); /* Black */
   --primary-foreground: oklch(1 0 0);
   --secondary: oklch(0.75 0.15 75); /* Warm amber */
   --secondary-foreground: oklch(0.2 0.01 165);
-  --sidebar-primary: oklch(0.55 0.15 165);
+  --sidebar-primary: oklch(0.2 0 0);
   --sidebar-primary-foreground: oklch(1 0 0);
-  --chart-1: oklch(0.65 0.12 165);
-  --chart-2: oklch(0.55 0.15 165);
-  --chart-3: oklch(0.45 0.18 165);
+  --chart-1: oklch(0.3 0 0);
+  --chart-2: oklch(0.2 0 0);
+  --chart-3: oklch(0.15 0 0);
   --chart-4: oklch(0.75 0.15 75);
   --chart-5: oklch(0.65 0.18 75);
   --radius: 0.65rem;
@@ -72,13 +72,13 @@
   --destructive-foreground: oklch(0.985 0 0);
   --border: oklch(0.9 0.005 165);
   --input: oklch(0.9 0.005 165);
-  --ring: oklch(0.55 0.15 165);
+  --ring: oklch(0.2 0 0);
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.2 0.01 165);
   --sidebar-accent: oklch(0.96 0.005 165);
   --sidebar-accent-foreground: oklch(0.2 0.01 165);
   --sidebar-border: oklch(0.9 0.005 165);
-  --sidebar-ring: oklch(0.55 0.15 165);
+  --sidebar-ring: oklch(0.2 0 0);
 }
 
 .dark {

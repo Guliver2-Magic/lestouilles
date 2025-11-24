@@ -740,14 +740,23 @@
 - [x] Ensure focus state is clean and professional
 - [x] Test input box appearance on different screen sizes
 
-## Chatbot Input Box Disappearing After N8N Response
-- [ ] Diagnose why input box disappears after n8n sends response
-- [ ] Check if input box is being conditionally hidden
-- [ ] Verify input box remains visible after message mutations complete
-- [ ] Ensure users can continue conversation after n8n response
-- [ ] Test multi-turn conversation flow
+## Chatbot Input Box Disappearing After N8N Response - CRITICAL BUG
+- [ ] Diagnose why input box and send button completely disappear
+- [ ] Check CSS overflow/height issues causing input to be hidden
+- [ ] Verify Card component flex layout is correct
+- [ ] Check if ScrollArea is pushing input out of view
+- [ ] Fix input section to always remain visible at bottom
+- [ ] Test multi-turn conversation flow after fix
 
 ## Chatbot Header Color Change
 - [x] Change chatbot header background from green to black
 - [x] Ensure text remains readable on black background
 - [x] Test header appearance
+
+## Site-Wide Color Change: Green to Black
+- [x] Change primary color from green to black in CSS variables
+- [x] Update header banner background color
+- [x] Update all button colors
+- [x] Update accent colors and highlights
+- [x] Test all pages for color consistency
+- [x] Ensure text remains readable on black backgrounds

@@ -69,7 +69,7 @@ export function OrderPrintView({ order, items, onClose, autoPrint = false }: Ord
             <div className="flex justify-end p-4 gap-2 print:hidden border-b">
               <button
                 onClick={() => window.print()}
-                className="px-4 py-2 bg-emerald-600 text-white rounded hover:bg-emerald-700"
+                className="px-4 py-2 bg-gray-900 text-white rounded hover:bg-black"
               >
                 Imprimer
               </button>
@@ -84,8 +84,8 @@ export function OrderPrintView({ order, items, onClose, autoPrint = false }: Ord
             {/* Printable content */}
             <div className="p-8 print:p-6">
               {/* Header */}
-              <div className="text-center mb-8 border-b-2 border-emerald-600 pb-4">
-                <h1 className="text-3xl font-bold text-emerald-600">Les Touillés</h1>
+              <div className="text-center mb-8 border-b-2 border-gray-900 pb-4">
+                <h1 className="text-3xl font-bold text-gray-900">Les Touillés</h1>
                 <p className="text-sm text-gray-600 mt-1">650 Rue de Montbrun, Boucherville, QC J4B 8G9</p>
                 <p className="text-sm text-gray-600">Tél: 514-703-8678 | info@lestouilles.ca</p>
               </div>

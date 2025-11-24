@@ -737,7 +737,7 @@ export default function AdminProducts() {
                     <span
                       className={`px-2 py-1 rounded text-xs ${
                         product.isActive
-                          ? "bg-green-100 text-green-800"
+                          ? "bg-gray-100 text-gray-800"
                           : "bg-gray-100 text-gray-800"
                       }`}
                     >

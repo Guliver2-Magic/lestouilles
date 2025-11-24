@@ -411,7 +411,7 @@ export default function Home() {
       <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b">
         <div className="container flex items-center justify-between h-16">
           <Link href="/" className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity">
-            <div className="bg-gradient-to-br from-emerald-600 to-emerald-700 p-2 rounded-lg shadow-md">
+            <div className="bg-gradient-to-br from-gray-900 to-black p-2 rounded-lg shadow-md">
               <img src={APP_LOGO} alt={APP_TITLE} className="h-10 w-auto" />
             </div>
           </Link>
@@ -505,7 +505,7 @@ export default function Home() {
       </header>
 
       {/* Promotional Teaser Banner */}
-      <div className="fixed top-16 left-0 right-0 z-40 bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-lg">
+      <div className="fixed top-16 left-0 right-0 z-40 bg-gradient-to-r from-gray-900 to-black text-white shadow-lg">
         <div className="container py-3 px-4">
           <div className="flex flex-col md:flex-row items-center justify-center gap-2 md:gap-6 text-center">
             <div className="flex items-center gap-2">
@@ -743,9 +743,9 @@ export default function Home() {
 
                   {/* Nutritional Tips */}
                   {item.nutritionalTip && (
-                    <div className="mb-3 p-2 bg-green-50 dark:bg-green-900/20 rounded-md border border-green-200 dark:border-green-800">
-                      <p className="text-xs text-green-700 dark:text-green-300 flex items-start gap-1">
-                        <span className="text-green-600 dark:text-green-400 font-bold">💡</span>
+                    <div className="mb-3 p-2 bg-gray-50 dark:bg-gray-900/20 rounded-md border border-gray-200 dark:border-gray-800">
+                      <p className="text-xs text-gray-700 dark:text-gray-300 flex items-start gap-1">
+                        <span className="text-gray-600 dark:text-gray-400 font-bold">💡</span>
                         <span>{item.nutritionalTip[language]}</span>
                       </p>
                     </div>

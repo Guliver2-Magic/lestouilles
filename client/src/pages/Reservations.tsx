@@ -181,7 +181,7 @@ export default function Reservations() {
             <Link href="/">
               <div className="flex items-center space-x-3 cursor-pointer">
                 <img src={APP_LOGO} alt={APP_TITLE} className="h-12 w-12 object-contain" />
-                <span className="text-2xl font-bold text-emerald-600">{APP_TITLE}</span>
+                <span className="text-2xl font-bold text-black">{APP_TITLE}</span>
               </div>
             </Link>
             <Button variant="outline" onClick={toggleLanguage}>
@@ -375,7 +375,7 @@ export default function Reservations() {
                 <div className="flex gap-4 pt-4">
                   <Button
                     type="submit"
-                    className="flex-1 bg-emerald-600 hover:bg-emerald-700"
+                    className="flex-1 bg-gray-900 hover:bg-black"
                     disabled={createReservation.isPending}
                   >
                     {createReservation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
