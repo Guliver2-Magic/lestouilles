@@ -677,7 +677,7 @@ export default function Home() {
                 key={category}
                 variant={selectedCategory === category ? "default" : "outline"}
                 onClick={() => setSelectedCategory(category)}
-                className="rounded-full"
+                className={`rounded-full ${selectedCategory === category ? 'bg-red-600 hover:bg-red-700' : 'border-red-600 text-red-600 hover:bg-red-50'}`}
               >
                 {category === "Tous" ? (language === "fr" ? "Tous" : "All") : translateCategory(category, language)}
               </Button>
@@ -741,7 +741,7 @@ export default function Home() {
                     <div className="mb-3">
                       <button
                         onClick={() => toggleNutrition(item.id)}
-                        className="w-full text-left text-sm text-primary hover:underline flex items-center gap-1 mb-2"
+                        className="w-full text-left text-sm text-red-600 hover:text-red-700 hover:underline flex items-center gap-1 mb-2"
                       >
                         ℹ️ {language === 'fr' ? 'Info Nutrition' : 'Nutrition Info'}
                         <span className="text-xs">{expandedNutrition.has(item.id) ? '▼' : '▶'}</span>
@@ -803,7 +803,7 @@ export default function Home() {
                     }
                     return (
                       <Button 
-                        className="w-full" 
+                        className="w-full bg-red-600 hover:bg-red-700" 
                         onClick={() => {
                           if (dbProduct) addItem(dbProduct);
                         }}

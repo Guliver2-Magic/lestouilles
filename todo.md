@@ -792,3 +792,10 @@
 - [x] Add "Info Nutrition" button/icon to each product card
 - [x] Implement toggle state for nutrition visibility
 - [x] Test click interaction
+
+## Button Color Redesign - Red Accent
+- [x] Change category filter buttons from black to red
+- [x] Change "Ajouter au panier" buttons from black to red
+- [x] Change "Info Nutrition" button to red
+- [x] Keep main header/navigation black
+- [x] Test visual balance and contrast
