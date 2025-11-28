@@ -27,9 +27,21 @@ Complete guide for deploying Les Touillés website on your Ubuntu server using D
 
 ### Required Software
 
-1. **Docker** (version 20.10 or newer)
-2. **Docker Compose** (version 2.0 or newer)
-3. **Git** (for cloning the repository)
+**Only Docker is required - everything else runs in containers!**
+
+1. **Docker** (version 20.10 or newer) with Docker Compose
+2. **Git** (optional, for cloning the repository)
+
+**✅ What's INCLUDED in Docker containers:**
+- MySQL database server
+- Node.js runtime
+- All application dependencies
+- nginx web server (optional)
+
+**❌ What you DON'T need to install:**
+- MySQL Server - NOT needed!
+- Node.js/npm/pnpm - NOT needed!
+- Application dependencies - NOT needed!
 
 ---
 

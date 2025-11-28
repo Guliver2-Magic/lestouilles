@@ -841,3 +841,13 @@
 - [x] Create standalone deployment guide (STANDALONE_DEPLOYMENT.md)
 - [ ] Test image generation with OpenAI
 - [ ] Test local authentication flow after database migration
+
+## Documentation Correction - MySQL in Docker
+- [x] Update STANDALONE_DEPLOYMENT.md to clarify MySQL is included in Docker
+- [x] Update prerequisites section - remove MySQL installation requirement
+- [x] Update migration steps - clarify migration runs AFTER Docker starts
+- [x] Update DEPLOYMENT.md for consistency
+- [x] Update QUICKSTART.md for consistency
+- [x] Added Docker installation instructions
+- [x] Clarified that MySQL runs in container
+- [x] Updated migration commands to use docker-compose exec

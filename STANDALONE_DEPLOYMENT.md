@@ -23,13 +23,41 @@ Your website has been modified to work independently:
 Before deploying, you need:
 
 1. **Ubuntu Server** (20.04 or newer)
-2. **Docker & Docker Compose** installed
+2. **Docker & Docker Compose** installed (see installation below)
 3. **OpenAI API Key** (for image generation)
    - Sign up at: https://platform.openai.com/signup
    - Get API key: https://platform.openai.com/api-keys
    - Cost: ~$0.04 per image generated
 4. **Your existing n8n instance** (already configured)
 5. **Stripe account** (for payments)
+
+**✅ What's INCLUDED in Docker (no installation needed):**
+- MySQL database server
+- Node.js runtime
+- All application dependencies
+
+**❌ What you DON'T need to install:**
+- MySQL Server (`apt install mysql-server`) - NOT needed!
+- Node.js/npm/pnpm - NOT needed!
+- Any application dependencies - NOT needed!
+
+### Installing Docker (if not already installed)
+
+```bash
+# Install Docker (one command)
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+
+# Add your user to docker group (avoid sudo)
+sudo usermod -aG docker $USER
+
+# Reload group membership
+newgrp docker
+
+# Verify installation
+docker --version
+docker-compose --version
+```
 
 ---
 
@@ -50,55 +78,31 @@ unzip les-touilles.zip
 cd les-touilles
 ```
 
-### Step 2: Run Database Migration
+### Step 2: Configure Environment Variables
 
-**⚠️ IMPORTANT:** You must run the SQL migration before starting the app!
-
-```bash
-# Connect to your MySQL database
-mysql -u root -p
-
-# Run the migration script
-source MIGRATION_LOCAL_AUTH.sql
-
-# Or manually:
-mysql -u root -p your_database < MIGRATION_LOCAL_AUTH.sql
-```
-
-This migration:
-- Removes the `openId` column (OAuth identifier)
-- Adds `password`, `isVerified`, `verificationToken`, `resetToken`, `resetTokenExpiry` columns
-- Makes `email` unique and required
-- Creates an admin user (you'll need to change the password hash)
-
-### Step 3: Configure Environment Variables
-
-Create a `.env` file:
+**Create a `.env` file with your configuration:**
 
 ```bash
+cd les-touilles
 nano .env
 ```
 
-**Minimum required configuration:**
+**Paste this configuration (update the values):**
 
 ```bash
-# Database
-MYSQL_ROOT_PASSWORD=your_secure_root_password
+# Database (used by MySQL container)
+MYSQL_ROOT_PASSWORD=YourSecureRootPassword123!
 MYSQL_DATABASE=lestouilles
 MYSQL_USER=lestouilles_user
-MYSQL_PASSWORD=your_secure_db_password
-DATABASE_URL=mysql://lestouilles_user:your_secure_db_password@db:3306/lestouilles
+MYSQL_PASSWORD=YourSecureUserPassword456!
 
-# Application
+# Application (connects to MySQL container)
+DATABASE_URL=mysql://lestouilles_user:YourSecureUserPassword456!@db:3306/lestouilles
 NODE_ENV=production
 JWT_SECRET=$(openssl rand -base64 32)
 
 # OpenAI (for image generation)
 OPENAI_API_KEY=sk-your_openai_api_key_here
-
-# Application Branding
-VITE_APP_TITLE=Les Touillés - Catering Service
-VITE_APP_LOGO=/logo.png
 
 # n8n Chatbot (your existing instance)
 N8N_CHATBOT_WEBHOOK_URL=https://vps-e53ac5fb.vps.ovh.ca/webhook/chatbot-response
@@ -108,37 +112,79 @@ STRIPE_SECRET_KEY=sk_live_your_stripe_key
 STRIPE_WEBHOOK_SECRET=whsec_your_webhook_secret
 VITE_STRIPE_PUBLISHABLE_KEY=pk_live_your_publishable_key
 
-# Analytics (optional)
-VITE_ANALYTICS_ENDPOINT=
-VITE_ANALYTICS_WEBSITE_ID=
+# Branding
+VITE_APP_TITLE=Les Touillés - Catering Service
+VITE_APP_LOGO=/logo.png
 ```
 
 **Generate secure secrets:**
-
 ```bash
-# JWT Secret (32+ characters)
+# For JWT_SECRET
 openssl rand -base64 32
 
-# Database passwords
+# For database passwords
 openssl rand -base64 24
 ```
 
-### Step 4: Deploy with Docker
+### Step 3: Start Docker Containers
+
+**This will start both MySQL and your application:**
 
 ```bash
-# Make deploy script executable
-chmod +x deploy.sh
+# Start all services in background
+docker-compose up -d
 
-# Run deployment
-./deploy.sh
+# Wait for MySQL to be ready (15-20 seconds)
+sleep 20
+
+# Check that both containers are running
+docker-compose ps
+# Should show: les-touilles-db-1 (mysql) and les-touilles-app-1 (node)
+
+# View logs if needed
+docker-compose logs -f
 ```
 
-The script will:
-1. Build Docker images
-2. Start MySQL database
-3. Start the application
-4. Run any pending migrations
-5. Show deployment status
+**What just happened:**
+- ✅ Docker downloaded MySQL image
+- ✅ Created MySQL container with your database
+- ✅ Built your application image
+- ✅ Started your application container
+- ✅ Connected app to MySQL via Docker network
+
+
+
+### Step 4: Run Database Migration
+
+**⚠️ IMPORTANT:** Run this AFTER Docker is started!
+
+**The migration runs INSIDE the MySQL container:**
+
+```bash
+# Option A: Run migration from file
+docker-compose exec -T db mysql -u lestouilles_user -p"YourSecureUserPassword456!" lestouilles < MIGRATION_LOCAL_AUTH.sql
+
+# Option B: Interactive migration
+docker-compose exec db mysql -u lestouilles_user -p lestouilles
+# Enter password when prompted
+# Then paste the SQL commands from MIGRATION_LOCAL_AUTH.sql
+
+# Option C: Copy file into container first
+docker cp MIGRATION_LOCAL_AUTH.sql $(docker-compose ps -q db):/tmp/migration.sql
+docker-compose exec db mysql -u lestouilles_user -p lestouilles < /tmp/migration.sql
+```
+
+**What this migration does:**
+- Removes the `openId` column (OAuth identifier)
+- Adds `password`, `isVerified`, `verificationToken`, `resetToken`, `resetTokenExpiry` columns
+- Makes `email` unique and required
+- Updates schema for local authentication
+
+**Verify migration succeeded:**
+```bash
+docker-compose exec db mysql -u lestouilles_user -p lestouilles -e "DESCRIBE users;"
+# Should show columns: id, email, password, name, role, isVerified, etc.
+```
 
 ### Step 5: Create Your Admin Account
 
