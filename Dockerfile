@@ -20,8 +20,8 @@ RUN pnpm install --no-frozen-lockfile
 # Copy source code
 COPY . .
 
-# Build the frontend only
-RUN pnpm run build:client
+# Build the application
+RUN pnpm run build
 
 # Stage 2: Production image
 FROM node:22-alpine AS runner
@@ -41,15 +41,17 @@ COPY package.json ./
 COPY pnpm-lock.yaml* ./
 COPY patches ./patches
 
-# Install production dependencies only
+# Install ALL dependencies (vite is needed at runtime)
 RUN pnpm install --no-frozen-lockfile
 
 # Copy built application from builder stage
 COPY --from=builder --chown=nodejs:nodejs /app/server ./server
 COPY --from=builder --chown=nodejs:nodejs /app/drizzle ./drizzle
 COPY --from=builder --chown=nodejs:nodejs /app/shared ./shared
-COPY --from=builder --chown=nodejs:nodejs /app/dist/public ./dist/public
-COPY --from=builder --chown=nodejs:nodejs /app/client/public ./client/public
+COPY --from=builder --chown=nodejs:nodejs /app/client/dist ./client/dist
+
+# Copy vite config (required by server)
+COPY --from=builder --chown=nodejs:nodejs /app/vite.config.ts ./vite.config.ts
 
 # Switch to non-root user
 USER nodejs
@@ -61,5 +63,5 @@ EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \
   CMD node -e "require('http').get('http://localhost:3000/api/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"
 
-# Start the application with tsx
-CMD ["npx", "tsx", "server/_core/index.ts"]
+# Start the application
+CMD ["node", "server/_core/index.js"]
