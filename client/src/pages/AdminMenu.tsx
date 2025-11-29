@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -23,104 +23,92 @@ import {
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { Plus, Pencil, Trash2, ArrowLeft, GripVertical } from "lucide-react";
+import { trpc } from "@/lib/trpc";
 
 interface MenuCategory {
   id: number;
   name: string;
-  description: string;
+  nameEn: string | null;
+  description: string | null;
+  descriptionEn: string | null;
+  image: string | null;
   sortOrder: number;
   isActive: boolean;
-  createdAt: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export default function AdminMenu() {
   const [, setLocation] = useLocation();
-  const [categories, setCategories] = useState<MenuCategory[]>([]);
-  const [loading, setLoading] = useState(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState<MenuCategory | null>(null);
   const [formData, setFormData] = useState({
     name: "",
+    nameEn: "",
     description: "",
+    descriptionEn: "",
     isActive: true,
   });
 
-  useEffect(() => {
-    fetchCategories();
-  }, []);
-
-  const fetchCategories = async () => {
-    try {
-      const response = await fetch("/api/menu-categories");
-      if (response.ok) {
-        const data = await response.json();
-        setCategories(data);
-      }
-    } catch (error) {
-      console.error("Error fetching categories:", error);
-      toast.error("Erreur lors du chargement des categories");
-    } finally {
-      setLoading(false);
-    }
-  };
+  // tRPC queries and mutations
+  const { data: categories = [], isLoading, refetch } = trpc.menuCategories.list.useQuery();
+  const createMutation = trpc.menuCategories.create.useMutation({
+    onSuccess: () => {
+      toast.success("Categorie creee avec succes");
+      setIsDialogOpen(false);
+      resetForm();
+      refetch();
+    },
+    onError: (error) => {
+      toast.error(error.message || "Erreur lors de la creation");
+    },
+  });
+  const updateMutation = trpc.menuCategories.update.useMutation({
+    onSuccess: () => {
+      toast.success("Categorie mise a jour avec succes");
+      setIsDialogOpen(false);
+      resetForm();
+      refetch();
+    },
+    onError: (error) => {
+      toast.error(error.message || "Erreur lors de la mise a jour");
+    },
+  });
+  const deleteMutation = trpc.menuCategories.delete.useMutation({
+    onSuccess: () => {
+      toast.success("Categorie supprimee avec succes");
+      refetch();
+    },
+    onError: (error) => {
+      toast.error(error.message || "Erreur lors de la suppression");
+    },
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      const url = editingCategory
-        ? `/api/menu-categories/${editingCategory.id}`
-        : "/api/menu-categories";
-      const method = editingCategory ? "PUT" : "POST";
-
-      const response = await fetch(url, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+    
+    if (editingCategory) {
+      updateMutation.mutate({
+        id: editingCategory.id,
+        ...formData,
       });
-
-      if (response.ok) {
-        toast.success(
-          editingCategory
-            ? "Categorie mise a jour avec succes"
-            : "Categorie creee avec succes"
-        );
-        setIsDialogOpen(false);
-        resetForm();
-        fetchCategories();
-      } else {
-        toast.error("Erreur lors de la sauvegarde");
-      }
-    } catch (error) {
-      console.error("Error saving category:", error);
-      toast.error("Erreur lors de la sauvegarde");
+    } else {
+      createMutation.mutate(formData);
     }
   };
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = (id: number) => {
     if (!confirm("Etes-vous sur de vouloir supprimer cette categorie?")) return;
-
-    try {
-      const response = await fetch(`/api/menu-categories/${id}`, {
-        method: "DELETE",
-      });
-
-      if (response.ok) {
-        toast.success("Categorie supprimee avec succes");
-        fetchCategories();
-      } else {
-        toast.error("Erreur lors de la suppression");
-      }
-    } catch (error) {
-      console.error("Error deleting category:", error);
-      toast.error("Erreur lors de la suppression");
-    }
+    deleteMutation.mutate({ id });
   };
 
   const handleEdit = (category: MenuCategory) => {
     setEditingCategory(category);
     setFormData({
       name: category.name,
-      description: category.description,
+      nameEn: category.nameEn || "",
+      description: category.description || "",
+      descriptionEn: category.descriptionEn || "",
       isActive: category.isActive,
     });
     setIsDialogOpen(true);
@@ -130,7 +118,9 @@ export default function AdminMenu() {
     setEditingCategory(null);
     setFormData({
       name: "",
+      nameEn: "",
       description: "",
+      descriptionEn: "",
       isActive: true,
     });
   };
@@ -173,26 +163,49 @@ export default function AdminMenu() {
                   </DialogTitle>
                 </DialogHeader>
                 <form onSubmit={handleSubmit} className="space-y-4">
-                  <div>
-                    <Label htmlFor="name">Nom</Label>
-                    <Input
-                      id="name"
-                      value={formData.name}
-                      onChange={(e) =>
-                        setFormData({ ...formData, name: e.target.value })
-                      }
-                      required
-                    />
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="name">Nom (FR)</Label>
+                      <Input
+                        id="name"
+                        value={formData.name}
+                        onChange={(e) =>
+                          setFormData({ ...formData, name: e.target.value })
+                        }
+                        required
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="nameEn">Nom (EN)</Label>
+                      <Input
+                        id="nameEn"
+                        value={formData.nameEn}
+                        onChange={(e) =>
+                          setFormData({ ...formData, nameEn: e.target.value })
+                        }
+                      />
+                    </div>
                   </div>
                   <div>
-                    <Label htmlFor="description">Description</Label>
+                    <Label htmlFor="description">Description (FR)</Label>
                     <Textarea
                       id="description"
                       value={formData.description}
                       onChange={(e) =>
                         setFormData({ ...formData, description: e.target.value })
                       }
-                      rows={3}
+                      rows={2}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="descriptionEn">Description (EN)</Label>
+                    <Textarea
+                      id="descriptionEn"
+                      value={formData.descriptionEn}
+                      onChange={(e) =>
+                        setFormData({ ...formData, descriptionEn: e.target.value })
+                      }
+                      rows={2}
                     />
                   </div>
                   <div className="flex items-center gap-2">
@@ -209,7 +222,10 @@ export default function AdminMenu() {
                     <Button type="button" variant="outline" onClick={handleDialogClose}>
                       Annuler
                     </Button>
-                    <Button type="submit">
+                    <Button 
+                      type="submit" 
+                      disabled={createMutation.isPending || updateMutation.isPending}
+                    >
                       {editingCategory ? "Mettre a jour" : "Creer"}
                     </Button>
                   </div>
@@ -218,7 +234,7 @@ export default function AdminMenu() {
             </Dialog>
           </CardHeader>
           <CardContent>
-            {loading ? (
+            {isLoading ? (
               <div className="text-center py-8">Chargement...</div>
             ) : categories.length === 0 ? (
               <div className="text-center py-8 text-gray-500">
@@ -260,7 +276,7 @@ export default function AdminMenu() {
                         <Button
                           variant="ghost"
                           size="icon"
-                          onClick={() => handleEdit(category)}
+                          onClick={() => handleEdit(category as MenuCategory)}
                         >
                           <Pencil className="h-4 w-4" />
                         </Button>
@@ -268,6 +284,7 @@ export default function AdminMenu() {
                           variant="ghost"
                           size="icon"
                           onClick={() => handleDelete(category.id)}
+                          disabled={deleteMutation.isPending}
                         >
                           <Trash2 className="h-4 w-4 text-red-500" />
                         </Button>
