@@ -17,6 +17,10 @@ import AdminReservations from "./pages/AdminReservations";
 import AdminProducts from "./pages/AdminProducts";
 import AdminDailySpecials from "./pages/AdminDailySpecials";
 import AdminFAQ from "./pages/AdminFAQ";
+import AdminMenu from "./pages/AdminMenu";
+import AdminTestimonials from "./pages/AdminTestimonials";
+import AdminGallery from "./pages/AdminGallery";
+import AdminSettings from "./pages/AdminSettings";
 import MealPlanner from "./pages/MealPlanner";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -39,6 +43,10 @@ function Router() {
       <Route path={"/admin/products"} component={AdminProducts} />
       <Route path={"/admin/daily-specials"} component={AdminDailySpecials} />
       <Route path={"/admin/faq"} component={AdminFAQ} />
+      <Route path={"/admin/menu"} component={AdminMenu} />
+      <Route path={"/admin/testimonials"} component={AdminTestimonials} />
+      <Route path={"/admin/gallery"} component={AdminGallery} />
+      <Route path={"/admin/settings"} component={AdminSettings} />
       <Route path={"/404"} component={NotFound} />
       <Route component={NotFound} />
     </Switch>
