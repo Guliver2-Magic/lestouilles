@@ -42,7 +42,7 @@ COPY pnpm-lock.yaml* ./
 COPY patches ./patches
 
 # Install production dependencies only
-RUN pnpm install --prod --no-frozen-lockfile
+RUN pnpm install --no-frozen-lockfile
 
 # Copy built application from builder stage
 COPY --from=builder --chown=nodejs:nodejs /app/server ./server
