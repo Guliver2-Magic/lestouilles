@@ -9,9 +9,10 @@ RUN npm install -g pnpm
 # Set working directory
 WORKDIR /app
 
-# Copy package files
+# Copy package files and patches
 COPY package.json ./
 COPY pnpm-lock.yaml* ./
+COPY patches ./patches
 
 # Install dependencies (use --no-frozen-lockfile if pnpm-lock.yaml is missing)
 RUN pnpm install --no-frozen-lockfile
@@ -35,9 +36,10 @@ RUN addgroup -g 1001 -S nodejs && \
 # Set working directory
 WORKDIR /app
 
-# Copy package files
+# Copy package files and patches
 COPY package.json ./
 COPY pnpm-lock.yaml* ./
+COPY patches ./patches
 
 # Install production dependencies only
 RUN pnpm install --prod --no-frozen-lockfile
