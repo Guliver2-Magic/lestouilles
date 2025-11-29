@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -21,62 +21,90 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
-import { Plus, Pencil, Trash2, ArrowLeft, Upload, Image as ImageIcon } from "lucide-react";
-
-interface GalleryImage {
-  id: number;
-  title: string;
-  description?: string;
-  imageUrl: string;
-  category: string;
-  sortOrder: number;
-  isActive: boolean;
-  createdAt: string;
-}
+import { Plus, Pencil, Trash2, ArrowLeft, Upload, Image as ImageIcon, Wand2, Loader2, Sparkles } from "lucide-react";
+import { trpc } from "@/lib/trpc";
 
 const GALLERY_CATEGORIES = [
-  "Événements",
+  "Evenements",
   "Plats",
   "Desserts",
-  "Équipe",
+  "Equipe",
   "Ambiance",
   "Autre",
 ];
 
 export default function AdminGallery() {
   const [, setLocation] = useLocation();
-  const [images, setImages] = useState<GalleryImage[]>([]);
-  const [loading, setLoading] = useState(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [editingImage, setEditingImage] = useState<GalleryImage | null>(null);
+  const [editingImage, setEditingImage] = useState<any | null>(null);
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [formData, setFormData] = useState({
     title: "",
+    titleEn: "",
     description: "",
+    descriptionEn: "",
     imageUrl: "",
     category: "Plats",
     isActive: true,
   });
 
-  useEffect(() => {
-    fetchImages();
-  }, []);
+  // AI Generation states
+  const [isAIDialogOpen, setIsAIDialogOpen] = useState(false);
+  const [aiPrompt, setAiPrompt] = useState("");
+  const [aiSize, setAiSize] = useState<"1024x1024" | "1792x1024" | "1024x1792">("1024x1024");
+  const [aiQuality, setAiQuality] = useState<"standard" | "hd">("standard");
+  const [aiStyle, setAiStyle] = useState<"vivid" | "natural">("vivid");
+  const [generatedImage, setGeneratedImage] = useState<string | null>(null);
 
-  const fetchImages = async () => {
-    try {
-      const response = await fetch("/api/gallery");
-      if (response.ok) {
-        const data = await response.json();
-        setImages(data);
-      }
-    } catch (error) {
-      console.error("Error fetching gallery:", error);
-      toast.error("Erreur lors du chargement de la galerie");
-    } finally {
-      setLoading(false);
-    }
-  };
+  // tRPC queries and mutations
+  const { data: images = [], isLoading, refetch } = trpc.gallery.list.useQuery();
+  const createMutation = trpc.gallery.create.useMutation({
+    onSuccess: () => {
+      toast.success("Image ajoutee avec succes");
+      setIsDialogOpen(false);
+      resetForm();
+      refetch();
+    },
+    onError: (error) => {
+      toast.error(error.message || "Erreur lors de l ajout");
+    },
+  });
+  const updateMutation = trpc.gallery.update.useMutation({
+    onSuccess: () => {
+      toast.success("Image mise a jour avec succes");
+      setIsDialogOpen(false);
+      resetForm();
+      refetch();
+    },
+    onError: (error) => {
+      toast.error(error.message || "Erreur lors de la mise a jour");
+    },
+  });
+  const deleteMutation = trpc.gallery.delete.useMutation({
+    onSuccess: () => {
+      toast.success("Image supprimee avec succes");
+      refetch();
+    },
+    onError: (error) => {
+      toast.error(error.message || "Erreur lors de la suppression");
+    },
+  });
+
+  // AI mutations
+  const generateImageMutation = trpc.ai.generateImage.useMutation({
+    onSuccess: (data) => {
+      setGeneratedImage(data.url);
+      toast.success("Image generee avec succes!");
+    },
+    onError: (error) => {
+      toast.error(error.message || "Erreur lors de la generation");
+    },
+  });
+
+  const { data: suggestedPrompts } = trpc.ai.getSuggestedPrompts.useQuery({
+    category: formData.category.toLowerCase(),
+  });
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -95,15 +123,39 @@ export default function AdminGallery() {
       if (response.ok) {
         const data = await response.json();
         setFormData({ ...formData, imageUrl: data.url });
-        toast.success("Image uploadée avec succès");
+        toast.success("Image uploadee avec succes");
       } else {
-        toast.error("Erreur lors de l'upload");
+        toast.error("Erreur lors de l upload");
       }
     } catch (error) {
       console.error("Error uploading file:", error);
-      toast.error("Erreur lors de l'upload");
+      toast.error("Erreur lors de l upload");
     } finally {
       setUploading(false);
+    }
+  };
+
+  const generateAIImage = () => {
+    if (!aiPrompt.trim()) {
+      toast.error("Veuillez entrer une description");
+      return;
+    }
+    setGeneratedImage(null);
+    generateImageMutation.mutate({
+      prompt: aiPrompt,
+      size: aiSize,
+      quality: aiQuality,
+      style: aiStyle,
+    });
+  };
+
+  const useGeneratedImage = () => {
+    if (generatedImage) {
+      setFormData({ ...formData, imageUrl: generatedImage });
+      setIsAIDialogOpen(false);
+      setGeneratedImage(null);
+      setAiPrompt("");
+      toast.success("Image ajoutee au formulaire");
     }
   };
 
@@ -115,61 +167,28 @@ export default function AdminGallery() {
       return;
     }
 
-    try {
-      const url = editingImage
-        ? `/api/gallery/${editingImage.id}`
-        : "/api/gallery";
-      const method = editingImage ? "PUT" : "POST";
-
-      const response = await fetch(url, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+    if (editingImage) {
+      updateMutation.mutate({
+        id: editingImage.id,
+        ...formData,
       });
-
-      if (response.ok) {
-        toast.success(
-          editingImage
-            ? "Image mise à jour avec succès"
-            : "Image ajoutée avec succès"
-        );
-        setIsDialogOpen(false);
-        resetForm();
-        fetchImages();
-      } else {
-        toast.error("Erreur lors de la sauvegarde");
-      }
-    } catch (error) {
-      console.error("Error saving image:", error);
-      toast.error("Erreur lors de la sauvegarde");
+    } else {
+      createMutation.mutate(formData);
     }
   };
 
-  const handleDelete = async (id: number) => {
-    if (!confirm("Êtes-vous sûr de vouloir supprimer cette image?")) return;
-
-    try {
-      const response = await fetch(`/api/gallery/${id}`, {
-        method: "DELETE",
-      });
-
-      if (response.ok) {
-        toast.success("Image supprimée avec succès");
-        fetchImages();
-      } else {
-        toast.error("Erreur lors de la suppression");
-      }
-    } catch (error) {
-      console.error("Error deleting image:", error);
-      toast.error("Erreur lors de la suppression");
-    }
+  const handleDelete = (id: number) => {
+    if (!confirm("Etes-vous sur de vouloir supprimer cette image?")) return;
+    deleteMutation.mutate({ id });
   };
 
-  const handleEdit = (image: GalleryImage) => {
+  const handleEdit = (image: any) => {
     setEditingImage(image);
     setFormData({
       title: image.title,
+      titleEn: image.titleEn || "",
       description: image.description || "",
+      descriptionEn: image.descriptionEn || "",
       imageUrl: image.imageUrl,
       category: image.category,
       isActive: image.isActive,
@@ -181,16 +200,13 @@ export default function AdminGallery() {
     setEditingImage(null);
     setFormData({
       title: "",
+      titleEn: "",
       description: "",
+      descriptionEn: "",
       imageUrl: "",
       category: "Plats",
       isActive: true,
     });
-  };
-
-  const handleDialogClose = () => {
-    setIsDialogOpen(false);
-    resetForm();
   };
 
   return (
@@ -226,19 +242,31 @@ export default function AdminGallery() {
                   </DialogTitle>
                 </DialogHeader>
                 <form onSubmit={handleSubmit} className="space-y-4">
-                  <div>
-                    <Label htmlFor="title">Titre</Label>
-                    <Input
-                      id="title"
-                      value={formData.title}
-                      onChange={(e) =>
-                        setFormData({ ...formData, title: e.target.value })
-                      }
-                      required
-                    />
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="title">Titre (FR)</Label>
+                      <Input
+                        id="title"
+                        value={formData.title}
+                        onChange={(e) =>
+                          setFormData({ ...formData, title: e.target.value })
+                        }
+                        required
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="titleEn">Titre (EN)</Label>
+                      <Input
+                        id="titleEn"
+                        value={formData.titleEn}
+                        onChange={(e) =>
+                          setFormData({ ...formData, titleEn: e.target.value })
+                        }
+                      />
+                    </div>
                   </div>
                   <div>
-                    <Label htmlFor="description">Description (optionnel)</Label>
+                    <Label htmlFor="description">Description (FR)</Label>
                     <Textarea
                       id="description"
                       value={formData.description}
@@ -249,7 +277,7 @@ export default function AdminGallery() {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="category">Catégorie</Label>
+                    <Label htmlFor="category">Categorie</Label>
                     <Select
                       value={formData.category}
                       onValueChange={(value) =>
@@ -289,14 +317,25 @@ export default function AdminGallery() {
                           </Button>
                         </div>
                       ) : (
-                        <div
-                          className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:border-gray-400 transition-colors"
-                          onClick={() => fileInputRef.current?.click()}
-                        >
-                          <Upload className="h-8 w-8 mx-auto text-gray-400 mb-2" />
-                          <p className="text-sm text-gray-500">
-                            {uploading ? "Upload en cours..." : "Cliquez pour uploader une image"}
-                          </p>
+                        <div className="grid grid-cols-2 gap-2">
+                          <div
+                            className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center cursor-pointer hover:border-gray-400 transition-colors"
+                            onClick={() => fileInputRef.current?.click()}
+                          >
+                            <Upload className="h-6 w-6 mx-auto text-gray-400 mb-1" />
+                            <p className="text-xs text-gray-500">
+                              {uploading ? "Upload..." : "Uploader"}
+                            </p>
+                          </div>
+                          <div
+                            className="border-2 border-dashed border-purple-300 rounded-lg p-4 text-center cursor-pointer hover:border-purple-400 transition-colors bg-purple-50 dark:bg-purple-900/20"
+                            onClick={() => setIsAIDialogOpen(true)}
+                          >
+                            <Wand2 className="h-6 w-6 mx-auto text-purple-500 mb-1" />
+                            <p className="text-xs text-purple-600 dark:text-purple-400">
+                              Generer IA
+                            </p>
+                          </div>
                         </div>
                       )}
                       <input
@@ -308,7 +347,7 @@ export default function AdminGallery() {
                       />
                       <div className="text-center text-sm text-gray-500">ou</div>
                       <Input
-                        placeholder="URL de l'image"
+                        placeholder="URL de l image"
                         value={formData.imageUrl}
                         onChange={(e) =>
                           setFormData({ ...formData, imageUrl: e.target.value })
@@ -327,11 +366,14 @@ export default function AdminGallery() {
                     <Label htmlFor="isActive">Actif</Label>
                   </div>
                   <div className="flex justify-end gap-2">
-                    <Button type="button" variant="outline" onClick={handleDialogClose}>
+                    <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
                       Annuler
                     </Button>
-                    <Button type="submit" disabled={uploading}>
-                      {editingImage ? "Mettre à jour" : "Ajouter"}
+                    <Button 
+                      type="submit" 
+                      disabled={uploading || createMutation.isPending || updateMutation.isPending}
+                    >
+                      {editingImage ? "Mettre a jour" : "Ajouter"}
                     </Button>
                   </div>
                 </form>
@@ -339,12 +381,12 @@ export default function AdminGallery() {
             </Dialog>
           </CardHeader>
           <CardContent>
-            {loading ? (
+            {isLoading ? (
               <div className="text-center py-8">Chargement...</div>
             ) : images.length === 0 ? (
               <div className="text-center py-8 text-gray-500">
                 <ImageIcon className="h-12 w-12 mx-auto text-gray-300 mb-4" />
-                <p>Aucune image dans la galerie. Ajoutez votre première photo!</p>
+                <p>Aucune image dans la galerie. Ajoutez votre premiere photo!</p>
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -402,6 +444,136 @@ export default function AdminGallery() {
           </CardContent>
         </Card>
       </div>
+
+      {/* AI Image Generator Dialog */}
+      <Dialog open={isAIDialogOpen} onOpenChange={setIsAIDialogOpen}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Sparkles className="h-5 w-5 text-purple-500" />
+              Generateur d Images IA (DALL-E 3)
+            </DialogTitle>
+          </DialogHeader>
+
+          <div className="space-y-4 mt-4">
+            <div>
+              <Label htmlFor="aiPrompt">Description de l image</Label>
+              <Textarea
+                id="aiPrompt"
+                value={aiPrompt}
+                onChange={(e) => setAiPrompt(e.target.value)}
+                placeholder="Ex: A beautifully plated gourmet dish with fresh herbs..."
+                rows={3}
+                className="mt-1"
+              />
+            </div>
+
+            {suggestedPrompts?.prompts && suggestedPrompts.prompts.length > 0 && (
+              <div>
+                <Label className="text-sm text-gray-500">Suggestions pour {formData.category}</Label>
+                <div className="mt-2 space-y-1 max-h-32 overflow-y-auto">
+                  {suggestedPrompts.prompts.map((suggestion, index) => (
+                    <button
+                      key={index}
+                      type="button"
+                      onClick={() => setAiPrompt(suggestion)}
+                      className="w-full text-left p-2 rounded border hover:bg-gray-50 dark:hover:bg-gray-800 text-xs transition-colors"
+                    >
+                      {suggestion.substring(0, 80)}...
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <div className="grid grid-cols-3 gap-4">
+              <div>
+                <Label>Taille</Label>
+                <Select value={aiSize} onValueChange={(v) => setAiSize(v as any)}>
+                  <SelectTrigger className="mt-1">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="1024x1024">Carre</SelectItem>
+                    <SelectItem value="1792x1024">Paysage</SelectItem>
+                    <SelectItem value="1024x1792">Portrait</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <Label>Qualite</Label>
+                <Select value={aiQuality} onValueChange={(v) => setAiQuality(v as any)}>
+                  <SelectTrigger className="mt-1">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="standard">Standard</SelectItem>
+                    <SelectItem value="hd">HD</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <Label>Style</Label>
+                <Select value={aiStyle} onValueChange={(v) => setAiStyle(v as any)}>
+                  <SelectTrigger className="mt-1">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="vivid">Vivid</SelectItem>
+                    <SelectItem value="natural">Natural</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <Button
+              type="button"
+              onClick={generateAIImage}
+              disabled={generateImageMutation.isPending || !aiPrompt.trim()}
+              className="w-full"
+            >
+              {generateImageMutation.isPending ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Generation en cours...
+                </>
+              ) : (
+                <>
+                  <Wand2 className="h-4 w-4 mr-2" />
+                  Generer l image
+                </>
+              )}
+            </Button>
+
+            {generatedImage && (
+              <div className="space-y-4">
+                <div className="relative rounded-lg overflow-hidden border">
+                  <img
+                    src={generatedImage}
+                    alt="Generated"
+                    className="w-full h-auto"
+                  />
+                </div>
+                <div className="flex gap-2">
+                  <Button onClick={useGeneratedImage} className="flex-1">
+                    <ImageIcon className="h-4 w-4 mr-2" />
+                    Utiliser cette image
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={generateAIImage}
+                    disabled={generateImageMutation.isPending}
+                  >
+                    Regenerer
+                  </Button>
+                </div>
+              </div>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
