@@ -48,7 +48,9 @@ RUN pnpm install --prod --no-frozen-lockfile
 COPY --from=builder --chown=nodejs:nodejs /app/server ./server
 COPY --from=builder --chown=nodejs:nodejs /app/drizzle ./drizzle
 COPY --from=builder --chown=nodejs:nodejs /app/shared ./shared
-COPY --from=builder --chown=nodejs:nodejs /app/client/dist ./client/dist
+COPY --from=builder --chown=nodejs:nodejs /app/dist/public ./dist/public
+COPY --from=builder --chown=nodejs:nodejs /app/dist/index.js ./dist/index.js
+COPY --from=builder --chown=nodejs:nodejs /app/client/public ./client/public
 
 # Switch to non-root user
 USER nodejs
@@ -61,4 +63,4 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \
   CMD node -e "require('http').get('http://localhost:3000/api/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"
 
 # Start the application
-CMD ["node", "server/_core/index.js"]
+CMD ["node", "dist/index.js"]
