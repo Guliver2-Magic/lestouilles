@@ -851,3 +851,13 @@
 - [x] Added Docker installation instructions
 - [x] Clarified that MySQL runs in container
 - [x] Updated migration commands to use docker-compose exec
+
+## Push to GitHub Repository
+- [ ] Create comprehensive .gitignore file
+- [ ] Remove any sensitive files or credentials
+- [ ] Initialize Git repository
+- [ ] Add all files to Git
+- [ ] Create initial commit
+- [ ] Add GitHub remote (Guliver2-Magic/lestouilles)
+- [ ] Push to GitHub main branch
+- [ ] Verify files are visible on GitHub
