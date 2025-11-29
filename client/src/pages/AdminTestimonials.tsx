@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -30,112 +30,82 @@ import {
 } from "@/components/ui/select";
 import { toast } from "sonner";
 import { Plus, Pencil, Trash2, ArrowLeft, Star } from "lucide-react";
-
-interface Testimonial {
-  id: number;
-  customerName: string;
-  customerTitle?: string;
-  content: string;
-  rating: number;
-  imageUrl?: string;
-  isActive: boolean;
-  isFeatured: boolean;
-  createdAt: string;
-}
+import { trpc } from "@/lib/trpc";
 
 export default function AdminTestimonials() {
   const [, setLocation] = useLocation();
-  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
-  const [loading, setLoading] = useState(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [editingTestimonial, setEditingTestimonial] = useState<Testimonial | null>(null);
+  const [editingTestimonial, setEditingTestimonial] = useState<any | null>(null);
   const [formData, setFormData] = useState({
     customerName: "",
     customerTitle: "",
     content: "",
+    contentEn: "",
     rating: 5,
     imageUrl: "",
     isActive: true,
     isFeatured: false,
   });
 
-  useEffect(() => {
-    fetchTestimonials();
-  }, []);
-
-  const fetchTestimonials = async () => {
-    try {
-      const response = await fetch("/api/testimonials");
-      if (response.ok) {
-        const data = await response.json();
-        setTestimonials(data);
-      }
-    } catch (error) {
-      console.error("Error fetching testimonials:", error);
-      toast.error("Erreur lors du chargement des témoignages");
-    } finally {
-      setLoading(false);
-    }
-  };
+  // tRPC queries and mutations
+  const { data: testimonials = [], isLoading, refetch } = trpc.testimonials.list.useQuery();
+  const createMutation = trpc.testimonials.create.useMutation({
+    onSuccess: () => {
+      toast.success("Temoignage cree avec succes");
+      setIsDialogOpen(false);
+      resetForm();
+      refetch();
+    },
+    onError: (error) => {
+      toast.error(error.message || "Erreur lors de la creation");
+    },
+  });
+  const updateMutation = trpc.testimonials.update.useMutation({
+    onSuccess: () => {
+      toast.success("Temoignage mis a jour avec succes");
+      setIsDialogOpen(false);
+      resetForm();
+      refetch();
+    },
+    onError: (error) => {
+      toast.error(error.message || "Erreur lors de la mise a jour");
+    },
+  });
+  const deleteMutation = trpc.testimonials.delete.useMutation({
+    onSuccess: () => {
+      toast.success("Temoignage supprime avec succes");
+      refetch();
+    },
+    onError: (error) => {
+      toast.error(error.message || "Erreur lors de la suppression");
+    },
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      const url = editingTestimonial
-        ? `/api/testimonials/${editingTestimonial.id}`
-        : "/api/testimonials";
-      const method = editingTestimonial ? "PUT" : "POST";
-
-      const response = await fetch(url, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+    
+    if (editingTestimonial) {
+      updateMutation.mutate({
+        id: editingTestimonial.id,
+        ...formData,
       });
-
-      if (response.ok) {
-        toast.success(
-          editingTestimonial
-            ? "Témoignage mis à jour avec succès"
-            : "Témoignage créé avec succès"
-        );
-        setIsDialogOpen(false);
-        resetForm();
-        fetchTestimonials();
-      } else {
-        toast.error("Erreur lors de la sauvegarde");
-      }
-    } catch (error) {
-      console.error("Error saving testimonial:", error);
-      toast.error("Erreur lors de la sauvegarde");
+    } else {
+      createMutation.mutate(formData);
     }
   };
 
-  const handleDelete = async (id: number) => {
-    if (!confirm("Êtes-vous sûr de vouloir supprimer ce témoignage?")) return;
-
-    try {
-      const response = await fetch(`/api/testimonials/${id}`, {
-        method: "DELETE",
-      });
-
-      if (response.ok) {
-        toast.success("Témoignage supprimé avec succès");
-        fetchTestimonials();
-      } else {
-        toast.error("Erreur lors de la suppression");
-      }
-    } catch (error) {
-      console.error("Error deleting testimonial:", error);
-      toast.error("Erreur lors de la suppression");
-    }
+  const handleDelete = (id: number) => {
+    if (!confirm("Etes-vous sur de vouloir supprimer ce temoignage?")) return;
+    deleteMutation.mutate({ id });
   };
 
-  const handleEdit = (testimonial: Testimonial) => {
+  const handleEdit = (testimonial: any) => {
     setEditingTestimonial(testimonial);
     setFormData({
       customerName: testimonial.customerName,
       customerTitle: testimonial.customerTitle || "",
       content: testimonial.content,
+      contentEn: testimonial.contentEn || "",
       rating: testimonial.rating,
       imageUrl: testimonial.imageUrl || "",
       isActive: testimonial.isActive,
@@ -150,6 +120,7 @@ export default function AdminTestimonials() {
       customerName: "",
       customerTitle: "",
       content: "",
+      contentEn: "",
       rating: 5,
       imageUrl: "",
       isActive: true,
@@ -157,18 +128,11 @@ export default function AdminTestimonials() {
     });
   };
 
-  const handleDialogClose = () => {
-    setIsDialogOpen(false);
-    resetForm();
-  };
-
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }, (_, i) => (
       <Star
         key={i}
-        className={`h-4 w-4 ${
-          i < rating ? "fill-yellow-400 text-yellow-400" : "text-gray-300"
-        }`}
+        className={`h-4 w-4 ${i < rating ? "text-yellow-400 fill-yellow-400" : "text-gray-300"}`}
       />
     ));
   };
@@ -185,91 +149,106 @@ export default function AdminTestimonials() {
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-            Gestion des Témoignages
+            Gestion des Temoignages
           </h1>
         </div>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle>Témoignages Clients</CardTitle>
+            <CardTitle>Temoignages Clients</CardTitle>
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
               <DialogTrigger asChild>
                 <Button onClick={resetForm}>
                   <Plus className="h-4 w-4 mr-2" />
-                  Nouveau Témoignage
+                  Nouveau Temoignage
                 </Button>
               </DialogTrigger>
               <DialogContent className="max-w-lg">
                 <DialogHeader>
                   <DialogTitle>
-                    {editingTestimonial ? "Modifier le Témoignage" : "Nouveau Témoignage"}
+                    {editingTestimonial ? "Modifier le Temoignage" : "Nouveau Temoignage"}
                   </DialogTitle>
                 </DialogHeader>
                 <form onSubmit={handleSubmit} className="space-y-4">
-                  <div>
-                    <Label htmlFor="customerName">Nom du Client</Label>
-                    <Input
-                      id="customerName"
-                      value={formData.customerName}
-                      onChange={(e) =>
-                        setFormData({ ...formData, customerName: e.target.value })
-                      }
-                      required
-                    />
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="customerName">Nom du client</Label>
+                      <Input
+                        id="customerName"
+                        value={formData.customerName}
+                        onChange={(e) =>
+                          setFormData({ ...formData, customerName: e.target.value })
+                        }
+                        required
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="customerTitle">Titre/Fonction</Label>
+                      <Input
+                        id="customerTitle"
+                        value={formData.customerTitle}
+                        onChange={(e) =>
+                          setFormData({ ...formData, customerTitle: e.target.value })
+                        }
+                        placeholder="Ex: Chef cuisinier"
+                      />
+                    </div>
                   </div>
                   <div>
-                    <Label htmlFor="customerTitle">Titre/Entreprise (optionnel)</Label>
-                    <Input
-                      id="customerTitle"
-                      value={formData.customerTitle}
-                      onChange={(e) =>
-                        setFormData({ ...formData, customerTitle: e.target.value })
-                      }
-                      placeholder="Ex: PDG de Entreprise XYZ"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="content">Témoignage</Label>
+                    <Label htmlFor="content">Temoignage (FR)</Label>
                     <Textarea
                       id="content"
                       value={formData.content}
                       onChange={(e) =>
                         setFormData({ ...formData, content: e.target.value })
                       }
-                      rows={4}
+                      rows={3}
                       required
                     />
                   </div>
                   <div>
-                    <Label htmlFor="rating">Note</Label>
-                    <Select
-                      value={formData.rating.toString()}
-                      onValueChange={(value) =>
-                        setFormData({ ...formData, rating: parseInt(value) })
-                      }
-                    >
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {[1, 2, 3, 4, 5].map((num) => (
-                          <SelectItem key={num} value={num.toString()}>
-                            {num} étoile{num > 1 ? "s" : ""}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div>
-                    <Label htmlFor="imageUrl">URL de la Photo (optionnel)</Label>
-                    <Input
-                      id="imageUrl"
-                      value={formData.imageUrl}
+                    <Label htmlFor="contentEn">Temoignage (EN)</Label>
+                    <Textarea
+                      id="contentEn"
+                      value={formData.contentEn}
                       onChange={(e) =>
-                        setFormData({ ...formData, imageUrl: e.target.value })
+                        setFormData({ ...formData, contentEn: e.target.value })
                       }
-                      placeholder="https://..."
+                      rows={3}
                     />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="rating">Note</Label>
+                      <Select
+                        value={String(formData.rating)}
+                        onValueChange={(value) =>
+                          setFormData({ ...formData, rating: parseInt(value) })
+                        }
+                      >
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {[1, 2, 3, 4, 5].map((num) => (
+                            <SelectItem key={num} value={String(num)}>
+                              {num} etoile{num > 1 ? "s" : ""}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div>
+                      <Label htmlFor="imageUrl">Photo URL</Label>
+                      <Input
+                        id="imageUrl"
+                        value={formData.imageUrl}
+                        onChange={(e) =>
+                          setFormData({ ...formData, imageUrl: e.target.value })
+                        }
+                        placeholder="https://..."
+                      />
+                    </div>
                   </div>
                   <div className="flex items-center gap-6">
                     <div className="flex items-center gap-2">
@@ -294,11 +273,14 @@ export default function AdminTestimonials() {
                     </div>
                   </div>
                   <div className="flex justify-end gap-2">
-                    <Button type="button" variant="outline" onClick={handleDialogClose}>
+                    <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
                       Annuler
                     </Button>
-                    <Button type="submit">
-                      {editingTestimonial ? "Mettre à jour" : "Créer"}
+                    <Button 
+                      type="submit" 
+                      disabled={createMutation.isPending || updateMutation.isPending}
+                    >
+                      {editingTestimonial ? "Mettre a jour" : "Creer"}
                     </Button>
                   </div>
                 </form>
@@ -306,18 +288,18 @@ export default function AdminTestimonials() {
             </Dialog>
           </CardHeader>
           <CardContent>
-            {loading ? (
+            {isLoading ? (
               <div className="text-center py-8">Chargement...</div>
             ) : testimonials.length === 0 ? (
               <div className="text-center py-8 text-gray-500">
-                Aucun témoignage trouvé. Ajoutez votre premier témoignage!
+                Aucun temoignage trouve. Ajoutez votre premier temoignage!
               </div>
             ) : (
               <Table>
                 <TableHeader>
                   <TableRow>
                     <TableHead>Client</TableHead>
-                    <TableHead>Témoignage</TableHead>
+                    <TableHead>Temoignage</TableHead>
                     <TableHead>Note</TableHead>
                     <TableHead>Statut</TableHead>
                     <TableHead className="text-right">Actions</TableHead>
@@ -330,14 +312,12 @@ export default function AdminTestimonials() {
                         <div>
                           <div className="font-medium">{testimonial.customerName}</div>
                           {testimonial.customerTitle && (
-                            <div className="text-sm text-gray-500">
-                              {testimonial.customerTitle}
-                            </div>
+                            <div className="text-sm text-gray-500">{testimonial.customerTitle}</div>
                           )}
                         </div>
                       </TableCell>
-                      <TableCell className="max-w-xs">
-                        <p className="truncate">{testimonial.content}</p>
+                      <TableCell className="max-w-xs truncate">
+                        {testimonial.content}
                       </TableCell>
                       <TableCell>
                         <div className="flex">{renderStars(testimonial.rating)}</div>
@@ -345,7 +325,7 @@ export default function AdminTestimonials() {
                       <TableCell>
                         <div className="flex flex-col gap-1">
                           <span
-                            className={`px-2 py-1 rounded-full text-xs w-fit ${
+                            className={`px-2 py-1 rounded-full text-xs inline-block w-fit ${
                               testimonial.isActive
                                 ? "bg-green-100 text-green-800"
                                 : "bg-gray-100 text-gray-800"
@@ -354,8 +334,8 @@ export default function AdminTestimonials() {
                             {testimonial.isActive ? "Actif" : "Inactif"}
                           </span>
                           {testimonial.isFeatured && (
-                            <span className="px-2 py-1 rounded-full text-xs w-fit bg-yellow-100 text-yellow-800">
-                              En vedette
+                            <span className="px-2 py-1 rounded-full text-xs bg-yellow-100 text-yellow-800 inline-block w-fit">
+                              Vedette
                             </span>
                           )}
                         </div>
@@ -372,6 +352,7 @@ export default function AdminTestimonials() {
                           variant="ghost"
                           size="icon"
                           onClick={() => handleDelete(testimonial.id)}
+                          disabled={deleteMutation.isPending}
                         >
                           <Trash2 className="h-4 w-4 text-red-500" />
                         </Button>
