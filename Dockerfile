@@ -70,7 +70,7 @@ RUN pnpm install --no-frozen-lockfile
 COPY --from=builder --chown=nodejs:nodejs /app/server ./server
 COPY --from=builder --chown=nodejs:nodejs /app/drizzle ./drizzle
 COPY --from=builder --chown=nodejs:nodejs /app/shared ./shared
-COPY --from=builder --chown=nodejs:nodejs /app/client/dist ./client/dist
+COPY --from=builder --chown=nodejs:nodejs /app/dist/public ./client/dist
 COPY --from=builder --chown=nodejs:nodejs /app/vite.config.ts ./vite.config.ts
 
 # Switch to non-root user
