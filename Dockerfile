@@ -9,12 +9,34 @@ RUN npm install -g pnpm
 # Set working directory
 WORKDIR /app
 
+# Build arguments for Vite (needed at build time)
+ARG VITE_APP_TITLE
+ARG VITE_APP_LOGO
+ARG VITE_STRIPE_PUBLISHABLE_KEY
+ARG VITE_OAUTH_PORTAL_URL
+ARG VITE_APP_ID
+ARG VITE_FRONTEND_FORGE_API_URL
+ARG VITE_FRONTEND_FORGE_API_KEY
+ARG VITE_ANALYTICS_ENDPOINT
+ARG VITE_ANALYTICS_WEBSITE_ID
+
+# Set them as environment variables for the build
+ENV VITE_APP_TITLE=$VITE_APP_TITLE
+ENV VITE_APP_LOGO=$VITE_APP_LOGO
+ENV VITE_STRIPE_PUBLISHABLE_KEY=$VITE_STRIPE_PUBLISHABLE_KEY
+ENV VITE_OAUTH_PORTAL_URL=$VITE_OAUTH_PORTAL_URL
+ENV VITE_APP_ID=$VITE_APP_ID
+ENV VITE_FRONTEND_FORGE_API_URL=$VITE_FRONTEND_FORGE_API_URL
+ENV VITE_FRONTEND_FORGE_API_KEY=$VITE_FRONTEND_FORGE_API_KEY
+ENV VITE_ANALYTICS_ENDPOINT=$VITE_ANALYTICS_ENDPOINT
+ENV VITE_ANALYTICS_WEBSITE_ID=$VITE_ANALYTICS_WEBSITE_ID
+
 # Copy package files and patches
 COPY package.json ./
 COPY pnpm-lock.yaml* ./
 COPY patches ./patches
 
-# Install dependencies (use --no-frozen-lockfile if pnpm-lock.yaml is missing)
+# Install dependencies
 RUN pnpm install --no-frozen-lockfile
 
 # Copy source code
@@ -41,7 +63,7 @@ COPY package.json ./
 COPY pnpm-lock.yaml* ./
 COPY patches ./patches
 
-# Install ALL dependencies (vite is needed at runtime)
+# Install ALL dependencies
 RUN pnpm install --no-frozen-lockfile
 
 # Copy built application from builder stage
@@ -49,8 +71,6 @@ COPY --from=builder --chown=nodejs:nodejs /app/server ./server
 COPY --from=builder --chown=nodejs:nodejs /app/drizzle ./drizzle
 COPY --from=builder --chown=nodejs:nodejs /app/shared ./shared
 COPY --from=builder --chown=nodejs:nodejs /app/client/dist ./client/dist
-
-# Copy vite config (required by server)
 COPY --from=builder --chown=nodejs:nodejs /app/vite.config.ts ./vite.config.ts
 
 # Switch to non-root user
