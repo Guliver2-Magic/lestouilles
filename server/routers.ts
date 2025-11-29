@@ -415,7 +415,7 @@ export const appRouter = router({
         if (isDateReserved) {
           throw new Error(
             input.language === 'fr' 
-              ? 'Cette date est déjà réservée. Veuillez choisir une autre date.'
+              ? 'Cette date est deja reservee. Veuillez choisir une autre date.'
               : 'This date is already reserved. Please choose another date.'
           );
         }
@@ -452,14 +452,13 @@ export const appRouter = router({
           });
         } catch (error) {
           console.error("Failed to send reservation confirmation email:", error);
-          // Don't fail the reservation if email fails
         }
 
         // Notify owner of new reservation
         const eventTypeLabels = {
           wedding: input.language === "fr" ? "Mariage" : "Wedding",
-          corporate: input.language === "fr" ? "Événement corporatif" : "Corporate event",
-          private_party: input.language === "fr" ? "Fête privée" : "Private party",
+          corporate: input.language === "fr" ? "Evenement corporatif" : "Corporate event",
+          private_party: input.language === "fr" ? "Fete privee" : "Private party",
           other: input.language === "fr" ? "Autre" : "Other",
         };
 
@@ -470,25 +469,25 @@ export const appRouter = router({
         });
 
         const notificationContent = `
-Nouvelle réservation reçue:
+Nouvelle reservation recue:
 
 Client: ${input.customerName}
 Email: ${input.customerEmail}
-Téléphone: ${input.customerPhone}
+Telephone: ${input.customerPhone}
 
-Type d'événement: ${eventTypeLabels[input.eventType]}
+Type d'evenement: ${eventTypeLabels[input.eventType]}
 Date: ${eventDate}
 Heure: ${input.eventTime}
-Nombre d'invités: ${input.guestCount}
+Nombre d'invites: ${input.guestCount}
 ${input.venue ? `Lieu: ${input.venue}` : ""}
-${input.estimatedBudget ? `Budget estimé: ${(input.estimatedBudget / 100).toFixed(2)} CAD` : ""}
-${input.specialRequirements ? `\nExigences spéciales: ${input.specialRequirements}` : ""}
+${input.estimatedBudget ? `Budget estime: ${(input.estimatedBudget / 100).toFixed(2)} CAD` : ""}
+${input.specialRequirements ? `\nExigences speciales: ${input.specialRequirements}` : ""}
 ${input.dietaryRestrictions ? `\nRestrictions alimentaires: ${input.dietaryRestrictions}` : ""}
         `.trim();
 
         try {
           await notifyOwner({
-            title: input.language === "fr" ? "Nouvelle réservation d'événement" : "New event reservation",
+            title: input.language === "fr" ? "Nouvelle reservation d'evenement" : "New event reservation",
             content: notificationContent,
           });
         } catch (error) {
@@ -535,10 +534,9 @@ ${input.dietaryRestrictions ? `\nRestrictions alimentaires: ${input.dietaryRestr
     getReservedDates: publicProcedure.query(async () => {
       const { getAllReservations } = await import("./db");
       const reservations = await getAllReservations();
-      // Return array of reserved dates (only confirmed and pending reservations)
       return reservations
         .filter(r => r.status === 'pending' || r.status === 'confirmed')
-        .map(r => r.eventDate.toISOString().split('T')[0]); // Return YYYY-MM-DD format
+        .map(r => r.eventDate.toISOString().split('T')[0]);
     }),
   }),
 
@@ -566,9 +564,7 @@ ${input.dietaryRestrictions ? `\nRestrictions alimentaires: ${input.dietaryRestr
       }),
   }),
 
-  // Products management (admin only)
   products: router({    
-    // List all products (admin only)
     listAll: protectedProcedure.query(async ({ ctx }) => {
       if (ctx.user.role !== 'admin') {
         throw new Error('Unauthorized');
@@ -577,13 +573,11 @@ ${input.dietaryRestrictions ? `\nRestrictions alimentaires: ${input.dietaryRestr
       return await getAllProducts();
     }),
 
-    // Get active products (public)
     listActive: publicProcedure.query(async () => {
       const { getActiveProducts } = await import("./db");
       return await getActiveProducts();
     }),
 
-    // Get products by category (public)
     byCategory: publicProcedure
       .input(z.object({ category: z.string() }))
       .query(async ({ input }) => {
@@ -591,7 +585,6 @@ ${input.dietaryRestrictions ? `\nRestrictions alimentaires: ${input.dietaryRestr
         return await getProductsByCategory(input.category);
       }),
 
-    // Get single product (public)
     getById: publicProcedure
       .input(z.object({ id: z.number() }))
       .query(async ({ input }) => {
@@ -599,7 +592,6 @@ ${input.dietaryRestrictions ? `\nRestrictions alimentaires: ${input.dietaryRestr
         return await getProductById(input.id);
       }),
 
-    // Create product (admin only)
     create: protectedProcedure
       .input(
         z.object({
@@ -636,7 +628,6 @@ ${input.dietaryRestrictions ? `\nRestrictions alimentaires: ${input.dietaryRestr
         return { success: true };
       }),
 
-    // Update product (admin only)
     update: protectedProcedure
       .input(
         z.object({
@@ -675,7 +666,6 @@ ${input.dietaryRestrictions ? `\nRestrictions alimentaires: ${input.dietaryRestr
         return { success: true };
       }),
 
-    // Delete product (admin only)
     delete: protectedProcedure
       .input(z.object({ id: z.number() }))
       .mutation(async ({ ctx, input }) => {
@@ -687,7 +677,6 @@ ${input.dietaryRestrictions ? `\nRestrictions alimentaires: ${input.dietaryRestr
         return { success: true };
       }),
 
-    // Generate AI image for product (admin only)
     generateImage: protectedProcedure
       .input(z.object({
         productName: z.string(),
@@ -708,7 +697,6 @@ ${input.dietaryRestrictions ? `\nRestrictions alimentaires: ${input.dietaryRestr
         };
       }),
 
-    // Suggest product attributes with AI (admin only)
     suggestAttributes: protectedProcedure
       .input(z.object({
         name: z.string(),
@@ -717,7 +705,7 @@ ${input.dietaryRestrictions ? `\nRestrictions alimentaires: ${input.dietaryRestr
       .mutation(async ({ input }) => {
         const { invokeLLM } = await import("./_core/llm");
         
-        const prompt = `Tu es un expert en nutrition. Analyse ce produit alimentaire et fournis des estimations précises:
+        const prompt = `Tu es un expert en nutrition. Analyse ce produit alimentaire et fournis des estimations precises:
 
 Nom: ${input.name}
 Description: ${input.description}
@@ -725,10 +713,10 @@ Description: ${input.description}
 Fournis UNIQUEMENT un objet JSON valide (sans markdown, sans \`\`\`) avec cette structure exacte:
 {
   "calories": nombre (calories totales),
-  "protein": nombre (protéines en grammes),
+  "protein": nombre (proteines en grammes),
   "carbs": nombre (glucides en grammes),
   "fat": nombre (lipides en grammes),
-  "nutritionalTip": "conseil nutritionnel en français (1 phrase)",
+  "nutritionalTip": "conseil nutritionnel en francais (1 phrase)",
   "isVegetarian": boolean,
   "isVegan": boolean,
   "isGlutenFree": boolean,
@@ -737,7 +725,7 @@ Fournis UNIQUEMENT un objet JSON valide (sans markdown, sans \`\`\`) avec cette 
 
         const response = await invokeLLM({
           messages: [
-            { role: "system", content: "Tu es un expert en nutrition. Tu réponds UNIQUEMENT avec du JSON valide, sans markdown." },
+            { role: "system", content: "Tu es un expert en nutrition. Tu reponds UNIQUEMENT avec du JSON valide, sans markdown." },
             { role: "user", content: prompt }
           ],
         });
@@ -745,7 +733,6 @@ Fournis UNIQUEMENT un objet JSON valide (sans markdown, sans \`\`\`) avec cette 
         const content = response.choices[0]?.message?.content;
         const contentStr = typeof content === 'string' ? content : '{}';
         
-        // Remove markdown code blocks if present
         const cleanContent = contentStr.replace(/```json\n?|```\n?/g, "").trim();
         
         try {
@@ -773,18 +760,13 @@ Fournis UNIQUEMENT un objet JSON valide (sans markdown, sans \`\`\`) avec cette 
         const { storagePut } = await import("./storage");
         const { optimizeProductImage } = await import("./_core/imageOptimization");
         
-        // Convert base64 to buffer
         const buffer = Buffer.from(input.base64Data, 'base64');
-        
-        // Optimize image for web
         const optimized = await optimizeProductImage(buffer);
         
-        // Generate unique filename
         const timestamp = Date.now();
         const randomStr = Math.random().toString(36).substring(7);
         const key = `products/${timestamp}-${randomStr}.${optimized.ext}`;
         
-        // Upload optimized image to S3
         const { url } = await storagePut(key, optimized.buffer, optimized.mimeType);
         
         return { url };
@@ -792,13 +774,11 @@ Fournis UNIQUEMENT un objet JSON valide (sans markdown, sans \`\`\`) avec cette 
   }),
 
   dailySpecials: router({
-    // Public procedures
     getActive: publicProcedure.query(async () => {
       const { getActiveDailySpecials } = await import("./db");
       return await getActiveDailySpecials();
     }),
 
-    // Admin procedures
     getAll: protectedProcedure.query(async ({ ctx }) => {
       if (ctx.user.role !== "admin") {
         throw new Error("Unauthorized");
@@ -878,7 +858,6 @@ Fournis UNIQUEMENT un objet JSON valide (sans markdown, sans \`\`\`) avec cette 
         const { id, ...data } = input;
         const { updateDailySpecial } = await import("./db");
         
-        // Convert date strings to Date objects if provided
         const updateData: any = { ...data };
         if (data.startDate) updateData.startDate = new Date(data.startDate);
         if (data.endDate) updateData.endDate = new Date(data.endDate);
@@ -898,13 +877,11 @@ Fournis UNIQUEMENT un objet JSON valide (sans markdown, sans \`\`\`) avec cette 
   }),
 
   faq: router({
-    // Public procedure to list all active FAQs
     list: publicProcedure.query(async () => {
       const { getAllFAQs } = await import("./db");
       return await getAllFAQs();
     }),
 
-    // Admin procedures
     create: protectedProcedure
       .input(
         z.object({
@@ -975,6 +952,512 @@ Fournis UNIQUEMENT un objet JSON valide (sans markdown, sans \`\`\`) avec cette 
         return { success: true };
       }),
   }),
+
+  // ================================================
+  // NEW ADMIN ROUTES - Menu Categories
+  // ================================================
+  menuCategories: router({
+    list: publicProcedure.query(async () => {
+      const db = await import("./db").then(m => m.getDb());
+      if (!db) throw new Error("Database not available");
+      
+      const { menuCategories } = await import("../drizzle/schema");
+      const { asc } = await import("drizzle-orm");
+      return await db.select().from(menuCategories).orderBy(asc(menuCategories.sortOrder));
+    }),
+
+    create: protectedProcedure
+      .input(
+        z.object({
+          name: z.string(),
+          nameEn: z.string().optional(),
+          description: z.string().optional(),
+          descriptionEn: z.string().optional(),
+          image: z.string().optional(),
+          isActive: z.boolean().default(true),
+        })
+      )
+      .mutation(async ({ input, ctx }) => {
+        if (ctx.user.role !== "admin") {
+          throw new Error("Unauthorized");
+        }
+        const db = await import("./db").then(m => m.getDb());
+        if (!db) throw new Error("Database not available");
+        
+        const { menuCategories } = await import("../drizzle/schema");
+        const { desc } = await import("drizzle-orm");
+        
+        const [maxOrder] = await db
+          .select({ maxSort: menuCategories.sortOrder })
+          .from(menuCategories)
+          .orderBy(desc(menuCategories.sortOrder))
+          .limit(1);
+        
+        const sortOrder = (maxOrder?.maxSort || 0) + 1;
+        
+        await db.insert(menuCategories).values({
+          ...input,
+          sortOrder,
+        });
+        return { success: true };
+      }),
+
+    update: protectedProcedure
+      .input(
+        z.object({
+          id: z.number(),
+          name: z.string().optional(),
+          nameEn: z.string().optional(),
+          description: z.string().optional(),
+          descriptionEn: z.string().optional(),
+          image: z.string().optional(),
+          sortOrder: z.number().optional(),
+          isActive: z.boolean().optional(),
+        })
+      )
+      .mutation(async ({ input, ctx }) => {
+        if (ctx.user.role !== "admin") {
+          throw new Error("Unauthorized");
+        }
+        const db = await import("./db").then(m => m.getDb());
+        if (!db) throw new Error("Database not available");
+        
+        const { menuCategories } = await import("../drizzle/schema");
+        const { eq } = await import("drizzle-orm");
+        const { id, ...data } = input;
+        await db.update(menuCategories).set(data).where(eq(menuCategories.id, id));
+        return { success: true };
+      }),
+
+    delete: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input, ctx }) => {
+        if (ctx.user.role !== "admin") {
+          throw new Error("Unauthorized");
+        }
+        const db = await import("./db").then(m => m.getDb());
+        if (!db) throw new Error("Database not available");
+        
+        const { menuCategories } = await import("../drizzle/schema");
+        const { eq } = await import("drizzle-orm");
+        await db.delete(menuCategories).where(eq(menuCategories.id, input.id));
+        return { success: true };
+      }),
+  }),
+
+  // ================================================
+  // NEW ADMIN ROUTES - Testimonials
+  // ================================================
+  testimonials: router({
+    list: publicProcedure.query(async () => {
+      const db = await import("./db").then(m => m.getDb());
+      if (!db) throw new Error("Database not available");
+      
+      const { testimonials } = await import("../drizzle/schema");
+      const { desc } = await import("drizzle-orm");
+      return await db.select().from(testimonials).orderBy(desc(testimonials.createdAt));
+    }),
+
+    listFeatured: publicProcedure.query(async () => {
+      const db = await import("./db").then(m => m.getDb());
+      if (!db) throw new Error("Database not available");
+      
+      const { testimonials } = await import("../drizzle/schema");
+      const { eq, desc } = await import("drizzle-orm");
+      return await db
+        .select()
+        .from(testimonials)
+        .where(eq(testimonials.isActive, true))
+        .orderBy(desc(testimonials.isFeatured), desc(testimonials.createdAt))
+        .limit(6);
+    }),
+
+    create: protectedProcedure
+      .input(
+        z.object({
+          customerName: z.string(),
+          customerTitle: z.string().optional(),
+          content: z.string(),
+          contentEn: z.string().optional(),
+          rating: z.number().min(1).max(5).default(5),
+          imageUrl: z.string().optional(),
+          isActive: z.boolean().default(true),
+          isFeatured: z.boolean().default(false),
+        })
+      )
+      .mutation(async ({ input, ctx }) => {
+        if (ctx.user.role !== "admin") {
+          throw new Error("Unauthorized");
+        }
+        const db = await import("./db").then(m => m.getDb());
+        if (!db) throw new Error("Database not available");
+        
+        const { testimonials } = await import("../drizzle/schema");
+        await db.insert(testimonials).values(input);
+        return { success: true };
+      }),
+
+    update: protectedProcedure
+      .input(
+        z.object({
+          id: z.number(),
+          customerName: z.string().optional(),
+          customerTitle: z.string().optional(),
+          content: z.string().optional(),
+          contentEn: z.string().optional(),
+          rating: z.number().min(1).max(5).optional(),
+          imageUrl: z.string().optional(),
+          isActive: z.boolean().optional(),
+          isFeatured: z.boolean().optional(),
+          displayOrder: z.number().optional(),
+        })
+      )
+      .mutation(async ({ input, ctx }) => {
+        if (ctx.user.role !== "admin") {
+          throw new Error("Unauthorized");
+        }
+        const db = await import("./db").then(m => m.getDb());
+        if (!db) throw new Error("Database not available");
+        
+        const { testimonials } = await import("../drizzle/schema");
+        const { eq } = await import("drizzle-orm");
+        const { id, ...data } = input;
+        await db.update(testimonials).set(data).where(eq(testimonials.id, id));
+        return { success: true };
+      }),
+
+    delete: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input, ctx }) => {
+        if (ctx.user.role !== "admin") {
+          throw new Error("Unauthorized");
+        }
+        const db = await import("./db").then(m => m.getDb());
+        if (!db) throw new Error("Database not available");
+        
+        const { testimonials } = await import("../drizzle/schema");
+        const { eq } = await import("drizzle-orm");
+        await db.delete(testimonials).where(eq(testimonials.id, input.id));
+        return { success: true };
+      }),
+  }),
+
+  // ================================================
+  // NEW ADMIN ROUTES - Gallery
+  // ================================================
+  gallery: router({
+    list: publicProcedure.query(async () => {
+      const db = await import("./db").then(m => m.getDb());
+      if (!db) throw new Error("Database not available");
+      
+      const { gallery } = await import("../drizzle/schema");
+      const { asc, desc } = await import("drizzle-orm");
+      return await db.select().from(gallery).orderBy(asc(gallery.sortOrder), desc(gallery.createdAt));
+    }),
+
+    listPublic: publicProcedure.query(async () => {
+      const db = await import("./db").then(m => m.getDb());
+      if (!db) throw new Error("Database not available");
+      
+      const { gallery } = await import("../drizzle/schema");
+      const { eq, asc } = await import("drizzle-orm");
+      return await db
+        .select()
+        .from(gallery)
+        .where(eq(gallery.isActive, true))
+        .orderBy(asc(gallery.sortOrder));
+    }),
+
+    create: protectedProcedure
+      .input(
+        z.object({
+          title: z.string(),
+          titleEn: z.string().optional(),
+          description: z.string().optional(),
+          descriptionEn: z.string().optional(),
+          imageUrl: z.string(),
+          category: z.string().default("Plats"),
+          isActive: z.boolean().default(true),
+        })
+      )
+      .mutation(async ({ input, ctx }) => {
+        if (ctx.user.role !== "admin") {
+          throw new Error("Unauthorized");
+        }
+        const db = await import("./db").then(m => m.getDb());
+        if (!db) throw new Error("Database not available");
+        
+        const { gallery } = await import("../drizzle/schema");
+        const { desc } = await import("drizzle-orm");
+        
+        const [maxOrder] = await db
+          .select({ maxSort: gallery.sortOrder })
+          .from(gallery)
+          .orderBy(desc(gallery.sortOrder))
+          .limit(1);
+        
+        const sortOrder = (maxOrder?.maxSort || 0) + 1;
+        
+        await db.insert(gallery).values({
+          ...input,
+          sortOrder,
+        });
+        return { success: true };
+      }),
+
+    update: protectedProcedure
+      .input(
+        z.object({
+          id: z.number(),
+          title: z.string().optional(),
+          titleEn: z.string().optional(),
+          description: z.string().optional(),
+          descriptionEn: z.string().optional(),
+          imageUrl: z.string().optional(),
+          category: z.string().optional(),
+          sortOrder: z.number().optional(),
+          isActive: z.boolean().optional(),
+        })
+      )
+      .mutation(async ({ input, ctx }) => {
+        if (ctx.user.role !== "admin") {
+          throw new Error("Unauthorized");
+        }
+        const db = await import("./db").then(m => m.getDb());
+        if (!db) throw new Error("Database not available");
+        
+        const { gallery } = await import("../drizzle/schema");
+        const { eq } = await import("drizzle-orm");
+        const { id, ...data } = input;
+        await db.update(gallery).set(data).where(eq(gallery.id, id));
+        return { success: true };
+      }),
+
+    delete: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input, ctx }) => {
+        if (ctx.user.role !== "admin") {
+          throw new Error("Unauthorized");
+        }
+        const db = await import("./db").then(m => m.getDb());
+        if (!db) throw new Error("Database not available");
+        
+        const { gallery } = await import("../drizzle/schema");
+        const { eq } = await import("drizzle-orm");
+        await db.delete(gallery).where(eq(gallery.id, input.id));
+        return { success: true };
+      }),
+  }),
+
+  // ================================================
+  // NEW ADMIN ROUTES - Site Settings
+  // ================================================
+  siteSettings: router({
+    get: publicProcedure.query(async () => {
+      const db = await import("./db").then(m => m.getDb());
+      if (!db) throw new Error("Database not available");
+      
+      const { siteSettings } = await import("../drizzle/schema");
+      const allSettings = await db.select().from(siteSettings);
+      
+      const settingsObject: Record<string, any> = {};
+      allSettings.forEach((setting) => {
+        let value: any = setting.settingValue;
+        if (setting.settingType === "json" && value) {
+          try {
+            value = JSON.parse(value);
+          } catch {}
+        } else if (setting.settingType === "number" && value) {
+          value = parseFloat(value);
+        } else if (setting.settingType === "boolean") {
+          value = value === "true";
+        }
+        settingsObject[setting.settingKey] = value;
+      });
+      
+      return settingsObject;
+    }),
+
+    update: protectedProcedure
+      .input(z.record(z.string(), z.any()))
+      .mutation(async ({ input, ctx }) => {
+        if (ctx.user.role !== "admin") {
+          throw new Error("Unauthorized");
+        }
+        const db = await import("./db").then(m => m.getDb());
+        if (!db) throw new Error("Database not available");
+        
+        const { siteSettings } = await import("../drizzle/schema");
+        const { eq } = await import("drizzle-orm");
+        
+        for (const [key, value] of Object.entries(input)) {
+          let settingValue: string;
+          let settingType: string = "string";
+          
+          if (typeof value === "object" && value !== null) {
+            settingValue = JSON.stringify(value);
+            settingType = "json";
+          } else if (typeof value === "number") {
+            settingValue = String(value);
+            settingType = "number";
+          } else if (typeof value === "boolean") {
+            settingValue = String(value);
+            settingType = "boolean";
+          } else {
+            settingValue = String(value || "");
+          }
+          
+          const [existing] = await db
+            .select()
+            .from(siteSettings)
+            .where(eq(siteSettings.settingKey, key));
+          
+          if (existing) {
+            await db
+              .update(siteSettings)
+              .set({ settingValue, settingType })
+              .where(eq(siteSettings.settingKey, key));
+          } else {
+            await db.insert(siteSettings).values({
+              settingKey: key,
+              settingValue,
+              settingType,
+            });
+          }
+        }
+        
+        return { success: true };
+      }),
+  }),
+
+  // ================================================
+  // NEW ADMIN ROUTES - AI Image Generation
+  // ================================================
+  ai: router({
+    generateImage: protectedProcedure
+      .input(
+        z.object({
+          prompt: z.string(),
+          size: z.enum(["1024x1024", "1792x1024", "1024x1792"]).default("1024x1024"),
+          quality: z.enum(["standard", "hd"]).default("standard"),
+          style: z.enum(["vivid", "natural"]).default("vivid"),
+        })
+      )
+      .mutation(async ({ input, ctx }) => {
+        if (ctx.user.role !== "admin") {
+          throw new Error("Unauthorized");
+        }
+        
+        const OpenAI = (await import("openai")).default;
+        const openai = new OpenAI({
+          apiKey: process.env.OPENAI_API_KEY,
+        });
+        
+        if (!process.env.OPENAI_API_KEY) {
+          throw new Error("OpenAI API key not configured");
+        }
+        
+        try {
+          const response = await openai.images.generate({
+            model: "dall-e-3",
+            prompt: input.prompt,
+            n: 1,
+            size: input.size,
+            quality: input.quality,
+            style: input.style,
+          });
+          
+          const imageUrl = response.data[0]?.url;
+          const revisedPrompt = response.data[0]?.revised_prompt;
+          
+          if (!imageUrl) {
+            throw new Error("Failed to generate image");
+          }
+          
+          // Save to database
+          const db = await import("./db").then(m => m.getDb());
+          if (db) {
+            const { aiGeneratedImages } = await import("../drizzle/schema");
+            await db.insert(aiGeneratedImages).values({
+              prompt: input.prompt,
+              revisedPrompt,
+              imageUrl,
+              model: "dall-e-3",
+              size: input.size,
+              quality: input.quality,
+              style: input.style,
+            });
+          }
+          
+          return {
+            url: imageUrl,
+            revisedPrompt,
+          };
+        } catch (error: any) {
+          if (error?.error?.code === "content_policy_violation") {
+            throw new Error("Content policy violation. Please modify your prompt.");
+          }
+          throw error;
+        }
+      }),
+
+    getHistory: protectedProcedure.query(async ({ ctx }) => {
+      if (ctx.user.role !== "admin") {
+        throw new Error("Unauthorized");
+      }
+      
+      const db = await import("./db").then(m => m.getDb());
+      if (!db) throw new Error("Database not available");
+      
+      const { aiGeneratedImages } = await import("../drizzle/schema");
+      const { desc } = await import("drizzle-orm");
+      return await db
+        .select()
+        .from(aiGeneratedImages)
+        .orderBy(desc(aiGeneratedImages.createdAt))
+        .limit(50);
+    }),
+
+    getSuggestedPrompts: publicProcedure
+      .input(z.object({ category: z.string().default("general") }))
+      .query(({ input }) => {
+        const prompts: Record<string, string[]> = {
+          plats: [
+            "A beautifully plated gourmet dish with fresh herbs and vegetables, professional food photography, soft lighting",
+            "Elegant French cuisine presentation on a white plate, fine dining style, artistic garnish",
+            "Rustic homestyle cooking presentation with steam rising, warm cozy atmosphere",
+            "Mediterranean feast spread with colorful fresh ingredients, olive oil drizzle, natural lighting",
+          ],
+          desserts: [
+            "Elegant French pastry with chocolate decoration, professional bakery photography",
+            "Colorful macarons arranged in artistic pattern, pastel colors, soft focus background",
+            "Decadent chocolate cake slice with berry garnish, dark moody food photography",
+            "Fresh fruit tart with glazed berries, golden crust, natural daylight",
+          ],
+          evenements: [
+            "Elegant wedding reception buffet setup with floral arrangements, romantic lighting",
+            "Corporate event catering display with professional presentation, modern style",
+            "Garden party food spread with fresh flowers, outdoor summer setting",
+            "Holiday feast table setting with candles and seasonal decorations",
+          ],
+          equipe: [
+            "Professional chef in kitchen preparing gourmet dish, action shot, steam and movement",
+            "Friendly catering team in uniform, welcoming pose, professional headshot style",
+            "Behind the scenes kitchen preparation, busy restaurant atmosphere",
+          ],
+          general: [
+            "Professional food photography of a catering spread, elegant presentation",
+            "Fresh ingredients artistically arranged, farm to table concept",
+            "Warm inviting restaurant interior with beautiful table settings",
+          ],
+        };
+        
+        return {
+          category: input.category,
+          prompts: prompts[input.category] || prompts.general,
+        };
+      }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;
@@ -988,7 +1471,6 @@ async function getBotResponseFromN8n(data: {
 }): Promise<{ response: string; shouldCaptureLead: boolean }> {
   const webhookUrl = ENV.n8nChatbotWebhookUrl;
 
-  // Fallback to simple responses if webhook is not configured
   if (!webhookUrl) {
     console.warn("N8N_CHATBOT_WEBHOOK_URL not configured, using fallback responses");
     return {
@@ -1017,7 +1499,6 @@ async function getBotResponseFromN8n(data: {
     };
   } catch (error) {
     console.error("Error calling n8n chatbot webhook:", error);
-    // Return fallback response on error
     return {
       response: generateFallbackResponse(data.message, data.language),
       shouldCaptureLead: false,
@@ -1025,20 +1506,19 @@ async function getBotResponseFromN8n(data: {
   }
 }
 
-// Fallback responses when n8n webhook is unavailable
 function generateFallbackResponse(message: string, language: "fr" | "en"): string {
   const lowerMessage = message.toLowerCase();
 
   const responses = {
     fr: {
-      greeting: "Bonjour! Je suis l'assistant virtuel de Les Touillés. Comment puis-je vous aider aujourd'hui?",
-      menu: "Nous offrons une grande variété de plats: soupes, plats préparés, viandes, légumes, desserts et boîtes à lunch. Que souhaitez-vous commander?",
-      catering: "Nous offrons des services de traiteur pour mariages, événements corporatifs et fêtes privées. Combien d'invités attendez-vous?",
-      contact: "Vous pouvez nous joindre au (514) 123-4567 ou par email à info@lestouilles.ca. Préférez-vous qu'on vous contacte?",
-      default: "Je comprends. Puis-je avoir votre nom et email pour qu'un membre de notre équipe vous contacte?",
+      greeting: "Bonjour! Je suis l'assistant virtuel de Les Touilles. Comment puis-je vous aider aujourd'hui?",
+      menu: "Nous offrons une grande variete de plats: soupes, plats prepares, viandes, legumes, desserts et boites a lunch. Que souhaitez-vous commander?",
+      catering: "Nous offrons des services de traiteur pour mariages, evenements corporatifs et fetes privees. Combien d'invites attendez-vous?",
+      contact: "Vous pouvez nous joindre au (514) 123-4567 ou par email a info@lestouilles.ca. Preferez-vous qu'on vous contacte?",
+      default: "Je comprends. Puis-je avoir votre nom et email pour qu'un membre de notre equipe vous contacte?",
     },
     en: {
-      greeting: "Hello! I'm the Les Touillés virtual assistant. How can I help you today?",
+      greeting: "Hello! I'm the Les Touilles virtual assistant. How can I help you today?",
       menu: "We offer a wide variety of dishes: soups, prepared dishes, meats, vegetables, desserts and lunch boxes. What would you like to order?",
       catering: "We offer catering services for weddings, corporate events and private parties. How many guests are you expecting?",
       contact: "You can reach us at (514) 123-4567 or by email at info@lestouilles.ca. Would you prefer us to contact you?",
@@ -1054,17 +1534,16 @@ function generateFallbackResponse(message: string, language: "fr" | "en"): strin
   if (lowerMessage.includes("menu") || lowerMessage.includes("plat") || lowerMessage.includes("dish")) {
     return lang.menu;
   }
-  if (lowerMessage.includes("traiteur") || lowerMessage.includes("catering") || lowerMessage.includes("événement") || lowerMessage.includes("event")) {
+  if (lowerMessage.includes("traiteur") || lowerMessage.includes("catering") || lowerMessage.includes("evenement") || lowerMessage.includes("event")) {
     return lang.catering;
   }
-  if (lowerMessage.includes("contact") || lowerMessage.includes("téléphone") || lowerMessage.includes("phone")) {
+  if (lowerMessage.includes("contact") || lowerMessage.includes("telephone") || lowerMessage.includes("phone")) {
     return lang.contact;
   }
 
   return lang.default;
 }
 
-// Helper function to check if message contains lead information
 function checkIfLeadInfo(message: string): boolean {
   const emailRegex = /\S+@\S+\.\S+/;
   const phoneRegex = /\d{3}[-.\s]?\d{3}[-.\s]?\d{4}/;
