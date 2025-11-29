@@ -892,8 +892,15 @@
 - [x] Update deployment package
 
 ## Fix Docker Build - client/dist Not Found After Build
-- [ ] Check package.json build script
-- [ ] Verify build process creates client/dist directory
-- [ ] Fix Dockerfile to ensure client build completes
-- [ ] Test build locally
-- [ ] Push fix to GitHub
+- [x] Check package.json build script
+- [x] Verify build process creates client/dist directory
+- [x] Fix Dockerfile to ensure client build completes
+- [x] Test build locally
+- [x] Push fix to GitHub
+
+## Fix Runtime Error - Vite Package Not Found
+- [ ] Analyze why bundled dist/index.js requires vite at runtime
+- [ ] Change Dockerfile to run TypeScript directly with tsx instead of bundled build
+- [ ] Update CMD to use tsx server/_core/index.ts
+- [ ] Ensure tsx is installed in production dependencies
+- [ ] Test and push to GitHub

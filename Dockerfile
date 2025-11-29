@@ -20,8 +20,8 @@ RUN pnpm install --no-frozen-lockfile
 # Copy source code
 COPY . .
 
-# Build the application
-RUN pnpm run build
+# Build the frontend only
+RUN pnpm run build:client
 
 # Stage 2: Production image
 FROM node:22-alpine AS runner
@@ -49,7 +49,6 @@ COPY --from=builder --chown=nodejs:nodejs /app/server ./server
 COPY --from=builder --chown=nodejs:nodejs /app/drizzle ./drizzle
 COPY --from=builder --chown=nodejs:nodejs /app/shared ./shared
 COPY --from=builder --chown=nodejs:nodejs /app/dist/public ./dist/public
-COPY --from=builder --chown=nodejs:nodejs /app/dist/index.js ./dist/index.js
 COPY --from=builder --chown=nodejs:nodejs /app/client/public ./client/public
 
 # Switch to non-root user
@@ -62,5 +61,5 @@ EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \
   CMD node -e "require('http').get('http://localhost:3000/api/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"
 
-# Start the application
-CMD ["node", "dist/index.js"]
+# Start the application with tsx
+CMD ["npx", "tsx", "server/_core/index.ts"]
