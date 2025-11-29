@@ -383,3 +383,108 @@ export const mealPlanItems = mysqlTable("mealPlanItems", {
 
 export type MealPlanItem = typeof mealPlanItems.$inferSelect;
 export type InsertMealPlanItem = typeof mealPlanItems.$inferInsert;
+// ================================================
+// AJOUTER CES TABLES À LA FIN DE drizzle/schema.ts
+// ================================================
+
+/**
+ * Menu Categories table
+ * Stores menu category organization
+ */
+export const menuCategories = mysqlTable("menuCategories", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(),
+  nameEn: varchar("nameEn", { length: 255 }),
+  description: text("description"),
+  descriptionEn: text("descriptionEn"),
+  image: text("image"),
+  sortOrder: int("sortOrder").default(0).notNull(),
+  isActive: boolean("isActive").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type MenuCategory = typeof menuCategories.$inferSelect;
+export type InsertMenuCategory = typeof menuCategories.$inferInsert;
+
+/**
+ * Testimonials table
+ * Stores customer reviews and testimonials
+ */
+export const testimonials = mysqlTable("testimonials", {
+  id: int("id").autoincrement().primaryKey(),
+  customerName: varchar("customerName", { length: 255 }).notNull(),
+  customerTitle: varchar("customerTitle", { length: 255 }),
+  content: text("content").notNull(),
+  contentEn: text("contentEn"),
+  rating: int("rating").default(5).notNull(),
+  imageUrl: text("imageUrl"),
+  isActive: boolean("isActive").default(true).notNull(),
+  isFeatured: boolean("isFeatured").default(false).notNull(),
+  displayOrder: int("displayOrder").default(0).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Testimonial = typeof testimonials.$inferSelect;
+export type InsertTestimonial = typeof testimonials.$inferInsert;
+
+/**
+ * Gallery table
+ * Stores images for the photo gallery
+ */
+export const gallery = mysqlTable("gallery", {
+  id: int("id").autoincrement().primaryKey(),
+  title: varchar("title", { length: 255 }).notNull(),
+  titleEn: varchar("titleEn", { length: 255 }),
+  description: text("description"),
+  descriptionEn: text("descriptionEn"),
+  imageUrl: text("imageUrl").notNull(),
+  category: varchar("category", { length: 100 }).default("Plats").notNull(),
+  sortOrder: int("sortOrder").default(0).notNull(),
+  isActive: boolean("isActive").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type GalleryImage = typeof gallery.$inferSelect;
+export type InsertGalleryImage = typeof gallery.$inferInsert;
+
+/**
+ * Site Settings table
+ * Stores key-value configuration settings
+ */
+export const siteSettings = mysqlTable("siteSettings", {
+  id: int("id").autoincrement().primaryKey(),
+  settingKey: varchar("settingKey", { length: 100 }).notNull().unique(),
+  settingValue: text("settingValue"),
+  settingType: varchar("settingType", { length: 50 }).default("string").notNull(), // string, number, boolean, json
+  category: varchar("category", { length: 100 }).default("general").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type SiteSetting = typeof siteSettings.$inferSelect;
+export type InsertSiteSetting = typeof siteSettings.$inferInsert;
+
+/**
+ * AI Generated Images table
+ * Tracks images generated with OpenAI DALL-E
+ */
+export const aiGeneratedImages = mysqlTable("aiGeneratedImages", {
+  id: int("id").autoincrement().primaryKey(),
+  prompt: text("prompt").notNull(),
+  revisedPrompt: text("revisedPrompt"),
+  imageUrl: text("imageUrl").notNull(),
+  model: varchar("model", { length: 50 }).default("dall-e-3").notNull(),
+  size: varchar("size", { length: 20 }).default("1024x1024").notNull(),
+  quality: varchar("quality", { length: 20 }).default("standard").notNull(),
+  style: varchar("style", { length: 20 }).default("vivid").notNull(),
+  usedIn: varchar("usedIn", { length: 50 }), // 'gallery', 'product', 'testimonial'
+  usedInId: int("usedInId"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type AIGeneratedImage = typeof aiGeneratedImages.$inferSelect;
+export type InsertAIGeneratedImage = typeof aiGeneratedImages.$inferInsert;
+
