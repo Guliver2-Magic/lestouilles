@@ -10,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
 import { ArrowLeft, Save, Store, Clock, Mail, CreditCard, Bell } from "lucide-react";
+import { trpc } from "@/lib/trpc";
 
 interface Settings {
   siteName: string;
@@ -86,47 +87,27 @@ const DAYS = [
 export default function AdminSettings() {
   const [, setLocation] = useLocation();
   const [settings, setSettings] = useState<Settings>(DEFAULT_SETTINGS);
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
 
+  // tRPC queries and mutations
+  const { data: savedSettings, isLoading } = trpc.siteSettings.get.useQuery();
+  const updateMutation = trpc.siteSettings.update.useMutation({
+    onSuccess: () => {
+      toast.success("Parametres sauvegardes avec succes");
+    },
+    onError: (error) => {
+      toast.error(error.message || "Erreur lors de la sauvegarde");
+    },
+  });
+
+  // Load settings when data arrives
   useEffect(() => {
-    fetchSettings();
-  }, []);
-
-  const fetchSettings = async () => {
-    try {
-      const response = await fetch("/api/settings");
-      if (response.ok) {
-        const data = await response.json();
-        setSettings({ ...DEFAULT_SETTINGS, ...data });
-      }
-    } catch (error) {
-      console.error("Error fetching settings:", error);
-    } finally {
-      setLoading(false);
+    if (savedSettings) {
+      setSettings({ ...DEFAULT_SETTINGS, ...savedSettings });
     }
-  };
+  }, [savedSettings]);
 
-  const handleSave = async () => {
-    setSaving(true);
-    try {
-      const response = await fetch("/api/settings", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(settings),
-      });
-
-      if (response.ok) {
-        toast.success("Parametres sauvegardes avec succes");
-      } else {
-        toast.error("Erreur lors de la sauvegarde");
-      }
-    } catch (error) {
-      console.error("Error saving settings:", error);
-      toast.error("Erreur lors de la sauvegarde");
-    } finally {
-      setSaving(false);
-    }
+  const handleSave = () => {
+    updateMutation.mutate(settings);
   };
 
   const updateBusinessHours = (
@@ -146,7 +127,7 @@ export default function AdminSettings() {
     });
   };
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
         <p>Chargement...</p>
@@ -170,9 +151,9 @@ export default function AdminSettings() {
               Parametres
             </h1>
           </div>
-          <Button onClick={handleSave} disabled={saving}>
+          <Button onClick={handleSave} disabled={updateMutation.isPending}>
             <Save className="h-4 w-4 mr-2" />
-            {saving ? "Sauvegarde..." : "Sauvegarder"}
+            {updateMutation.isPending ? "Sauvegarde..." : "Sauvegarder"}
           </Button>
         </div>
 
